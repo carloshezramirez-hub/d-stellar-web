@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight } from "lucide-react";
 import { CtaLink, CtaAnchor } from "@/components/ui/cta-link";
@@ -21,6 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const cookieNames = menu[0].items.map((item) => item.name);
 
+const VALUE_ACCENTS = ["bg-stellar-green", "bg-stellar-pink", "bg-stellar-blue", "bg-stellar-purple"] as const;
+
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -29,91 +32,181 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line px-5 pb-20 pt-16 md:pb-28 md:pt-24">
+      {/* HERO */}
+      <section className="relative overflow-hidden border-b border-line px-5 pb-16 pt-14 md:pb-24 md:pt-20">
         <StarField />
-        <div className="relative mx-auto max-w-4xl text-center">
-          <p className="font-tag text-xs uppercase tracking-[0.3em] text-nova">{t("eyebrow")}</p>
-          <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] text-cream sm:text-5xl md:text-7xl">
-            {t("heroTitle")}
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-balance text-base text-cream/75 md:text-lg">
-            {t("heroSubtitle")}
-          </p>
-          <p className="star-rule mt-4 font-tag text-xs uppercase text-marigold">{t("heroTag")}</p>
+        <div className="relative mx-auto grid max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
+          <div>
+            <p className="font-tag text-xs uppercase tracking-[0.35em] text-stellar-pink">{t("heroKicker")}</p>
+            <h1 className="mt-4 font-display text-[15vw] font-black uppercase leading-[0.85] tracking-tight text-stellar-white sm:text-7xl md:text-8xl lg:text-[7.5rem]">
+              {t("heroTitle")}
+            </h1>
+            <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
+              {t("heroSubtitle")}
+            </p>
+            <p className="star-rule mt-4 font-tag text-xs uppercase text-stellar-green">{t("heroTag")}</p>
 
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-            <CtaAnchor
-              href={BUSINESS.mapsUrl}
-              target="_blank"
-              rel="noreferrer"
-              variant="solid"
-            >
-              {cta("directions")} <ArrowUpRight size={14} />
-            </CtaAnchor>
-            <CtaLink href="/menu" variant="outline">
-              {cta("viewMenu")}
-            </CtaLink>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+                {cta("directions")} <ArrowUpRight size={14} />
+              </CtaAnchor>
+              <CtaLink href="/menu" variant="outline">
+                {cta("viewMenu")}
+              </CtaLink>
+            </div>
+          </div>
+
+          <div className="relative hidden shrink-0 md:block">
+            <Image
+              src="/brand/illustrations/star-person-run-white.png"
+              alt=""
+              width={2956}
+              height={3053}
+              className="h-56 w-auto opacity-90 lg:h-72"
+              priority
+            />
           </div>
         </div>
       </section>
 
-      <div className="overflow-hidden border-b border-line bg-cream py-4">
-        <div className="flex w-max animate-marquee gap-10 font-display text-2xl font-bold text-ink/90">
+      {/* MARQUEE */}
+      <div className="overflow-hidden border-b border-line bg-stellar-white py-3">
+        <div className="flex w-max animate-marquee items-center gap-8 font-display text-2xl font-bold uppercase text-stellar-black md:text-3xl">
           {[...cookieNames, ...cookieNames].map((name, i) => (
-            <span key={i} className="flex items-center gap-10">
-              {name} <span className="text-nova">★</span>
+            <span key={i} className="flex items-center gap-8">
+              {name}
+              <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="h-4 w-auto md:h-5" />
             </span>
           ))}
         </div>
       </div>
 
-      <section className="border-b border-line px-5 py-20">
-        <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[1.1fr_1fr] md:gap-16">
-          <h2 className="font-display text-3xl font-bold leading-tight text-cream md:text-4xl">
+      {/* INTRO — editorial, asymmetric, photo overlap */}
+      <section className="relative border-b border-line px-5 py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-16">
+          <h2 className="font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-6xl">
             {t("introTitle")}
           </h2>
-          <p className="text-base leading-relaxed text-cream/75 md:text-lg">{t("introBody")}</p>
-        </div>
-      </section>
-
-      <section className="border-b border-line bg-cream px-5 py-20 text-ink">
-        <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-16">
-          <div>
-            <p className="font-tag text-xs uppercase tracking-widest text-nova">{t("menuTeaserTitle")}</p>
-            <p className="mt-4 text-lg leading-relaxed text-ink/80">{t("menuTeaserBody")}</p>
-            <CtaLink href="/menu" variant="ghost" className="mt-6 px-0">
-              {cta("viewMenu")} <ArrowUpRight size={14} />
-            </CtaLink>
-          </div>
-          <div>
-            <p className="font-tag text-xs uppercase tracking-widest text-cosmic">{t("eventsTeaserTitle")}</p>
-            <p className="mt-4 text-lg leading-relaxed text-ink/80">{t("eventsTeaserBody")}</p>
-            <CtaLink href="/events" variant="ghost" className="mt-6 px-0">
-              {cta("seeEvents")} <ArrowUpRight size={14} />
-            </CtaLink>
+          <div className="flex flex-col gap-8 sm:flex-row md:flex-col">
+            <p className="flex-1 text-base leading-relaxed text-stellar-white/75 md:text-lg">{t("introBody")}</p>
+            <div className="relative aspect-[4/5] w-full max-w-[220px] shrink-0 self-end overflow-hidden border-2 border-stellar-white/20 sm:max-w-[180px] md:max-w-[220px]">
+              <Image
+                src="/images/products/cookie-display-bright.webp"
+                alt="Exhibición de cookies del mes en la barra de d-stellar"
+                fill
+                sizes="220px"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
 
+      {/* STATEMENT — stacked type + brand copy, official language */}
+      <section className="border-b border-line bg-stellar-black px-5 py-20">
+        <div className="mx-auto max-w-6xl md:grid md:grid-cols-[1.3fr_1fr] md:gap-16">
+          <p className="font-display text-3xl font-black uppercase leading-[0.9] text-stellar-white sm:text-5xl md:text-6xl">
+            {t("statementTitle")}
+          </p>
+          <p className="mt-8 max-w-md text-base leading-relaxed text-stellar-white/70 md:mt-0 md:self-center md:text-lg">
+            {t("statementBody")}
+          </p>
+        </div>
+      </section>
+
+      {/* PHOTO STRIP — real, uneven crops */}
+      <section className="border-b border-line px-5 py-16">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          <div className="relative col-span-1 aspect-[3/4] overflow-hidden md:translate-y-6">
+            <Image
+              src="/images/location/storefront-door-1.webp"
+              alt="Entrada de d-stellar en Pabellón Nuevo León, con bandera de la comunidad"
+              fill
+              sizes="(min-width: 768px) 25vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative col-span-1 aspect-[3/4] overflow-hidden">
+            <Image
+              src="/images/location/interior-lounge.webp"
+              alt="Interior de d-stellar, techo con efecto estrellado"
+              fill
+              sizes="(min-width: 768px) 25vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative col-span-1 aspect-[3/4] overflow-hidden md:translate-y-10">
+            <Image
+              src="/images/products/cookie-display-lit.webp"
+              alt="Cookies del mes exhibidas en la barra"
+              fill
+              sizes="(min-width: 768px) 25vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative col-span-1 aspect-[3/4] overflow-hidden">
+            <Image
+              src="/images/location/patio.webp"
+              alt="Patio exterior de d-stellar"
+              fill
+              sizes="(min-width: 768px) 25vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* MENU + EVENTS TEASER — color blocks */}
+      <section className="grid border-b border-line md:grid-cols-2">
+        <div className="border-b border-line px-5 py-16 md:border-b-0 md:border-r md:px-10 md:py-20">
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("menuTeaserTitle")}</p>
+          <p className="mt-4 max-w-sm text-lg leading-relaxed text-stellar-white/80">{t("menuTeaserBody")}</p>
+          <CtaLink href="/menu" variant="ghost" className="mt-6 px-0">
+            {cta("viewMenu")} <ArrowUpRight size={14} />
+          </CtaLink>
+        </div>
+        <div className="px-5 py-16 md:px-10 md:py-20">
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-blue">{t("eventsTeaserTitle")}</p>
+          <p className="mt-4 max-w-sm text-lg leading-relaxed text-stellar-white/80">{t("eventsTeaserBody")}</p>
+          <CtaLink href="/events" variant="ghost" className="mt-6 px-0">
+            {cta("seeEvents")} <ArrowUpRight size={14} />
+          </CtaLink>
+        </div>
+      </section>
+
+      {/* VALUES */}
       <section className="border-b border-line px-5 py-20">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="font-display text-2xl font-bold text-cream md:text-3xl">{t("valuesTitle")}</h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="font-display text-3xl font-black uppercase text-stellar-white md:text-4xl">
+            {t("valuesTitle")}
+          </h2>
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
             {t.raw("values").map((value: { title: string; body: string }, i: number) => (
-              <div key={i} className="rounded-2xl border border-line p-5">
-                <p className="font-display text-lg font-bold text-nova">{value.title}</p>
-                <p className="mt-2 text-sm text-cream/70">{value.body}</p>
+              <div key={i} className={`${VALUE_ACCENTS[i % VALUE_ACCENTS.length]} p-5 text-stellar-black`}>
+                <p className="font-demi text-lg font-bold">{value.title}</p>
+                <p className="mt-2 text-sm text-stellar-black/80">{value.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-5 py-20">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-8 rounded-3xl border border-line bg-ink-soft p-8 md:flex-row md:items-center md:p-12">
+      {/* VISIT TEASER — photo backdrop */}
+      <section className="relative overflow-hidden px-5 py-24 md:py-32">
+        <Image
+          src="/images/location/facade-entrance.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-top opacity-25"
+        />
+        <div className="absolute inset-0 bg-stellar-black/60" />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div>
-            <p className="font-tag text-xs uppercase tracking-widest text-marigold">{t("visitTeaserTitle")}</p>
-            <p className="mt-3 max-w-md text-lg text-cream/80">{t("visitTeaserBody")}</p>
+            <p className="font-tag text-xs uppercase tracking-widest text-stellar-green">{t("visitTeaserTitle")}</p>
+            <p className="mt-3 max-w-md font-display text-2xl font-bold uppercase leading-tight text-stellar-white md:text-3xl">
+              {t("visitTeaserBody")}
+            </p>
           </div>
           <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
             {cta("openInMaps")} <ArrowUpRight size={14} />

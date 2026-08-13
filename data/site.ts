@@ -2,9 +2,9 @@ export const SITE_URL = "https://d-stellar.com";
 
 export const BUSINESS = {
   name: "d-stellar",
-  legalName: "d-stellar — The Sweet Universe Company",
+  legalName: "d-stellar — by The Sweet Universe Company",
   tagline: "Junt★s brillamos más",
-  founders: ["Hernán Castilla", "Eduardo de Castilla"],
+  founders: ["Hernán Castilla", "Eduardo Hernández"],
   foundedYear: 2024,
   streetAddress: "Av. Nuevo León 217",
   addressLocality: "Hipódromo Condesa, Cuauhtémoc",
@@ -19,8 +19,11 @@ export const BUSINESS = {
   // day-by-day hours (and any Monday closure) against Google Business
   // Profile before publishing openingHoursSpecification with per-day rules.
   hours: { opens: "11:00", closes: "19:00" },
-  phone: "",
-  email: "hola@d-stellar.com",
+  // Published as the brand's own public contact number on official
+  // identity collateral (business card / secondary logo lockup).
+  phone: "+52 55 4633 2352",
+  phoneHref: "+525546332352",
+  email: "hernan@dstellar.com",
   social: {
     instagram: "https://www.instagram.com/dstellarmx",
     tiktok: "https://www.tiktok.com/@dstellarmx",

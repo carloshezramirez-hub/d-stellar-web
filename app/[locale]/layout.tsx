@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Manrope, Space_Mono } from "next/font/google";
+import { Big_Shoulders, Archivo, Inter, IBM_Plex_Mono } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,22 +13,42 @@ import { localBusinessSchema, websiteSchema } from "@/lib/schema";
 import { SITE_URL } from "@/data/site";
 import "../globals.css";
 
-const bricolage = Bricolage_Grotesque({
+// Franklin Gothic URW Demi is the official display face (Adobe Fonts —
+// no kit configured in this project). Big Shoulders is Google's closest
+// open equivalent: a condensed American-gothic display face built for the
+// exact same signage/editorial register (Chicago flag / Franklin Gothic
+// lineage).
+const bigShoulders = Big_Shoulders({
   subsets: ["latin"],
-  variable: "--font-bricolage",
+  weight: ["700", "800", "900"],
+  variable: "--font-big-shoulders",
   display: "swap",
 });
 
-const manrope = Manrope({
+// Standing in for Franklin Gothic URW Demi at non-condensed sizes
+// (subheads, labels, nav) where the condensed face reads too tight.
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-manrope",
+  weight: ["600", "700", "800"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const spaceMono = Space_Mono({
+// Coordinates Variable Regular is the official body face (Adobe Fonts —
+// same licensing gap as above). Inter is the fallback for long-form,
+// highly legible copy.
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-space-mono",
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// IBM Plex Mono appears in d-stellar's own presentation deck as the
+// working mono face for labels/prices — kept here for tags and prices.
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-mono",
   display: "swap",
 });
 
@@ -79,7 +99,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <body
-        className={`${bricolage.variable} ${manrope.variable} ${spaceMono.variable} font-body antialiased`}
+        className={`${bigShoulders.variable} ${archivo.variable} ${inter.variable} ${plexMono.variable} font-body antialiased`}
       >
         <NextIntlClientProvider>
           <JsonLd data={websiteSchema()} />

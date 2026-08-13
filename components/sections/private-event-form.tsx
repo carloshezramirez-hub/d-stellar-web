@@ -32,53 +32,53 @@ export function PrivateEventForm() {
   return (
     <form onSubmit={handleSubmit} className="grid gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 text-sm text-cream/80">
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
           {t("name")}
           <input
             name="name"
             required
-            className="rounded-lg border border-line bg-transparent px-4 py-3 text-cream outline-none focus:border-nova"
+            className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm text-cream/80">
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
           {t("email")}
           <input
             type="email"
             name="email"
             required
-            className="rounded-lg border border-line bg-transparent px-4 py-3 text-cream outline-none focus:border-nova"
+            className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm text-cream/80">
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
           {t("date")}
           <input
             type="date"
             name="date"
-            className="rounded-lg border border-line bg-transparent px-4 py-3 text-cream outline-none focus:border-nova"
+            className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm text-cream/80">
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
           {t("guests")}
           <input
             type="number"
             min={1}
             name="guests"
-            className="rounded-lg border border-line bg-transparent px-4 py-3 text-cream outline-none focus:border-nova"
+            className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
           />
         </label>
       </div>
-      <label className="flex flex-col gap-2 text-sm text-cream/80">
+      <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
         {t("message")}
         <textarea
           name="message"
           rows={4}
           required
-          className="resize-none rounded-lg border border-line bg-transparent px-4 py-3 text-cream outline-none focus:border-nova"
+          className="resize-none border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
         />
       </label>
       <button
         type="submit"
-        className="mt-2 inline-flex items-center justify-center rounded-full bg-nova px-6 py-3 font-tag text-xs uppercase tracking-widest text-ink transition-colors hover:bg-cream"
+        className="mt-2 inline-flex items-center justify-center bg-stellar-pink px-6 py-3 font-demi text-xs font-bold uppercase tracking-widest text-stellar-black transition-colors hover:bg-stellar-white"
       >
         {t("submit")}
       </button>

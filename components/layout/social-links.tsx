@@ -30,7 +30,7 @@ export function SocialLinks() {
         rel="noreferrer"
         aria-label="Instagram"
         onClick={() => trackEvent("click_instagram")}
-        className="text-cream/80 transition-colors hover:text-nova"
+        className="text-stellar-white/80 transition-colors hover:text-stellar-pink"
       >
         <InstagramIcon />
       </a>
@@ -40,7 +40,7 @@ export function SocialLinks() {
         rel="noreferrer"
         aria-label="TikTok"
         onClick={() => trackEvent("click_tiktok")}
-        className="text-cream/80 transition-colors hover:text-nova"
+        className="text-stellar-white/80 transition-colors hover:text-stellar-pink"
       >
         <TikTokIcon />
       </a>

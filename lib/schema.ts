@@ -9,7 +9,8 @@ export function localBusinessSchema() {
     name: BUSINESS.name,
     alternateName: BUSINESS.legalName,
     url: SITE_URL,
-    image: `${SITE_URL}/images/og/d-stellar-storefront.jpg`,
+    image: `${SITE_URL}/images/location/storefront-door-1.webp`,
+    telephone: BUSINESS.phone,
     priceRange: "$$",
     servesCuisine: ["Bakery", "Coffee", "Desserts"],
     address: {

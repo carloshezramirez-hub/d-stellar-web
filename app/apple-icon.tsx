@@ -1,9 +1,14 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-export default function AppleIcon() {
+export default async function AppleIcon() {
+  const star = await readFile(join(process.cwd(), "public/brand/icons/pixel-star.png"));
+  const starSrc = `data:image/png;base64,${star.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -13,12 +18,10 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0E0E10",
+          background: "#000000",
         }}
       >
-        <svg width="110" height="110" viewBox="0 0 24 24" fill="#FF2E7E">
-          <path d="M12 2l2.6 7.2H22l-6 4.6 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.6h7.4z" />
-        </svg>
+        <img src={starSrc} width={110} height={100} alt="" />
       </div>
     ),
     { ...size },

@@ -12,7 +12,7 @@ export function MobileActionBar() {
   return (
     <nav
       aria-label={t("directions")}
-      className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 border-t border-line bg-ink/95 backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 border-t border-line bg-stellar-black/95 backdrop-blur md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <a
@@ -20,7 +20,7 @@ export function MobileActionBar() {
         target="_blank"
         rel="noreferrer"
         onClick={() => trackEvent("click_directions")}
-        className="flex flex-col items-center gap-1 py-2.5 text-cream/80 active:text-nova"
+        className="flex flex-col items-center gap-1 py-2.5 text-stellar-white/80 active:text-stellar-pink"
       >
         <MapPin size={20} />
         <span className="font-tag text-[10px] uppercase tracking-wide">{t("directions")}</span>
@@ -28,7 +28,7 @@ export function MobileActionBar() {
       <Link
         href="/menu"
         onClick={() => trackEvent("click_menu")}
-        className="flex flex-col items-center gap-1 py-2.5 text-cream/80 active:text-nova"
+        className="flex flex-col items-center gap-1 py-2.5 text-stellar-white/80 active:text-stellar-pink"
       >
         <BookOpen size={20} />
         <span className="font-tag text-[10px] uppercase tracking-wide">{t("menu")}</span>
@@ -36,14 +36,14 @@ export function MobileActionBar() {
       <Link
         href="/pickup"
         onClick={() => trackEvent("click_pickup")}
-        className="flex flex-col items-center gap-1 py-2.5 text-cream/80 active:text-nova"
+        className="flex flex-col items-center gap-1 py-2.5 text-stellar-white/80 active:text-stellar-pink"
       >
         <ShoppingBag size={20} />
         <span className="font-tag text-[10px] uppercase tracking-wide">{t("pickup")}</span>
       </Link>
       <Link
         href="/events"
-        className="flex flex-col items-center gap-1 py-2.5 text-cream/80 active:text-nova"
+        className="flex flex-col items-center gap-1 py-2.5 text-stellar-white/80 active:text-stellar-pink"
       >
         <CalendarDays size={20} />
         <span className="font-tag text-[10px] uppercase tracking-wide">{t("events")}</span>

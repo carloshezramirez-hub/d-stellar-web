@@ -1,36 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * Official d-stellar palette — exact values from Manual-D-stellar.pdf
+ * ("COLORES" page). Do not substitute with "close enough" colors.
+ *
+ * Accessibility: stellar-green (#00FF00) and stellar-pink (#FF70E0) fail
+ * WCAG AA for small text on black. Use them for large display type
+ * (24px+/bold), borders, icons and black-text-on-color blocks only —
+ * never for body copy. See app/[locale]/menu category blocks for the
+ * black-on-color pattern.
+ */
 :root {
-  --color-ink: #0e0e10;
-  --color-ink-soft: #17161b;
-  --color-cream: #f7f1e4;
-  --color-cream-soft: #efe7d3;
-  --color-nova: #ff2e7e;
-  --color-nova-soft: #ffd6e6;
-  --color-cosmic: #3b4bff;
-  --color-marigold: #ffc72c;
-  --color-flare: #ff5a36;
-  --color-line: rgba(247, 241, 228, 0.14);
-  --color-line-on-cream: rgba(14, 14, 16, 0.14);
+  --color-stellar-black: #000000;
+  --color-stellar-black-soft: #0a0a0a;
+  --color-stellar-white: #ffffff;
+  --color-stellar-white-soft: #f2f2f2;
+  --color-stellar-green: #00ff00;
+  --color-stellar-blue: #243ad2;
+  --color-stellar-pink: #ff70e0;
+  --color-stellar-red: #fc000f;
+  --color-stellar-purple: #a21ffe;
+  --color-line: rgba(255, 255, 255, 0.16);
+  --color-line-on-stellar-white: rgba(0, 0, 0, 0.14);
 }
 
 @theme inline {
-  --color-ink: var(--color-ink);
-  --color-ink-soft: var(--color-ink-soft);
-  --color-cream: var(--color-cream);
-  --color-cream-soft: var(--color-cream-soft);
-  --color-nova: var(--color-nova);
-  --color-nova-soft: var(--color-nova-soft);
-  --color-cosmic: var(--color-cosmic);
-  --color-marigold: var(--color-marigold);
-  --color-flare: var(--color-flare);
+  --color-stellar-black: var(--color-stellar-black);
+  --color-stellar-black-soft: var(--color-stellar-black-soft);
+  --color-stellar-white: var(--color-stellar-white);
+  --color-stellar-white-soft: var(--color-stellar-white-soft);
+  --color-stellar-green: var(--color-stellar-green);
+  --color-stellar-blue: var(--color-stellar-blue);
+  --color-stellar-pink: var(--color-stellar-pink);
+  --color-stellar-red: var(--color-stellar-red);
+  --color-stellar-purple: var(--color-stellar-purple);
+  --color-line: var(--color-line);
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-tag: var(--font-space-mono), ui-monospace, monospace;
+  /*
+   * Franklin Gothic URW (Demi) and Coordinates Variable (Regular) are the
+   * official typefaces, licensed via Adobe Fonts/Typekit — this project has
+   * no Adobe Fonts kit configured, so the brand's own fonts cannot load.
+   * Fallbacks below preserve the intended feel (condensed American gothic
+   * display / clean grotesk body / technical mono for labels) until a kit
+   * ID is available. See PROJECT_NOTES.md → "Missing assets".
+   */
+  --font-display: var(--font-big-shoulders), "Arial Narrow", sans-serif;
+  --font-demi: var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-tag: var(--font-plex-mono), ui-monospace, monospace;
 
-  --animate-marquee: marquee 28s linear infinite;
-  --animate-orbit: orbit 40s linear infinite;
+  --animate-marquee: marquee 26s linear infinite;
+  --animate-marquee-slow: marquee 60s linear infinite;
+  --animate-drift: drift 22s ease-in-out infinite;
 }
 
 @keyframes marquee {
@@ -42,12 +63,13 @@
   }
 }
 
-@keyframes orbit {
-  from {
-    transform: rotate(0deg);
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: translate(2%, -3%) rotate(6deg);
   }
 }
 
@@ -56,18 +78,22 @@ html {
 }
 
 body {
-  background: var(--color-ink);
-  color: var(--color-cream);
+  background: var(--color-stellar-black);
+  color: var(--color-stellar-white);
   font-family: var(--font-body);
 }
 
 ::selection {
-  background: var(--color-nova);
-  color: var(--color-ink);
+  background: var(--color-stellar-pink);
+  color: var(--color-stellar-black);
 }
 
 .font-display {
   font-family: var(--font-display);
+}
+
+.font-demi {
+  font-family: var(--font-demi);
 }
 
 .font-tag {
@@ -76,6 +102,16 @@ body {
 
 .star-rule {
   letter-spacing: 0.3em;
+}
+
+/* Official brand texture — "D-STELLAR" wordmark scattered in orbit swirls.
+   Use sparingly: hero backdrops, footer, event heroes. Never permanent noise
+   behind readable text. */
+.brand-texture {
+  background-image: var(--texture-url);
+  background-size: 1400px auto;
+  background-repeat: repeat;
+  background-position: center;
 }
 
 @media (prefers-reduced-motion: reduce) {

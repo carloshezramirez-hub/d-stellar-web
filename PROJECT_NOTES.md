@@ -1,148 +1,213 @@
 # d-stellar — Project Notes
 
-Full rebuild of the d-stellar website: Next.js 16 (App Router, Turbopack) + TypeScript + Tailwind v4, bilingual (ES default / EN under `/en`).
+Next.js 16 (App Router, Turbopack) + TypeScript + Tailwind v4, bilingual (ES default / EN under `/en`).
+This is a **full visual and functional rebuild on the official brand identity**
+(`Manual-D-stellar.pdf`, by Brada Studio), not a generic redesign — see "Brand"
+below for the source of every design decision.
 
-## What d-stellar actually is (research summary)
+## Brand
 
-The previous site (`d-stellar.com`) was a bare WordPress "coming soon" page with no
-real content — nothing worth migrating or 301-redirecting beyond the root domain
-itself. Brand facts below came from the brand's own public Instagram and LinkedIn
-profiles (fetched during this build) plus the brief:
+### Source of truth
 
-- Cookie shop / cacao / coffee bar at **Av. Nuevo León 217, Hipódromo Condesa,
-  CDMX**, inside **Pabellón Nuevo León**. Open daily **11:00–19:00** (per Instagram
-  bio — day-by-day hours were not published anywhere public; verify against the
-  Google Business Profile before relying on it for anything stricter than the
-  schema.org `openingHoursSpecification` currently shipped).
-- Founded **2024** by **Hernán Castilla** and **Eduardo de Castilla**, operating as
-  **"The Sweet Universe Company."** Tagline: **"Junt★s brillamos más"** (EN: "Together
-  we shine brighter").
-- Positioning (LinkedIn): diversity, pride, "each bite tells a story." This is the
-  basis for the LGBTQ+ friendly / trans safe space / pet friendly messaging used
-  throughout the site.
-- Menu category names and cookie/drink names come from the brief; exact
-  ingredients and **prices are intentionally omitted** everywhere (menu, events)
-  because they could not be verified against an official source. `data/menu.ts`
-  and `data/events.ts` have optional `priceMXN` fields — fill them in once
-  confirmed and they'll render automatically.
+`Manual-D-stellar.pdf` (30 pages, "MANUAL DE IDENTIDAD") is canonical. The
+80-page `dstellar-pres (1).pdf` is Brada Studio's earlier proposal deck — same
+system, plus astronomy mood-boarding research; it was skimmed to confirm it
+converges on the same manual, not treated as a second source of truth.
+
+### Colors — exact, from the manual's "COLORES" page
+
+```
+--stellar-black:  #000000
+--stellar-white:  #FFFFFF
+--stellar-green:  #00FF00
+--stellar-blue:   #243AD2
+--stellar-pink:   #FF70E0
+--stellar-red:    #FC000F
+--stellar-purple: #A21FFE
+```
+
+Defined in `app/globals.css`. Black/white are the structural base; the five
+secondary colors are used as flashes — category blocks on `/menu`, the value
+cards on the homepage, event gradients — never as a permanent rainbow. **Green
+and pink fail WCAG AA for small text on black** — they're used for large
+display type, black-text-on-color blocks, and borders/icons only, never body
+copy (see the comment block at the top of `globals.css`).
+
+### Logotype
+
+The bubble wordmark is the **official vector logo**, extracted at 600dpi from
+the manual (not redrawn, not approximated with a lookalike font) —
+`public/brand/logos/dstellar-wordmark-{black,white}.png`. Used as-is in the
+header, footer, and OG image. Do not stretch, recolor outside black/white, or
+rebuild it with a system font — the manual is explicit about this
+("USOS CORRECTOS E INCORRECTOS").
+
+### Typography — Adobe Fonts gap (see "Missing assets")
+
+Official: **Franklin Gothic URW Demi** (display) + **Coordinates Variable
+Regular** (body), both Adobe Fonts/Typekit — no kit is configured in this
+project, so they cannot load. Fallbacks, chosen to preserve intent:
+
+- Display (`font-display`, huge headlines): **Big Shoulders** — a condensed
+  American-gothic face in the same Chicago-flag/Franklin-Gothic lineage.
+- Demi stand-in (`font-demi`, subheads/nav/labels at sizes too small for the
+  condensed display face): **Archivo**, weight 700–800.
+- Body (`font-body`): **Inter**.
+- Mono (`font-tag`, eyebrows/prices/phone): **IBM Plex Mono** — this one isn't
+  a guess: it's the actual mono face used in d-stellar's own presentation
+  deck.
+
+### Texture & graphic elements — extracted, not redrawn
+
+All from the manual, extracted as real assets (never Unicode stars or
+downloaded icon-pack substitutes):
+
+- `public/brand/textures/texture-{black,cream}.webp` — the official
+  "D-STELLAR" swirl texture (full-res raster pulled from the PDF's embedded
+  image). Used sparingly: footer background, event page background.
+- `public/brand/illustrations/` — the two line-art "star people",
+  starburst compositions, and the "GLOW" wordmark, extracted at 600dpi and
+  cleaned to transparent PNG (black + white variants).
+- `public/brand/icons/` — globe, triangle, the cross/starburst mark, the
+  circled "CDMX" lockup, and the pixel-art star (used everywhere a bullet or
+  favicon needs a star — see `app/icon.tsx`).
+- `scripts/gen-event-placeholders.mjs` — regenerates the event cover
+  placeholders (official gradient + real logo) if needed.
+
+### Voice
+
+Pulled directly from the manual, not paraphrased:
+tagline **"Junt★s brillamos más"**; the values stack
+**"Auténtic★s. Original★s. Inquebrantables. Icónic★s. Desafiantes."**; the
+brand statement **"Una marca transgresora, imparable y amable, donde te
+puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un
+universo propio."**; and the campaign line **"Bend the rules. Star the
+show."** on `/events`. The inclusive star (replacing gendered `a`/`o`) is used
+only in these editorial statements, never in body copy — per the manual's own
+instruction not to apply it everywhere for legibility.
+
+## What d-stellar actually is
+
+- Cookie shop at **Av. Nuevo León 217, Hipódromo Condesa, CDMX**, inside
+  **Pabellón Nuevo León** — the entrance is genuinely easy to miss, which is
+  why `/visit` walks through it as three photographed steps. Open daily,
+  **11:00–19:00** (Instagram bio; no published day-by-day breakdown — verify
+  against Google Business Profile before tightening the schema.org hours).
+- Founded **2024** by **Hernán Castilla** and **Eduardo Hernández** (verified
+  from their own printed business cards inside the manual — LinkedIn's public
+  copy says "Eduardo de Castilla," the business card is more likely correct
+  and is what's used here), operating as **The Sweet Universe Company**.
+- **Phone `+52 55 4633 2352`** — this is not a guess or a personal cell
+  scraped from somewhere private: it's printed as the brand's own public
+  contact number on the manual's secondary logo lockup, next to the
+  `@dstellar` handle. Used for `tel:` links and the LocalBusiness schema.
+- Menu names, prices, and descriptions are transcribed directly from the
+  in-store menu board photos (see `data/menu.ts`) — every price is real as of
+  August. "Agua de Cuarzo" is the current printed name for the Aurora Rosada
+  pairing; an older printed booklet called the same drink "Moonbeam Latte" —
+  the in-store board (more recent) was trusted over the booklet.
 
 ## Photography
 
-Instagram/TikTok/Facebook images could not be downloaded through this build's
-tooling (no authenticated scraping). Rather than hot-linking fragile external
-URLs or fabricating stock photography, every photo slot (event covers, `/visit`
-facade/entrance/interior, `/about` story image) uses a **generated on-brand SVG
-placeholder** that visibly says "Placeholder — replace with real event
-photography" etc. — see `public/images/**/*.svg`, generated by
-`scripts/gen-placeholders.mjs`.
+16 real photos of the physical space, menu boards, and product were supplied
+and are in use — `public/images/location/` (facade, both storefront-door
+angles, interior counter, interior lounge, patio), `public/images/products/`
+(three cookie-display-shelf angles), `public/images/menu-reference/` (the
+photographed menu boards, kept for reference/verification, not currently
+rendered as page content since menu data must stay real HTML). Source files
+are Photos.app-generated derivatives (360×480 / 768×1024) — good enough for
+the card/step sizes they're used at on this site, but visibly soft if anyone
+blows one up to a full-bleed hero. Re-export at full resolution from the
+original camera roll before using any of them larger than ~700px wide.
 
-**Before launch:** export real photos from the official Instagram/Drive and drop
-them in at the same paths (e.g. `public/images/visit/facade.jpg`), update the
-`coverImage` / `src` references, and switch the plain `<img>` tags back to
-`next/image` for real photos (the placeholders use `<img>` because they're SVG —
-`next/image` isn't configured for local SVG optimization).
-
-## Design system
-
-- **Fonts:** Bricolage Grotesque (display/headlines — editorial, slightly
-  quirky), Manrope (body), Space Mono (eyebrows/labels/tags) — all via
-  `next/font/google`, self-hosted at build time.
-- **Palette:** ink black `#0E0E10` + warm cream `#F7F1E4` as the editorial base,
-  with a pride-adjacent accent set — nova pink `#FF2E7E`, cosmic blue `#3B4BFF`,
-  marigold `#FFC72C`, flare red-orange `#FF5A36` — used sparingly against the
-  dark base. Alternating black/cream sections give the page an editorial,
-  zine-like rhythm instead of one flat theme.
-- Star motif (`★`) throughout — logo mark, tagline, list bullets, decorative
-  field on the hero (`components/ui/star-field.tsx`) — ties back to the brand
-  name and tagline.
-- Motion is intentionally minimal: a CSS marquee ticker of this month's cookie
-  names, hover states, and a soft blurred-orb hero background. Everything
-  respects `prefers-reduced-motion` (see `app/globals.css`).
+**Event cover photography is still a placeholder** (official gradient + logo,
+clearly labeled) — no real event photos were supplied. Swap
+`data/events.ts` → `coverImage` for real photos when available.
 
 ## Architecture
 
-- `app/[locale]/...` — every route lives under a locale segment. `i18n/routing.ts`
-  uses `next-intl`'s `as-needed` prefix: Spanish is the default locale with **no**
-  prefix (`/menu`), English is prefixed (`/en/menu`). `proxy.ts` (renamed from
-  `middleware.ts` per the Next 16 convention) runs the locale negotiation.
-- `data/menu.ts` — the entire menu as structured data (`MenuSection[]`), each
-  item with `es`/`en` descriptions. **To update the monthly cookie rotation,
-  only edit the `cookies` section** — everything else tends to stay stable.
-- `data/events.ts` — events as structured data (`EventRecord[]`). See "Creating a
-  new event" below.
-- `data/site.ts` — single source of truth for address, hours, socials, maps URL,
-  and amenities. Everything else (schema.org, footer, visit page) reads from here.
-- `messages/es.json` / `messages/en.json` — all UI copy and long-form editorial
-  text, via `next-intl`. English is hand-written for a US tourist audience, not
-  machine-translated.
-- `lib/schema.ts` + `components/json-ld.tsx` — JSON-LD builders for
-  `CafeOrCoffeeShop`/`LocalBusiness`, `WebSite`, `BreadcrumbList`, `Event`, and
-  `Menu`/`MenuSection`/`MenuItem`. Rendered per-page (business+website schema is
-  global, in `app/[locale]/layout.tsx`).
-- `app/sitemap.ts` / `app/robots.ts` — dynamic, include ES/EN alternate
-  language entries and every event slug automatically.
-- `app/[locale]/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx` — all
-  generated on the fly with `next/og` (no external asset dependency for social
-  cards/favicons).
+- `app/[locale]/...` — `next-intl` `as-needed` prefix: Spanish at the root, no
+  prefix; English under `/en`. `proxy.ts` (Next 16 rename of `middleware.ts`)
+  runs locale negotiation.
+- `data/site.ts` — address, hours, phone, socials, amenities. Single source
+  read by schema.org, footer, and `/visit`.
+- `data/menu.ts` — `MenuSection[]` with an `accent` field (one of the 7 brand
+  colors) driving the category color-block on `/menu`. See "Updating content"
+  below.
+- `data/events.ts` — `EventRecord[]`. See "Updating content."
+- `messages/es.json` / `messages/en.json` — all copy via `next-intl`. English
+  is hand-written for a US tourist audience, not machine-translated.
+- `lib/schema.ts` + `components/json-ld.tsx` — JSON-LD: `CafeOrCoffeeShop`,
+  `WebSite`, `BreadcrumbList`, `Event`, `Menu`/`MenuSection`/`MenuItem`. No
+  fabricated ratings/reviews.
+- `app/sitemap.ts` / `app/robots.ts` — dynamic, include ES/EN alternates and
+  every event slug automatically.
+- `app/[locale]/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx` —
+  generated with `next/og`, using the real extracted logo/star assets (read
+  from `public/brand` at render time) — no external dependency.
 - `lib/analytics.ts` + `components/analytics.tsx` — GA4 loads only if
-  `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set (see `.env.example`). `trackEvent(...)`
-  is wired into: directions, menu, pickup (mobile action bar), Instagram/TikTok
-  (footer), and language switch (header). Add more calls to `trackEvent` as
-  needed (types are enumerated in `lib/analytics.ts`).
-- `/private-events` form has **no backend yet** — submitting opens a pre-filled
-  `mailto:` to `BUSINESS.email` (`data/site.ts`). Swap in a real endpoint
-  (Resend, Formspree, etc.) when ready; the form markup won't need to change.
+  `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. `trackEvent(...)` wired into:
+  directions, menu, pickup (mobile action bar), Instagram/TikTok (footer),
+  language switch (header).
+- `/private-events` form has **no backend** — submitting opens a pre-filled
+  `mailto:` to `BUSINESS.email`. Swap in a real endpoint (Resend, Formspree)
+  when ready; the form markup won't need to change.
 
-## How to update the monthly menu
+## Updating content
 
-Edit `data/menu.ts`. Only the `cookies` section's `items` array should need
-regular changes — replace the five entries with the new month's flavors (keep
-proper-noun names, translate only the `description`). Update
-`MENU_MONTH_LABEL` too. Everything renders automatically on `/menu` and
-`/en/menu`, including the homepage marquee ticker (it reads the first section
-of `menu`).
+**Monthly cookie rotation** — edit `data/menu.ts` → `cookies` section (well,
+`gourmet-cookies`): replace the five items' `name`/`description`/`priceMXN`,
+update `MENU_MONTH_LABEL`. The homepage marquee reads the same section
+automatically.
 
-## How to create a new event
+**Focaccias** — same file, `focaccias` section; the "melt del día" item has no
+fixed description on purpose (ask-in-store), keep it that way unless it
+becomes a fixed recipe.
 
-Add an entry to the `events` array in `data/events.ts`:
+**Prices** — every `MenuItem.priceMXN` and `EventRecord.priceMXN` is a plain
+number, edit directly.
 
-1. `slug` — becomes the URL: `/events/[slug]` and `/en/events/[slug]`.
-2. Fill in `dateISO`/`endISO` (include the `-06:00` CDMX offset), `summary`,
-   `description` (array of paragraphs), `includes`, `capacity`, and optionally
-   `priceMXN` (omit it to render "free" language — check the `events` messages
-   namespace).
-3. Drop a real cover image at `public/images/events/[slug].jpg` (or keep a
-   generated placeholder via `scripts/gen-placeholders.mjs` until you have one)
-   and point `coverImage`/`imageAlt` at it.
-4. Set `status` to `"upcoming"` or `"past"` — the `/events` index sorts by this
-   field, not by date automatically, so move it to `"past"` yourself once it's
-   over.
-
-No other file needs to change — the sitemap, JSON-LD `Event` schema, and
-Google Calendar link all derive from this record automatically.
+**New event** — add to `data/events.ts`: `slug` (becomes the URL), `dateISO`
+(with `-06:00` offset), `summary`, `description` (paragraphs), `includes`,
+`capacity`, optional `priceMXN`, a `coverImage` (real photo if you have one,
+otherwise regenerate a placeholder via
+`node scripts/gen-event-placeholders.mjs` after adding an entry to that
+script), and `status: "upcoming" | "past"` (flip manually once it's over —
+there's no automatic date-based sorting). Sitemap, JSON-LD, and the Google
+Calendar link all derive from this automatically.
 
 ## SEO / GEO
 
-- Bilingual `hreflang`/canonical/alternates are wired on every page
-  (`generateMetadata` per route + `app/[locale]/layout.tsx` for the site-wide
-  defaults).
-- Local SEO keyword intents (galletas Condesa, best cookies Mexico City,
-  queer-friendly cafe Mexico City, etc.) are worked into page titles,
-  descriptions, and body copy naturally — no keyword stuffing.
-- JSON-LD is verifiable-facts-only: no fabricated ratings/reviews. Geo
-  coordinates are approximate to the block; flagged in `data/site.ts` to verify
-  against the real Google Business Profile.
+Bilingual hreflang/canonical/alternates on every route. Local SEO intents
+(galletas Condesa, best cookies Mexico City, queer-friendly cafe Mexico City,
+etc.) worked into titles/descriptions/body copy naturally. JSON-LD is
+verifiable-facts-only.
 
 ## Known upstream issue (not app code)
 
-Every page throws a **non-fatal** console error on first paint:
+Every page throws a non-fatal console error on first paint:
 `Failed to execute 'appendChild' on 'Node': missing ) after argument list`.
-This was isolated during QA: it reproduces on a completely bare page with zero
-custom `<script>` tags (JSON-LD temporarily removed, still happened), so it's a
-Next.js 16.3 (Turbopack) + React 19.2-canary runtime issue, not something in
-this codebase. It does **not** break hydration or interactivity — mobile menu,
-language switch, and forms were all verified working via Playwright. Worth
-re-checking after the next Next.js patch release.
+Isolated during QA on the previous build: reproduces on a bare page with zero
+custom `<script>` tags, so it's a Next.js 16.3 (Turbopack) + React 19.2-canary
+runtime issue, not this codebase. Doesn't break hydration — mobile menu,
+language switch, and forms all verified working via Playwright on both the
+previous and this redesigned build. Worth re-checking after the next Next.js
+patch release.
+
+## Missing assets — needs your intervention
+
+1. **Adobe Fonts kit for Franklin Gothic URW Demi + Coordinates Variable.**
+   This is the one thing in the manual that genuinely cannot be self-served —
+   both are commercial fonts on Typekit. If d-stellar (or Brada Studio) has an
+   Adobe Fonts kit ID with these two families active, add the kit's embed
+   script to `app/[locale]/layout.tsx` and swap the `font-display`/`font-body`
+   variables in `globals.css` to point at the real families. Until then, Big
+   Shoulders / Archivo / Inter stand in.
+2. **Real event photography** — currently gradient+logo placeholders.
+3. **Full-resolution location/product photos** — current files are small
+   Photos.app derivatives; fine at current sizes, would look soft any larger.
+4. **Day-by-day opening hours, exact coordinates, official phone hours** — to
+   verify against Google Business Profile.
 
 ## Deploy
 
@@ -151,26 +216,9 @@ npm run lint
 npm run build
 ```
 
-Vercel: connect the GitHub repo, framework preset "Next.js" (auto-detected), no
-special build settings needed. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in the Vercel
-project's environment variables once you have a GA4 property.
+Vercel: connect the GitHub repo, framework preset "Next.js" (auto-detected).
+Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in the Vercel project once there's a GA4
+property.
 
-**Domain:** `d-stellar.com` currently points at the old WordPress "coming soon"
-site — do not repoint DNS without explicit confirmation. Recommended path:
-deploy this project to Vercel first (get a `*.vercel.app` preview + production
-URL), verify everything, then switch the domain over.
-
-## Outstanding manual steps before this can fully go live
-
-1. Replace every placeholder SVG in `public/images/` with real photography.
-2. Verify hours (day-by-day), phone number, and exact coordinates against the
-   Google Business Profile; update `data/site.ts`.
-3. Fill in real prices in `data/menu.ts` and `data/events.ts` once confirmed.
-4. Replace the sample events in `data/events.ts` with real upcoming events (or
-   remove them if there's nothing scheduled yet).
-5. Wire the `/private-events` form to a real backend once you have one (see
-   above — currently `mailto:`).
-6. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` and connect Google Search Console once
-   deployed.
-7. Point `d-stellar.com` at the new deployment (DNS change — needs your
-   explicit go-ahead).
+**Domain:** `d-stellar.com` currently points at the old WordPress "coming
+soon" site — do not repoint DNS without explicit confirmation.

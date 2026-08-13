@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight, Check } from "lucide-react";
 import { CtaAnchor } from "@/components/ui/cta-link";
@@ -25,10 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const images = [
-  { src: "/images/visit/facade.svg", key: "facade" },
-  { src: "/images/visit/entrance.svg", key: "entrance" },
-  { src: "/images/visit/interior.svg", key: "interior" },
+const STEP_IMAGES = [
+  { src: "/images/location/facade-entrance.webp", alt: "Fachada del Pabellón Nuevo León sobre Av. Nuevo León" },
+  { src: "/images/location/storefront-door-2.webp", alt: "Puerta de d-stellar con la bandera de la comunidad" },
+  { src: "/images/location/interior-counter.webp", alt: "Interior de d-stellar, barra y counter" },
 ] as const;
 
 export default async function VisitPage({ params }: Props) {
@@ -36,6 +37,7 @@ export default async function VisitPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("visit");
   const cta = await getTranslations("cta");
+  const steps = t.raw("steps") as Array<{ title: string; body: string }>;
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -46,10 +48,12 @@ export default async function VisitPage({ params }: Props) {
         ])}
       />
 
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="font-tag text-xs uppercase tracking-widest text-nova">{t("eyebrow")}</p>
-        <h1 className="mt-4 font-display text-4xl font-bold text-cream md:text-5xl">{t("title")}</h1>
-        <p className="mt-5 text-cream/75">{t("intro")}</p>
+      <div className="mx-auto max-w-3xl">
+        <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("eyebrow")}</p>
+        <h1 className="mt-4 font-display text-5xl font-black uppercase leading-[0.9] text-stellar-white md:text-7xl">
+          {t("title")}
+        </h1>
+        <p className="mt-5 max-w-xl text-stellar-white/75">{t("intro")}</p>
         <div className="mt-7">
           <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
             {cta("openInMaps")} <ArrowUpRight size={14} />
@@ -57,22 +61,31 @@ export default async function VisitPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="mx-auto mt-14 grid max-w-4xl gap-4 sm:grid-cols-3">
-        {images.map((img) => (
-          // eslint-disable-next-line @next/next/no-img-element -- brand placeholder SVG
-          <img
-            key={img.key}
-            src={img.src}
-            alt=""
-            className="aspect-[4/3] w-full rounded-2xl border border-line object-cover"
-          />
-        ))}
+      <div className="mx-auto mt-16 max-w-5xl">
+        <h2 className="font-display text-2xl font-black uppercase text-stellar-white">{t("stepsTitle")}</h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-3">
+          {steps.map((step, i) => (
+            <div key={i}>
+              <div className="relative aspect-[3/4] overflow-hidden border-2 border-line">
+                <Image
+                  src={STEP_IMAGES[i].src}
+                  alt={STEP_IMAGES[i].alt}
+                  fill
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <p className="mt-3 font-demi font-bold text-stellar-white">{step.title}</p>
+              <p className="mt-1 text-sm text-stellar-white/65">{step.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="mx-auto mt-16 grid max-w-4xl gap-10 md:grid-cols-2">
+      <div className="mx-auto mt-16 grid max-w-5xl gap-10 md:grid-cols-2">
         <div>
-          <h2 className="font-tag text-xs uppercase tracking-widest text-nova">{t("addressTitle")}</h2>
-          <p className="mt-3 text-lg text-cream">
+          <h2 className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("addressTitle")}</h2>
+          <p className="mt-3 text-lg text-stellar-white">
             {BUSINESS.streetAddress}
             <br />
             {BUSINESS.neighborhood}
@@ -80,40 +93,35 @@ export default async function VisitPage({ params }: Props) {
             {BUSINESS.addressLocality}, {BUSINESS.postalCode}
           </p>
 
-          <h2 className="mt-8 font-tag text-xs uppercase tracking-widest text-nova">{t("hoursTitle")}</h2>
-          <p className="mt-3 text-lg text-cream">{t("hoursBody")}</p>
+          <h2 className="mt-8 font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("hoursTitle")}</h2>
+          <p className="mt-3 text-lg text-stellar-white">{t("hoursBody")}</p>
         </div>
 
         <div>
-          <h2 className="font-tag text-xs uppercase tracking-widest text-cosmic">{t("findUsTitle")}</h2>
-          <p className="mt-3 text-cream/80">{t("findUsBody")}</p>
+          <h2 className="font-tag text-xs uppercase tracking-widest text-stellar-blue">{t("gettingHereTitle")}</h2>
+          <div className="mt-4 space-y-4">
+            {t.raw("gettingHere").map((item: { title: string; body: string }, i: number) => (
+              <div key={i}>
+                <p className="font-demi font-bold text-stellar-white">{item.title}</p>
+                <p className="text-sm text-stellar-white/65">{item.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto mt-16 max-w-4xl">
-        <h2 className="font-display text-2xl font-bold text-cream">{t("gettingHereTitle")}</h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-3">
-          {t.raw("gettingHere").map((item: { title: string; body: string }, i: number) => (
-            <div key={i} className="rounded-2xl border border-line p-5">
-              <p className="font-display font-bold text-cream">{item.title}</p>
-              <p className="mt-2 text-sm text-cream/65">{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mx-auto mt-16 max-w-4xl">
-        <h2 className="font-display text-2xl font-bold text-cream">{t("amenitiesTitle")}</h2>
+      <div className="mx-auto mt-16 max-w-5xl">
+        <h2 className="font-display text-2xl font-black uppercase text-stellar-white">{t("amenitiesTitle")}</h2>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {t.raw("amenities").map((item: string, i: number) => (
-            <li key={i} className="flex items-center gap-2 text-cream/80">
-              <Check size={16} className="text-nova" /> {item}
+            <li key={i} className="flex items-center gap-2 text-stellar-white/80">
+              <Check size={16} className="text-stellar-green" /> {item}
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="mx-auto mt-16 max-w-4xl overflow-hidden rounded-3xl border border-line">
+      <div className="mx-auto mt-16 max-w-5xl overflow-hidden border-2 border-line">
         <iframe
           title="d-stellar map"
           src="https://www.google.com/maps?q=Av.+Nuevo+Le%C3%B3n+217,+Hip%C3%B3dromo,+Cuauht%C3%A9moc,+06100+Ciudad+de+M%C3%A9xico&output=embed"

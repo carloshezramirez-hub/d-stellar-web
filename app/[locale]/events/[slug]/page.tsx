@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CalendarDays, MapPin, Users, ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -84,12 +85,12 @@ export default async function EventDetailPage({ params }: Props) {
       <div className="mx-auto max-w-3xl">
         <Link
           href="/events"
-          className="inline-flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-cream/60 hover:text-nova"
+          className="inline-flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-white/60 hover:text-stellar-pink"
         >
           <ArrowLeft size={14} /> {cta("backToEvents")}
         </Link>
 
-        <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-3xl border border-line bg-ink-soft">
+        <div className="relative mt-6 aspect-[16/9] overflow-hidden border-2 border-line bg-stellar-black-soft">
           {/* eslint-disable-next-line @next/next/no-img-element -- brand placeholder SVG, swap for a real photo via next/image */}
           <img
             src={event.coverImage}
@@ -99,42 +100,43 @@ export default async function EventDetailPage({ params }: Props) {
           />
         </div>
 
-        <h1 className="mt-8 font-display text-3xl font-bold text-cream md:text-4xl">{event.title}</h1>
-        <p className="mt-3 text-lg text-cream/75">{event.summary[loc]}</p>
+        <h1 className="mt-8 font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-5xl">{event.title}</h1>
+        <p className="mt-3 text-lg text-stellar-white/75">{event.summary[loc]}</p>
 
-        <div className="mt-8 grid gap-4 rounded-2xl border border-line p-6 sm:grid-cols-3">
+        <div className="mt-8 grid gap-4 border-2 border-line p-6 sm:grid-cols-3">
           <div>
-            <p className="font-tag text-[10px] uppercase tracking-widest text-nova">{t("details")}</p>
-            <p className="mt-2 flex items-center gap-2 text-sm text-cream/80">
+            <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("details")}</p>
+            <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
               <CalendarDays size={14} /> {formattedDate}
             </p>
           </div>
           <div>
-            <p className="font-tag text-[10px] uppercase tracking-widest text-nova">{t("capacity")}</p>
-            <p className="mt-2 flex items-center gap-2 text-sm text-cream/80">
+            <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("capacity")}</p>
+            <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
               <Users size={14} /> {event.capacity} {t("capacityUnit")}
             </p>
           </div>
           <div>
-            <p className="font-tag text-[10px] uppercase tracking-widest text-nova">{t("location")}</p>
-            <p className="mt-2 flex items-center gap-2 text-sm text-cream/80">
+            <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("location")}</p>
+            <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
               <MapPin size={14} /> {BUSINESS.streetAddress}
             </p>
           </div>
         </div>
 
-        <div className="mt-10 space-y-4 text-cream/80">
+        <div className="mt-10 space-y-4 text-stellar-white/80">
           {event.description[loc].map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
         </div>
 
         <div className="mt-8">
-          <p className="font-display text-lg font-bold text-cream">{t("includesTitle")}</p>
+          <p className="font-demi text-lg font-bold text-stellar-white">{t("includesTitle")}</p>
           <ul className="mt-3 space-y-2">
             {event.includes[loc].map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-cream/75">
-                <span className="text-nova">★</span> {item}
+              <li key={i} className="flex items-start gap-2 text-sm text-stellar-white/75">
+                <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="mt-0.5 h-3.5 w-auto shrink-0" />
+                {item}
               </li>
             ))}
           </ul>
