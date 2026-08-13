@@ -1,7 +1,6 @@
 export type CalendarCookie = {
   name: string;
   description: { es: string; en: string };
-  priceMXN: number;
 };
 
 export type CalendarMonth = {
@@ -27,7 +26,6 @@ export const cookieCalendar: CalendarMonth[] = [
           es: "Cookie de vainilla con corazón de pera rostizada, crema sedosa de mascarpone y tierra crujiente de cacao y café.",
           en: "Vanilla cookie with a roasted-pear center, silky mascarpone cream and a crunchy cacao-coffee crumble.",
         },
-        priceMXN: 90,
       },
       {
         name: "Bruma Zarza",
@@ -35,7 +33,6 @@ export const cookieCalendar: CalendarMonth[] = [
           es: "Cookie vegana con confit de zarzamora y crema de frutos rojos.",
           en: "Vegan cookie with blackberry confit and red berry cream.",
         },
-        priceMXN: 90,
       },
       {
         name: "Aurora Rosada",
@@ -43,7 +40,6 @@ export const cookieCalendar: CalendarMonth[] = [
           es: "Cookie de limón amarillo con crema ligera de vainilla y compota de tuna rosa.",
           en: "Yellow lemon cookie with light vanilla cream and pink prickly-pear compote.",
         },
-        priceMXN: 90,
       },
       {
         name: "Eclipse Rubí",
@@ -51,7 +47,6 @@ export const cookieCalendar: CalendarMonth[] = [
           es: "Cookie de cacao intenso con crujiente oculto, ganache montada de chocolate y un centro ácido de granada.",
           en: "Intense cacao cookie with a hidden crunch, whipped chocolate ganache and a tart pomegranate center.",
         },
-        priceMXN: 90,
       },
       {
         name: "Última de Verano",
@@ -59,7 +54,6 @@ export const cookieCalendar: CalendarMonth[] = [
           es: "Cookie de hojicha con crocante de arroz tostado, mango ácido y ganache aireada de chocolate blanco tostado.",
           en: "Hojicha cookie with toasted rice crunch, tart mango and airy toasted white chocolate ganache.",
         },
-        priceMXN: 90,
       },
     ],
   },

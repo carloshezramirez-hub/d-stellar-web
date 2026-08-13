@@ -138,21 +138,32 @@ clearly labeled) — no real event photos were supplied. Swap
 - `data/cookie-calendar.ts` — `CalendarMonth[]`, the monthly cookie archive
   rendered on `/calendar`. Separate from `data/menu.ts` on purpose: `menu.ts`
   only ever holds the *current* rotation, this file keeps every past month
-  on the record.
+  on the record. `CalendarCookie` has no `priceMXN` on purpose — `/calendar`
+  is a flavor archive, not a price list; current prices live on `/menu` only.
 - `data/press.ts` — `PressMention[]`, real third-party coverage rendered on
-  `/press`. Every entry must be a verified, live URL that actually names
-  "d-stellar" — several roundup articles were checked and discarded during
-  research because they didn't. Don't add a listicle link on the strength of
-  its title alone.
+  `/press` (media-only page — no reviews there, see below). Every entry must
+  be a verified, live URL that actually names "d-stellar" — several roundup
+  articles were checked and discarded during research because they didn't.
+  Don't add a listicle link on the strength of its title alone. Each entry
+  also carries a `logo` path into `public/press-logos/` — real outlet
+  logos, not fabricated: `el-economista.svg` and `cronista.png` are the
+  outlets' own files from Wikimedia Commons (public-domain/no-threshold-of-
+  originality, trademark still applies), `almomento.png` was pulled directly
+  from the `<header>` of almomento.mx. Rendered on a white chip
+  (`bg-stellar-white`) in the press cards since El Economista's wordmark is
+  black and invisible on the dark theme otherwise. New mention → source a
+  real logo the same way before adding the entry.
 - `data/reviews.ts` — `ReviewQuote[]` + `googleReviewStats`, real Google
   Maps review quotes (copied verbatim, lightly trimmed, never invented) and
   the real aggregate rating/count, both supplied by the business owner from
   d-stellar's own Google Maps profile. Rendered as a horizontal scroll-snap
-  carousel (`components/sections/reviews-carousel.tsx`) on `/press`, and
-  `googleReviewStats` also feeds `aggregateRating` in
+  carousel (`components/sections/reviews-carousel.tsx`) on the **homepage**,
+  between the "This isn't just a cookie shop" intro section and the brand
+  statement section — moved there from `/press` on 2026-08-13 so `/press` is
+  media-only. `googleReviewStats` also feeds `aggregateRating` in
   `lib/schema.ts` → `localBusinessSchema()`. If this array is ever empty,
-  the page falls back to a CTA-only card linking out to Google Maps —
-  never fill it with placeholder testimonials.
+  the homepage section falls back to a CTA-only card linking out to Google
+  Maps — never fill it with placeholder testimonials.
 - `messages/es.json` / `messages/en.json` — all copy via `next-intl`. English
   is hand-written for a US tourist audience, not machine-translated.
 - `lib/schema.ts` + `components/json-ld.tsx` — JSON-LD: `CafeOrCoffeeShop`,
@@ -166,7 +177,10 @@ clearly labeled) — no real event photos were supplied. Swap
 - `lib/analytics.ts` + `components/analytics.tsx` — GA4 loads only if
   `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. `trackEvent(...)` wired into:
   directions, menu, pickup (mobile action bar), Instagram/TikTok (footer),
-  language switch (header).
+  language switch (header). Live GA4 property `G-CC7TRTZ4BR` (stream:
+  `www.d-stellar.co`) is set as `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel →
+  Production + Preview as of 2026-08-13. Not set locally on purpose (see
+  `.env.example`) — the component just renders nothing in dev.
 - `/private-events` form has **no backend** — submitting opens a pre-filled
   `mailto:` to `BUSINESS.email`. Swap in a real endpoint (Resend, Formspree)
   when ready; the form markup won't need to change.
@@ -246,8 +260,8 @@ npm run build
 ```
 
 Vercel: connect the GitHub repo, framework preset "Next.js" (auto-detected).
-Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in the Vercel project once there's a GA4
-property.
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` is set in the Vercel project (Production +
+Preview) — see "Key files" → analytics.
 
 **Domain:** `d-stellar.com` currently points at the old WordPress "coming
 soon" site — do not repoint DNS without explicit confirmation.

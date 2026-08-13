@@ -10,7 +10,7 @@
     "pickup": "Pickup",
     "visit": "Visita",
     "privateEvents": "Eventos privados",
-    "press": "Hablan de nosotros",
+    "press": "Prensa",
     "about": "Nosotros",
     "language": "English"
   },
@@ -167,9 +167,9 @@
     "quote": "Junt★s brillamos más — no es solo un eslogan, es la razón por la que abrimos la puerta cada mañana."
   },
   "press": {
-    "eyebrow": "Hablan de nosotros",
-    "title": "Lo que dicen de d-stellar",
-    "intro": "Prensa, reseñas y la comunidad de Condesa contando la historia con sus propias palabras.",
+    "eyebrow": "Prensa",
+    "title": "d-stellar en medios",
+    "intro": "La cobertura de prensa que ha hablado de d-stellar, el negocio y la comunidad que construimos.",
     "reviewsTitle": "Reseñas en Google Maps",
     "reviewsIntro": "Lo que dice quien ya nos visitó — directo de nuestro perfil de Google Maps.",
     "reviewsCta": "Ver todas las reseñas en Google Maps",

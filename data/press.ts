@@ -1,5 +1,10 @@
 export type PressMention = {
   outlet: string;
+  // Official outlet logo, sourced from the outlet itself or Wikimedia
+  // Commons — see PROJECT_NOTES.md for provenance. Rendered on a white
+  // chip so dark-text marks (e.g. El Economista) stay legible on our
+  // dark background.
+  logo: string;
   title: string;
   url: string;
   // Human-readable, deliberately not a precise ISO date — publish dates on
@@ -17,6 +22,7 @@ export type PressMention = {
 export const press: PressMention[] = [
   {
     outlet: "El Economista",
+    logo: "/press-logos/el-economista.svg",
     title: "D-Stellar: el negocio de galletas que es un espacio seguro para la comunidad LGBTQ+",
     url: "https://www.eleconomista.com.mx/el-empresario/d-stellar-negocio-galletas-espacio-seguro-comunidad-lgbtq-20260630-820890.html",
     dateLabel: { es: "Junio 2026", en: "June 2026" },
@@ -27,6 +33,7 @@ export const press: PressMention[] = [
   },
   {
     outlet: "Cronista",
+    logo: "/press-logos/cronista.png",
     title: "Galletas con propósito en la Condesa: así aplica D-Stellar la filosofía del consumo local para crecer",
     url: "https://www.cronista.com/mexico/finanzas-economia/galletas-con-proposito-en-la-condesa-asi-aplica-d-stellar-la-filosofia-del-consumo-local-para-crecer/",
     dateLabel: { es: "Agosto 2026", en: "August 2026" },
@@ -37,6 +44,7 @@ export const press: PressMention[] = [
   },
   {
     outlet: "Almomento",
+    logo: "/press-logos/almomento.png",
     title: "Emprender también es resistir: ¿apoyar negocios LGBT+ también es activismo?",
     url: "https://almomento.mx/emprender-tambien-es-resistir-apoyar-negocios-lgbt-tambien-es-activismo/",
     dateLabel: { es: "Junio 2026", en: "June 2026" },

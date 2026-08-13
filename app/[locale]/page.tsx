@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import { CtaLink, CtaAnchor } from "@/components/ui/cta-link";
 import { StarField } from "@/components/ui/star-field";
+import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
 import { menu } from "@/data/menu";
 import { BUSINESS } from "@/data/site";
+import { googleReviews, googleReviewStats } from "@/data/reviews";
 
 type Props = { params: Promise<{ locale: string }> };
+type Locale = "es" | "en";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -27,8 +30,10 @@ const VALUE_ACCENTS = ["bg-stellar-green", "bg-stellar-pink", "bg-stellar-blue",
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const loc = locale as Locale;
   const t = await getTranslations("home");
   const cta = await getTranslations("cta");
+  const tPress = await getTranslations("press");
 
   return (
     <>
@@ -99,6 +104,46 @@ export default async function HomePage({ params }: Props) {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* REVIEWS — real Google Maps quotes */}
+      <section className="border-b border-line px-5 py-16 md:py-20">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex items-center gap-3">
+            <Star className="text-stellar-green" size={22} fill="currentColor" />
+            <h2 className="font-display text-3xl font-black uppercase text-stellar-white md:text-4xl">
+              {tPress("reviewsTitle")}
+            </h2>
+          </div>
+          <p className="mt-3 max-w-xl text-stellar-white/70">{tPress("reviewsIntro")}</p>
+
+          {googleReviews.length > 0 && (
+            <div className="mt-6 flex items-center gap-2">
+              <div className="flex items-center gap-0.5 text-stellar-green">
+                {Array.from({ length: Math.round(googleReviewStats.average) }).map((_, star) => (
+                  <Star key={star} size={16} fill="currentColor" />
+                ))}
+              </div>
+              <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/60">
+                {new Intl.NumberFormat(loc === "en" ? "en-US" : "es-MX", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }).format(googleReviewStats.average)}{" "}
+                · {googleReviewStats.count} {tPress("reviewsCount")}
+              </p>
+            </div>
+          )}
+
+          {googleReviews.length > 0 ? (
+            <ReviewsCarousel reviews={googleReviews} />
+          ) : (
+            <p className="mt-10 max-w-md text-sm text-stellar-white/60">{tPress("reviewsEmpty")}</p>
+          )}
+
+          <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline" className="mt-8">
+            {tPress("reviewsCta")} <ArrowUpRight size={14} />
+          </CtaAnchor>
         </div>
       </section>
 

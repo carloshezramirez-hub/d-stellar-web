@@ -78,9 +78,6 @@ export default async function CalendarPage({ params }: Props) {
                     <p className="flex-1 text-sm leading-relaxed text-stellar-white/70">
                       {cookie.description[loc]}
                     </p>
-                    <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">
-                      ${cookie.priceMXN} MXN
-                    </p>
                   </div>
                 ))}
               </div>
