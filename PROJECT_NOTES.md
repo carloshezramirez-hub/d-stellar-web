@@ -135,6 +135,24 @@ clearly labeled) — no real event photos were supplied. Swap
   colors) driving the category color-block on `/menu`. See "Updating content"
   below.
 - `data/events.ts` — `EventRecord[]`. See "Updating content."
+- `data/cookie-calendar.ts` — `CalendarMonth[]`, the monthly cookie archive
+  rendered on `/calendar`. Separate from `data/menu.ts` on purpose: `menu.ts`
+  only ever holds the *current* rotation, this file keeps every past month
+  on the record.
+- `data/press.ts` — `PressMention[]`, real third-party coverage rendered on
+  `/press`. Every entry must be a verified, live URL that actually names
+  "d-stellar" — several roundup articles were checked and discarded during
+  research because they didn't. Don't add a listicle link on the strength of
+  its title alone.
+- `data/reviews.ts` — `ReviewQuote[]` + `googleReviewStats`, real Google
+  Maps review quotes (copied verbatim, lightly trimmed, never invented) and
+  the real aggregate rating/count, both supplied by the business owner from
+  d-stellar's own Google Maps profile. Rendered as a horizontal scroll-snap
+  carousel (`components/sections/reviews-carousel.tsx`) on `/press`, and
+  `googleReviewStats` also feeds `aggregateRating` in
+  `lib/schema.ts` → `localBusinessSchema()`. If this array is ever empty,
+  the page falls back to a CTA-only card linking out to Google Maps —
+  never fill it with placeholder testimonials.
 - `messages/es.json` / `messages/en.json` — all copy via `next-intl`. English
   is hand-written for a US tourist audience, not machine-translated.
 - `lib/schema.ts` + `components/json-ld.tsx` — JSON-LD: `CafeOrCoffeeShop`,
@@ -158,7 +176,18 @@ clearly labeled) — no real event photos were supplied. Swap
 **Monthly cookie rotation** — edit `data/menu.ts` → `cookies` section (well,
 `gourmet-cookies`): replace the five items' `name`/`description`/`priceMXN`,
 update `MENU_MONTH_LABEL`. The homepage marquee reads the same section
-automatically.
+automatically. Also push a new entry to `data/cookie-calendar.ts` with the
+*outgoing* month's lineup before overwriting `menu.ts` — that array is the
+archive `/calendar` reads, so it only grows, never gets overwritten.
+
+**New press mention** — add to `data/press.ts`: `outlet`, `title`, `url`,
+`dateLabel`, bilingual `summary`. Verify the URL actually names "d-stellar"
+before adding it — several LGBTQ+/bakery roundups were checked and discarded
+because they didn't.
+
+**New Google review** — add to `data/reviews.ts`: `author`, `rating`,
+`quote` (copied verbatim from Google Maps), optional `dateLabel`. Never
+invent a quote, rating, or review count.
 
 **Focaccias** — same file, `focaccias` section; the "melt del día" item has no
 fixed description on purpose (ask-in-store), keep it that way unless it

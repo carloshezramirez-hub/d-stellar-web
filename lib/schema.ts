@@ -1,4 +1,5 @@
 import { BUSINESS, SITE_URL } from "@/data/site";
+import { googleReviewStats } from "@/data/reviews";
 import type { EventRecord } from "@/data/events";
 
 export function localBusinessSchema() {
@@ -44,6 +45,13 @@ export function localBusinessSchema() {
     menu: `${SITE_URL}/menu`,
     hasMap: BUSINESS.mapsUrl,
     petsAllowed: true,
+    // Real snapshot from d-stellar's own Google Maps profile — keep in
+    // sync with data/reviews.ts → googleReviewStats, never a placeholder.
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: googleReviewStats.average,
+      reviewCount: googleReviewStats.count,
+    },
   };
 }
 

@@ -9,10 +9,12 @@ import { trackEvent } from "@/lib/analytics";
 
 const NAV_ITEMS = [
   { href: "/menu" as const, key: "menu" },
+  { href: "/calendar" as const, key: "calendar" },
   { href: "/events" as const, key: "events" },
   { href: "/pickup" as const, key: "pickup" },
   { href: "/visit" as const, key: "visit" },
   { href: "/private-events" as const, key: "privateEvents" },
+  { href: "/press" as const, key: "press" },
   { href: "/about" as const, key: "about" },
 ];
 
@@ -37,7 +39,7 @@ export function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-4 lg:gap-6 xl:flex">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.key}
@@ -49,7 +51,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-4 xl:flex">
           <Link
             href={pathname as never}
             locale={otherLocale}
@@ -62,7 +64,7 @@ export function Header() {
 
         <button
           type="button"
-          className="text-stellar-white md:hidden"
+          className="text-stellar-white xl:hidden"
           aria-label="Menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -72,7 +74,7 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="flex flex-col gap-1 border-t border-line px-5 pb-6 md:hidden">
+        <nav className="flex flex-col gap-1 border-t border-line px-5 pb-6 xl:hidden">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.key}

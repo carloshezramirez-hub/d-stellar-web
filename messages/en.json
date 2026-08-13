@@ -5,10 +5,12 @@
   },
   "nav": {
     "menu": "Menu",
+    "calendar": "Calendar",
     "events": "Events",
     "pickup": "Pickup",
     "visit": "Visit",
     "privateEvents": "Private events",
+    "press": "Press",
     "about": "About",
     "language": "Español"
   },
@@ -163,6 +165,28 @@
     "brandStatementTitle": "Authentic. Original. Unbreakable. Iconic. Defiant.",
     "brandStatement": "We're a brand that's transgressive, unstoppable and kind — where you can express yourself freely, with no fear of judgment. A community. A universe of your own.",
     "quote": "Together we shine brighter — it's not just a tagline, it's why we open the door every morning."
+  },
+  "press": {
+    "eyebrow": "Press",
+    "title": "What people say about d-stellar",
+    "intro": "Press, reviews, and the Condesa community telling the story in their own words.",
+    "reviewsTitle": "Google Maps reviews",
+    "reviewsIntro": "What people who've already visited have to say — straight from our Google Maps profile.",
+    "reviewsCta": "See all reviews on Google Maps",
+    "reviewsCount": "reviews on Google",
+    "reviewsEmpty": "We're gathering our best reviews to feature here. In the meantime, read them firsthand on Google Maps.",
+    "prevReviews": "Previous reviews",
+    "nextReviews": "Next reviews",
+    "mediaTitle": "In the media",
+    "mediaIntro": "Articles and features covering d-stellar — the business, the space, and the community we've built.",
+    "readMore": "Read the article"
+  },
+  "calendar": {
+    "eyebrow": "Calendar",
+    "title": "The cookies, month by month",
+    "intro": "Every month we reinvent the full collection. This is the record — what's on the counter now, and what's already history.",
+    "currentBadge": "On the counter now",
+    "viewMenu": "See the full menu"
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, Mexico City",

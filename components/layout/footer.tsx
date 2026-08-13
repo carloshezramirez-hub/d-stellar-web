@@ -37,10 +37,12 @@ export function Footer() {
 
         <nav className="flex flex-col gap-2 font-tag text-xs uppercase tracking-widest text-stellar-white/70">
           <Link href="/menu" className="hover:text-stellar-pink">{nav("menu")}</Link>
+          <Link href="/calendar" className="hover:text-stellar-pink">{nav("calendar")}</Link>
           <Link href="/events" className="hover:text-stellar-pink">{nav("events")}</Link>
           <Link href="/pickup" className="hover:text-stellar-pink">{nav("pickup")}</Link>
           <Link href="/visit" className="hover:text-stellar-pink">{nav("visit")}</Link>
           <Link href="/private-events" className="hover:text-stellar-pink">{nav("privateEvents")}</Link>
+          <Link href="/press" className="hover:text-stellar-pink">{nav("press")}</Link>
           <Link href="/about" className="hover:text-stellar-pink">{nav("about")}</Link>
         </nav>
 

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/data/site";
 import { events } from "@/data/events";
 
-const staticPaths = ["", "/menu", "/events", "/pickup", "/visit", "/private-events", "/about"];
+const staticPaths = ["", "/menu", "/events", "/pickup", "/visit", "/private-events", "/about", "/press", "/calendar"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({

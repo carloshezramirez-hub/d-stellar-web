@@ -5,10 +5,12 @@
   },
   "nav": {
     "menu": "Menú",
+    "calendar": "Calendario",
     "events": "Eventos",
     "pickup": "Pickup",
     "visit": "Visita",
     "privateEvents": "Eventos privados",
+    "press": "Hablan de nosotros",
     "about": "Nosotros",
     "language": "English"
   },
@@ -163,6 +165,28 @@
     "brandStatementTitle": "Auténtic★s. Original★s. Inquebrantables. Icónic★s. Desafiantes.",
     "brandStatement": "Somos una marca transgresora, imparable y amable, donde te puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un universo propio.",
     "quote": "Junt★s brillamos más — no es solo un eslogan, es la razón por la que abrimos la puerta cada mañana."
+  },
+  "press": {
+    "eyebrow": "Hablan de nosotros",
+    "title": "Lo que dicen de d-stellar",
+    "intro": "Prensa, reseñas y la comunidad de Condesa contando la historia con sus propias palabras.",
+    "reviewsTitle": "Reseñas en Google Maps",
+    "reviewsIntro": "Lo que dice quien ya nos visitó — directo de nuestro perfil de Google Maps.",
+    "reviewsCta": "Ver todas las reseñas en Google Maps",
+    "reviewsCount": "reseñas en Google",
+    "reviewsEmpty": "Estamos reuniendo las mejores reseñas para mostrarlas aquí. Mientras tanto, léelas de primera mano en Google Maps.",
+    "prevReviews": "Reseñas anteriores",
+    "nextReviews": "Siguientes reseñas",
+    "mediaTitle": "En medios",
+    "mediaIntro": "Notas y reportajes donde se habla de d-stellar — el negocio, el espacio y la comunidad que construimos.",
+    "readMore": "Leer la nota"
+  },
+  "calendar": {
+    "eyebrow": "Calendario",
+    "title": "Las cookies, mes a mes",
+    "intro": "Cada mes reinventamos la colección completa. Aquí queda el registro — lo que está en la barra ahora, y lo que ya pasó a la historia.",
+    "currentBadge": "En la barra ahora",
+    "viewMenu": "Ver el menú completo"
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, CDMX",
