@@ -76,15 +76,27 @@
   "pickup": {
     "eyebrow": "Pickup",
     "title": "Pickup en Nuevo León 217. Sin delivery.",
-    "intro": "Por ahora, todo se recoge en tienda — así garantizamos que cada cookie llegue a ti recién horneada.",
-    "statusTitle": "Pedidos en línea: muy pronto",
-    "statusBody": "Estamos preparando la infraestructura para que puedas ordenar y pagar desde aquí. Mientras tanto, llama, escríbenos por Instagram o pasa directo a la barra.",
-    "howTitle": "Cómo funciona hoy",
+    "intro": "Pide con anticipación y paga al recoger — así garantizamos que cada cookie llegue a ti recién horneada.",
     "steps": [
-      { "title": "Ven a la barra", "body": "Elige de la colección del mes directamente en tienda." },
-      { "title": "Llama o escríbenos por Instagram", "body": "Para pedidos grandes o packs, avísanos con anticipación." },
-      { "title": "Recoge en el mostrador", "body": "Sin filas largas — todo se hornea en tandas cortas." }
-    ]
+      { "title": "Llena tu pedido", "body": "Elige tus cookies, focaccias o packs aquí abajo." },
+      { "title": "Te confirmamos", "body": "Te escribimos por teléfono o WhatsApp para confirmar la hora." },
+      { "title": "Recoge y paga", "body": "Pasas al mostrador, pagas ahí — efectivo o tarjeta." }
+    ],
+    "order": {
+      "eyebrow": "Pedido anticipado",
+      "title": "Ordena para recoger",
+      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga al llegar a la tienda.",
+      "total": "Total estimado",
+      "emptyError": "Elige al menos un producto antes de enviar tu pedido.",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "date": "Fecha de recolección",
+      "time": "Hora aproximada",
+      "notes": "Notas (opcional)",
+      "submit": "Enviar pedido",
+      "payNote": "No se cobra en línea. Pagas en tienda al recoger tu pedido, en efectivo o con tarjeta."
+    },
+    "altTitle": "¿Prefieres llamar o escribir?"
   },
   "visit": {
     "eyebrow": "Visita",

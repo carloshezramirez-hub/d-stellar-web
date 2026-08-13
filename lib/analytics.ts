@@ -10,6 +10,7 @@ export type AnalyticsEvent =
   | "click_instagram"
   | "click_tiktok"
   | "click_phone"
+  | "submit_pickup_order"
   | "language_switch";
 
 declare global {

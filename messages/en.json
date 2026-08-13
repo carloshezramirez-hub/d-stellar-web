@@ -76,15 +76,27 @@
   "pickup": {
     "eyebrow": "Pickup",
     "title": "Pickup at Nuevo León 217. No delivery.",
-    "intro": "For now, everything is picked up in-store — that's how we make sure every cookie reaches you fresh out of the oven.",
-    "statusTitle": "Online ordering: coming soon",
-    "statusBody": "We're building the infrastructure so you can order and pay right here. In the meantime, call, message us on Instagram, or come up to the counter.",
-    "howTitle": "How it works today",
+    "intro": "Order ahead and pay when you pick up — that's how we make sure every cookie reaches you fresh out of the oven.",
     "steps": [
-      { "title": "Come to the counter", "body": "Pick from this month's collection right in the shop." },
-      { "title": "Call or message us on Instagram", "body": "For larger orders or packs, give us a heads-up ahead of time." },
-      { "title": "Pick up at the counter", "body": "No long lines — everything is baked in short batches." }
-    ]
+      { "title": "Fill out your order", "body": "Pick your cookies, focaccias or packs below." },
+      { "title": "We confirm", "body": "We'll call or message you on WhatsApp to confirm the time." },
+      { "title": "Pick up and pay", "body": "Come to the counter and pay there — cash or card." }
+    ],
+    "order": {
+      "eyebrow": "Order ahead",
+      "title": "Order for pickup",
+      "intro": "Pick what you want, tell us when you're coming, and pay when you arrive at the shop.",
+      "total": "Estimated total",
+      "emptyError": "Choose at least one item before sending your order.",
+      "name": "Name",
+      "phone": "Phone",
+      "date": "Pickup date",
+      "time": "Approximate time",
+      "notes": "Notes (optional)",
+      "submit": "Send order",
+      "payNote": "Nothing is charged online. You pay in store when you pick up your order, cash or card."
+    },
+    "altTitle": "Prefer to call or message?"
   },
   "visit": {
     "eyebrow": "Visit",

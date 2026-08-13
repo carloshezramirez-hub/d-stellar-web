@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Clock } from "lucide-react";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { PickupOrderForm } from "@/components/sections/pickup-order-form";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: isEn ? "Pickup — Order Ahead at Nuevo León 217" : "Pickup — Pide para recoger en Nuevo León 217",
     description: isEn
-      ? "Pickup only at d-stellar, Nuevo León 217, Condesa. No delivery. Online ordering coming soon."
-      : "Pickup en d-stellar, Nuevo León 217, Condesa. Sin delivery. Pedidos en línea, muy pronto.",
+      ? "Order ahead for pickup at d-stellar, Nuevo León 217, Condesa. Pay in store when you arrive. No delivery."
+      : "Pide con anticipación para recoger en d-stellar, Nuevo León 217, Condesa. Pagas al llegar. Sin delivery.",
     alternates: {
       canonical: isEn ? "/en/pickup" : "/pickup",
       languages: { es: "/pickup", en: "/en/pickup", "x-default": "/pickup" },
@@ -44,11 +44,34 @@ export default async function PickupPage({ params }: Props) {
         <p className="mt-5 text-stellar-white/75">{t("intro")}</p>
       </div>
 
-      <div className="mx-auto mt-14 max-w-2xl border-2 border-dashed border-stellar-green/60 bg-stellar-black-soft p-8 text-center">
-        <p className="font-tag text-xs uppercase tracking-widest text-stellar-green">{t("statusTitle")}</p>
-        <p className="mt-3 text-stellar-white/80">{t("statusBody")}</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <CtaAnchor href={`tel:${BUSINESS.phoneHref}`} variant="solid">
+      <div className="mx-auto mt-14 max-w-4xl">
+        <ol className="grid gap-6 sm:grid-cols-3">
+          {t.raw("steps").map((step: { title: string; body: string }, i: number) => (
+            <li key={i} className="flex gap-4 sm:flex-col sm:gap-2">
+              <span className="font-display text-2xl font-black text-stellar-pink">{i + 1}</span>
+              <div>
+                <p className="font-demi font-bold text-stellar-white">{step.title}</p>
+                <p className="mt-1 text-sm text-stellar-white/65">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="mx-auto mt-16 max-w-4xl border-2 border-line bg-stellar-black-soft p-6 md:p-10">
+        <p className="font-tag text-xs uppercase tracking-widest text-stellar-green">{t("order.eyebrow")}</p>
+        <h2 className="mt-2 font-display text-3xl font-black uppercase text-stellar-white">{t("order.title")}</h2>
+        <p className="mt-2 max-w-xl text-sm text-stellar-white/70">{t("order.intro")}</p>
+
+        <div className="mt-10">
+          <PickupOrderForm />
+        </div>
+      </div>
+
+      <div className="mx-auto mt-14 max-w-4xl text-center">
+        <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("altTitle")}</p>
+        <div className="mt-4 flex flex-wrap justify-center gap-4">
+          <CtaAnchor href={`tel:${BUSINESS.phoneHref}`} variant="outline">
             {cta("call")}
           </CtaAnchor>
           <CtaAnchor href={BUSINESS.social.instagram} target="_blank" rel="noreferrer" variant="outline">
@@ -58,23 +81,6 @@ export default async function PickupPage({ params }: Props) {
             {cta("viewMenu")}
           </CtaLink>
         </div>
-      </div>
-
-      <div className="mx-auto mt-16 max-w-2xl">
-        <p className="flex items-center justify-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-white/60">
-          <Clock size={14} /> {t("howTitle")}
-        </p>
-        <ol className="mt-8 space-y-6">
-          {t.raw("steps").map((step: { title: string; body: string }, i: number) => (
-            <li key={i} className="flex gap-4">
-              <span className="font-display text-2xl font-bold text-stellar-pink">{i + 1}</span>
-              <div>
-                <p className="font-display text-lg font-bold text-stellar-white">{step.title}</p>
-                <p className="mt-1 text-sm text-stellar-white/65">{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
       </div>
     </div>
   );
