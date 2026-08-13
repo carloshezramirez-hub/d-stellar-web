@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "titleSuffix": "d-stellar — Condesa, Mexico City",
+    "defaultDescription": "New York-style cookies, cacao and signature drinks in an intimate Condesa space. Monthly rotating menu, events, and pickup at Nuevo León 217."
+  },
+  "nav": {
+    "menu": "Menu",
+    "events": "Events",
+    "pickup": "Pickup",
+    "visit": "Visit",
+    "privateEvents": "Private events",
+    "about": "About",
+    "language": "Español"
+  },
+  "cta": {
+    "directions": "Get directions",
+    "viewMenu": "View menu",
+    "orderPickup": "Order for pickup",
+    "seeEvents": "See events",
+    "seeEvent": "See event",
+    "backToEvents": "Back to events",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "addToCalendar": "Add to calendar",
+    "sendInquiry": "Send inquiry",
+    "openInMaps": "Open in Google Maps",
+    "comingSoon": "Online pickup coming soon"
+  },
+  "home": {
+    "eyebrow": "Condesa, Mexico City",
+    "heroTitle": "Cookies, cacao, and a community that shines together.",
+    "heroSubtitle": "A small, intimate space on Nuevo León 217, with a monthly rotating menu, signature drinks, and events you won't find anywhere else in Condesa.",
+    "heroTag": "Together we shine brighter",
+    "introTitle": "This isn't just a cookie shop.",
+    "introBody": "At d-stellar we bake in short batches, serve cacao and coffee with intention, and open our doors at night for screenings, viewing parties, and gatherings that build community. It's a small place that feels huge once you're inside.",
+    "menuTeaserTitle": "This month's collection",
+    "menuTeaserBody": "Five cookies, signature drinks, and everything else — it changes every month, so if you loved something, come back soon.",
+    "eventsTeaserTitle": "What's coming up",
+    "eventsTeaserBody": "Viewing parties, collaborations, and private nights in a limited-capacity space.",
+    "visitTeaserTitle": "Find us",
+    "visitTeaserBody": "Inside Pabellón Nuevo León, a short walk from Parque México.",
+    "valuesTitle": "A space open to everyone",
+    "values": [
+      { "title": "LGBTQ+ friendly", "body": "A trans safe space, always." },
+      { "title": "Pet friendly", "body": "Bring your dog." },
+      { "title": "Intimate capacity", "body": "Small on purpose, not by accident." },
+      { "title": "Rotating menu", "body": "New flavors every month." }
+    ]
+  },
+  "menu": {
+    "eyebrow": "Menu",
+    "title": "What's here this month",
+    "intro": "The menu changes with the seasons. These categories stay put — the flavors inside each one rotate month to month.",
+    "note": "Exact prices and ingredients are posted at the counter. Let us know about any allergies or dietary needs."
+  },
+  "events": {
+    "eyebrow": "Events",
+    "title": "Limited capacity, full experiences",
+    "intro": "Screenings, viewing parties, collaborations, and nights that only happen once. That's how small this space is — that's how close you'll be.",
+    "upcomingTitle": "Upcoming events",
+    "pastTitle": "Past events",
+    "emptyUpcoming": "No events announced right now — follow us on Instagram to be the first to know.",
+    "details": "Details",
+    "capacity": "Capacity",
+    "capacityUnit": "people",
+    "price": "Cost",
+    "priceFree": "Free entry",
+    "location": "Location",
+    "includesTitle": "What's included"
+  },
+  "pickup": {
+    "eyebrow": "Pickup",
+    "title": "Pickup at Nuevo León 217. No delivery.",
+    "intro": "For now, everything is picked up in-store — that's how we make sure every cookie reaches you fresh out of the oven.",
+    "statusTitle": "Online ordering: coming soon",
+    "statusBody": "We're building the infrastructure so you can order and pay right here. In the meantime, come up to the counter or message us on Instagram.",
+    "howTitle": "How it works today",
+    "steps": [
+      { "title": "Come to the counter", "body": "Pick from this month's collection right in the shop." },
+      { "title": "Message us on Instagram", "body": "For larger orders or packs, DM us ahead of time." },
+      { "title": "Pick up at the counter", "body": "No long lines — everything is baked in short batches." }
+    ]
+  },
+  "visit": {
+    "eyebrow": "Visit",
+    "title": "Find us inside Pabellón Nuevo León",
+    "intro": "d-stellar is at Av. Nuevo León 217, inside Pabellón Nuevo León, right in the heart of Hipódromo Condesa.",
+    "addressTitle": "Address",
+    "hoursTitle": "Hours",
+    "hoursBody": "Open daily, 11:00 am – 7:00 pm.",
+    "findUsTitle": "How to find us",
+    "findUsBody": "Look for the entrance to Pabellón Nuevo León on Nuevo León 217 — d-stellar is just inside, a few steps from the entrance. Walking from Parque México, it's about 10 minutes.",
+    "gettingHereTitle": "Getting here",
+    "gettingHere": [
+      { "title": "On foot", "body": "10 minutes from Parque México and the Ámsterdam corridor." },
+      { "title": "Metrobús / Metro", "body": "The closest station is Chilpancingo (Metro Line 9 / Metrobús)." },
+      { "title": "By car", "body": "Paid street parking on Nuevo León and nearby streets." }
+    ],
+    "amenitiesTitle": "On site",
+    "amenities": [
+      "Pet friendly",
+      "LGBTQ+ friendly · trans safe space",
+      "Wi-Fi",
+      "Dine-in seating",
+      "Takeaway",
+      "Paid street parking"
+    ]
+  },
+  "privateEvents": {
+    "eyebrow": "Private events",
+    "title": "A small space, for your event",
+    "intro": "Birthdays, private screenings, brand activations, collaborations — d-stellar can be booked out for small groups looking for something different.",
+    "pitchTitle": "Small is the point",
+    "pitchBody": "We don't have a banquet hall. We have an intimate space in Condesa, full of personality, for limited-capacity experiences that feel exclusive because they are.",
+    "useCasesTitle": "Great for",
+    "useCases": [
+      "Birthdays and small celebrations",
+      "Private screenings and viewing parties",
+      "Brand activations and collaborations",
+      "LGBTQ+ events and drag viewing parties",
+      "Team offsites or press gatherings"
+    ],
+    "formTitle": "Tell us about your event",
+    "formBody": "Send us the details and we'll get back to you with availability and pricing.",
+    "formFields": {
+      "name": "Name",
+      "email": "Email",
+      "date": "Preferred date",
+      "guests": "Number of guests",
+      "message": "Tell us what you have in mind",
+      "submit": "Send inquiry"
+    }
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "The Sweet Universe Company",
+    "lead": "d-stellar started in 2024, founded by Hernán Castilla and Eduardo de Castilla, on one simple idea: cookies can be the excuse to build community.",
+    "body": [
+      "We started baking in short batches for a handful of Condesa neighbors. We're still doing exactly that — we just fit exactly right now, and that feels perfect.",
+      "d-stellar is a space open to every way of being: LGBTQ+ friendly, a trans safe space, pet friendly. A place where diversity isn't a policy — it's the atmosphere.",
+      "Every month we reinvent the cookie and drinks collection. Every so often, we dim the lights for a screening, a collaboration, or a small party that feels enormous."
+    ],
+    "quote": "Together we shine brighter — it's not just a tagline, it's why we open the door every morning."
+  },
+  "footer": {
+    "address": "Av. Nuevo León 217, Hipódromo Condesa, Mexico City",
+    "hours": "Open daily · 11:00 am–7:00 pm",
+    "rights": "All rights reserved."
+  },
+  "mobileBar": {
+    "directions": "Directions",
+    "menu": "Menu",
+    "pickup": "Pickup",
+    "events": "Events"
+  },
+  "notFound": {
+    "title": "This page got lost among the stars.",
+    "body": "We couldn't find what you were looking for. Try the homepage or check the menu.",
+    "cta": "Back home"
+  }
+}

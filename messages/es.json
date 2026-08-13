@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "titleSuffix": "d-stellar — Condesa, CDMX",
+    "defaultDescription": "Cookies estilo Nueva York, cacao y bebidas de autor en un espacio íntimo de Condesa. Menú rotativo mensual, eventos y pickup en Nuevo León 217."
+  },
+  "nav": {
+    "menu": "Menú",
+    "events": "Eventos",
+    "pickup": "Pickup",
+    "visit": "Visita",
+    "privateEvents": "Eventos privados",
+    "about": "Nosotros",
+    "language": "English"
+  },
+  "cta": {
+    "directions": "Cómo llegar",
+    "viewMenu": "Ver menú",
+    "orderPickup": "Pedir para recoger",
+    "seeEvents": "Ver eventos",
+    "seeEvent": "Ver evento",
+    "backToEvents": "Volver a eventos",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "addToCalendar": "Agregar al calendario",
+    "sendInquiry": "Enviar solicitud",
+    "openInMaps": "Abrir en Google Maps",
+    "comingSoon": "Pickup en línea, muy pronto"
+  },
+  "home": {
+    "eyebrow": "Condesa, Ciudad de México",
+    "heroTitle": "Cookies, cacao y una comunidad que brilla junta.",
+    "heroSubtitle": "Un espacio chico e íntimo en Nuevo León 217, con menú rotativo mensual, bebidas de autor y eventos que no caben en ningún otro lado de Condesa.",
+    "heroTag": "Junt★s brillamos más",
+    "introTitle": "No es solo una tienda de galletas.",
+    "introBody": "d-stellar horneamos en tandas cortas, servimos cacao y café con intención, y abrimos las noches para proyecciones, viewing parties y encuentros que hacen comunidad. Es un lugar chico que se siente enorme cuando estás dentro.",
+    "menuTeaserTitle": "La colección de este mes",
+    "menuTeaserBody": "Cinco cookies, bebidas de autor y todo lo demás — cambia mes a mes, así que si te gustó algo, vuelve pronto.",
+    "eventsTeaserTitle": "Lo que viene",
+    "eventsTeaserBody": "Viewing parties, colaboraciones y noches privadas en un espacio de cupo limitado.",
+    "visitTeaserTitle": "Encuéntranos",
+    "visitTeaserBody": "Dentro del Pabellón Nuevo León, a unas cuadras del Parque México.",
+    "valuesTitle": "Un espacio abierto para todes",
+    "values": [
+      { "title": "LGBTQ+ friendly", "body": "Trans safe space, siempre." },
+      { "title": "Pet friendly", "body": "Tu perro también puede entrar." },
+      { "title": "Cupo íntimo", "body": "Chico a propósito, no por accidente." },
+      { "title": "Menú rotativo", "body": "Nuevos sabores cada mes." }
+    ]
+  },
+  "menu": {
+    "eyebrow": "Menú",
+    "title": "Lo que hay este mes",
+    "intro": "El menú cambia con las temporadas. Estas son las categorías fijas — los sabores dentro de cada una rotan mes a mes.",
+    "note": "Precios e ingredientes exactos disponibles en barra. Avísanos si tienes alguna alergia o restricción."
+  },
+  "events": {
+    "eyebrow": "Eventos",
+    "title": "Cupo limitado, experiencias completas",
+    "intro": "Screenings, viewing parties, colaboraciones y noches que solo pasan una vez. Así de chico es el espacio, así de cerca vas a estar.",
+    "upcomingTitle": "Próximos eventos",
+    "pastTitle": "Eventos pasados",
+    "emptyUpcoming": "Sin eventos anunciados por ahora — síguenos en Instagram para ser el primero en enterarte.",
+    "details": "Detalles",
+    "capacity": "Cupo",
+    "capacityUnit": "personas",
+    "price": "Costo",
+    "priceFree": "Entrada libre",
+    "location": "Ubicación",
+    "includesTitle": "Qué incluye"
+  },
+  "pickup": {
+    "eyebrow": "Pickup",
+    "title": "Pickup en Nuevo León 217. Sin delivery.",
+    "intro": "Por ahora, todo se recoge en tienda — así garantizamos que cada cookie llegue a ti recién horneada.",
+    "statusTitle": "Pedidos en línea: muy pronto",
+    "statusBody": "Estamos preparando la infraestructura para que puedas ordenar y pagar desde aquí. Mientras tanto, pasa directo a la barra o escríbenos por Instagram.",
+    "howTitle": "Cómo funciona hoy",
+    "steps": [
+      { "title": "Ven a la barra", "body": "Elige de la colección del mes directamente en tienda." },
+      { "title": "Escríbenos por Instagram", "body": "Para pedidos grandes o packs, mándanos DM con anticipación." },
+      { "title": "Recoge en el mostrador", "body": "Sin filas largas — todo se hornea en tandas cortas." }
+    ]
+  },
+  "visit": {
+    "eyebrow": "Visita",
+    "title": "Encuéntranos en el Pabellón Nuevo León",
+    "intro": "d-stellar está en Av. Nuevo León 217, dentro del Pabellón Nuevo León, en el corazón de Hipódromo Condesa.",
+    "addressTitle": "Dirección",
+    "hoursTitle": "Horario",
+    "hoursBody": "Todos los días, 11:00 a.m. – 7:00 p.m.",
+    "findUsTitle": "Cómo encontrarnos",
+    "findUsBody": "Busca la entrada al Pabellón Nuevo León sobre Nuevo León 217 — d-stellar está dentro, a unos pasos del acceso. Si llegas caminando desde el Parque México, son unos 10 minutos.",
+    "gettingHereTitle": "Cómo llegar",
+    "gettingHere": [
+      { "title": "Caminando", "body": "A 10 minutos del Parque México y del corredor de Ámsterdam." },
+      { "title": "Metrobús / Metro", "body": "La estación más cercana es Chilpancingo (Línea 9 / Metrobús)." },
+      { "title": "Auto", "body": "Estacionamiento en la calle, de paga, en Nuevo León y calles aledañas." }
+    ],
+    "amenitiesTitle": "En el lugar",
+    "amenities": [
+      "Pet friendly",
+      "LGBTQ+ friendly · trans safe space",
+      "Wi-Fi",
+      "Consumo en local",
+      "Para llevar",
+      "Estacionamiento en calle (de paga)"
+    ]
+  },
+  "privateEvents": {
+    "eyebrow": "Eventos privados",
+    "title": "Un espacio chico, para tu evento",
+    "intro": "Cumpleaños, screenings privados, activaciones de marca, colaboraciones — d-stellar se renta completo para grupos pequeños que quieren algo distinto.",
+    "pitchTitle": "Chico es la propuesta",
+    "pitchBody": "No tenemos salón de banquetes. Tenemos un espacio íntimo en Condesa, con personalidad, para experiencias de cupo limitado que se sienten exclusivas porque lo son.",
+    "useCasesTitle": "Ideal para",
+    "useCases": [
+      "Cumpleaños y celebraciones chicas",
+      "Screenings y viewing parties privados",
+      "Activaciones y colaboraciones de marca",
+      "Eventos LGBTQ+ y drag viewing parties",
+      "Reuniones de equipo o prensa"
+    ],
+    "formTitle": "Cuéntanos de tu evento",
+    "formBody": "Manda los detalles y te respondemos con disponibilidad y costo.",
+    "formFields": {
+      "name": "Nombre",
+      "email": "Correo",
+      "date": "Fecha tentativa",
+      "guests": "Número de invitados",
+      "message": "Cuéntanos qué tienes en mente",
+      "submit": "Enviar solicitud"
+    }
+  },
+  "about": {
+    "eyebrow": "Nosotros",
+    "title": "The Sweet Universe Company",
+    "lead": "d-stellar nació en 2024, de la mano de Hernán Castilla y Eduardo de Castilla, con una idea simple: las cookies pueden ser una excusa para construir comunidad.",
+    "body": [
+      "Empezamos horneando en tandas cortas para un puñado de vecinos de la Condesa. Hoy seguimos haciendo lo mismo — solo que ahora cabemos justo, y eso nos parece perfecto.",
+      "d-stellar es un espacio abierto a todas las formas de ser: LGBTQ+ friendly, trans safe space, pet friendly. Un lugar donde la diversidad no es una política, es el ambiente.",
+      "Cada mes reinventamos la colección de cookies y bebidas. Cada tanto, apagamos las luces para una proyección, una colaboración o una fiesta chica que se siente enorme."
+    ],
+    "quote": "Junt★s brillamos más — no es solo un eslogan, es la razón por la que abrimos la puerta cada mañana."
+  },
+  "footer": {
+    "address": "Av. Nuevo León 217, Hipódromo Condesa, CDMX",
+    "hours": "Todos los días · 11:00–19:00",
+    "rights": "Todos los derechos reservados."
+  },
+  "mobileBar": {
+    "directions": "Llegar",
+    "menu": "Menú",
+    "pickup": "Pickup",
+    "events": "Eventos"
+  },
+  "notFound": {
+    "title": "Esta página se perdió entre las estrellas.",
+    "body": "No encontramos lo que buscabas. Prueba desde el inicio o revisa el menú.",
+    "cta": "Volver al inicio"
+  }
+}
