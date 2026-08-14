@@ -69,6 +69,10 @@ export default async function EventDetailPage({ params }: Props) {
     month: "long",
     hour: "numeric",
     minute: "2-digit",
+    // Always show d-stellar's local time (CDMX), regardless of the
+    // server's or the viewer's own timezone — dateISO already carries the
+    // -06:00 offset, but Intl defaults to the runtime's zone without this.
+    timeZone: "America/Mexico_City",
   }).format(new Date(event.dateISO));
 
   return (

@@ -29,6 +29,9 @@ function formatDate(iso: string, locale: string) {
     weekday: "long",
     day: "numeric",
     month: "long",
+    // Always show d-stellar's local time (CDMX) — see the same fix in
+    // events/[slug]/page.tsx for why this is required.
+    timeZone: "America/Mexico_City",
   }).format(new Date(iso));
 }
 
