@@ -37,16 +37,14 @@
   --color-line: var(--color-line);
 
   /*
-   * Franklin Gothic URW (Demi) and Coordinates Variable (Regular) are the
-   * official typefaces, licensed via Adobe Fonts/Typekit — this project has
-   * no Adobe Fonts kit configured, so the brand's own fonts cannot load.
-   * Fallbacks below preserve the intended feel (condensed American gothic
-   * display / clean grotesk body / technical mono for labels) until a kit
-   * ID is available. See PROJECT_NOTES.md → "Missing assets".
+   * Franklin Gothic URW Demi (display + demi) and Coordinates Variable
+   * (body) are the official typefaces — self-hosted from the client's own
+   * licensed font files as of 2026-08-14 (fonts/, wired in
+   * app/[locale]/layout.tsx). No more Google Fonts stand-ins.
    */
-  --font-display: var(--font-big-shoulders), "Arial Narrow", sans-serif;
-  --font-demi: var(--font-archivo), ui-sans-serif, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-franklin-gothic), "Arial Narrow", sans-serif;
+  --font-demi: var(--font-franklin-gothic), ui-sans-serif, sans-serif;
+  --font-body: var(--font-coordinates), ui-sans-serif, system-ui, sans-serif;
   --font-tag: var(--font-plex-mono), ui-monospace, monospace;
 
   --animate-marquee: marquee 26s linear infinite;
@@ -81,6 +79,7 @@ body {
   background: var(--color-stellar-black);
   color: var(--color-stellar-white);
   font-family: var(--font-body);
+  /* Coordinates Variable Light — the exact weight named in the brand manual. */
   font-weight: 300;
 }
 

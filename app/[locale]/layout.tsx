@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Big_Shoulders, Archivo, Inter, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { IBM_Plex_Mono } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,34 +14,26 @@ import { localBusinessSchema, websiteSchema } from "@/lib/schema";
 import { SITE_URL } from "@/data/site";
 import "../globals.css";
 
-// Franklin Gothic URW Demi is the official display face (Adobe Fonts —
-// no kit configured in this project). Big Shoulders is Google's closest
-// open equivalent: a condensed American-gothic display face built for the
-// exact same signage/editorial register (Chicago flag / Franklin Gothic
-// lineage).
-const bigShoulders = Big_Shoulders({
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--font-big-shoulders",
+// The real brand typefaces, self-hosted from the client's own licensed
+// font files (Process Type Foundry / URW) — see fonts/ and
+// PROJECT_NOTES.md → "Typography". Used for both huge display headlines
+// and smaller subheads/nav/labels: it's a single Demi weight, not
+// condensed, so it doesn't need Big Shoulders' signage-condensed
+// substitute at small sizes the way the old fallback did.
+const franklinGothic = localFont({
+  src: "../../fonts/franklin-gothic-urw-demi.otf",
+  variable: "--font-franklin-gothic",
   display: "swap",
+  weight: "600",
 });
 
-// Standing in for Franklin Gothic URW Demi at non-condensed sizes
-// (subheads, labels, nav) where the condensed face reads too tight.
-const archivo = Archivo({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-archivo",
+// Variable font — ships Light through Bold as named instances, so a single
+// import covers both the Light body copy and any heavier in-body emphasis.
+const coordinates = localFont({
+  src: "../../fonts/coordinates-variable.otf",
+  variable: "--font-coordinates",
   display: "swap",
-});
-
-// Coordinates Variable Regular is the official body face (Adobe Fonts —
-// same licensing gap as above). Inter is the fallback for long-form,
-// highly legible copy.
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+  weight: "300 700",
 });
 
 // IBM Plex Mono appears in d-stellar's own presentation deck as the
@@ -99,7 +92,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <body
-        className={`${bigShoulders.variable} ${archivo.variable} ${inter.variable} ${plexMono.variable} font-body antialiased`}
+        className={`${franklinGothic.variable} ${coordinates.variable} ${plexMono.variable} font-body antialiased`}
       >
         <NextIntlClientProvider>
           <JsonLd data={websiteSchema()} />

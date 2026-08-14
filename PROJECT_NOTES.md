@@ -42,20 +42,29 @@ header, footer, and OG image. Do not stretch, recolor outside black/white, or
 rebuild it with a system font — the manual is explicit about this
 ("USOS CORRECTOS E INCORRECTOS").
 
-### Typography — Adobe Fonts gap (see "Missing assets")
+### Typography — real brand fonts, self-hosted (fixed 2026-08-14)
 
-Official: **Franklin Gothic URW Demi** (display) + **Coordinates Variable
-Regular** (body), both Adobe Fonts/Typekit — no kit is configured in this
-project, so they cannot load. Fallbacks, chosen to preserve intent:
+The client supplied the actual licensed font files (Process Type Foundry /
+URW), so this no longer needs an Adobe Fonts kit or a Google Fonts stand-in:
 
-- Display (`font-display`, huge headlines): **Big Shoulders** — a condensed
-  American-gothic face in the same Chicago-flag/Franklin-Gothic lineage.
-- Demi stand-in (`font-demi`, subheads/nav/labels at sizes too small for the
-  condensed display face): **Archivo**, weight 700–800.
-- Body (`font-body`): **Inter**.
-- Mono (`font-tag`, eyebrows/prices/phone): **IBM Plex Mono** — this one isn't
-  a guess: it's the actual mono face used in d-stellar's own presentation
-  deck.
+- Display + demi (`font-display`, `font-demi` — huge headlines *and*
+  subheads/nav/labels, one weight): **Franklin Gothic URW Demi**,
+  `fonts/franklin-gothic-urw-demi.otf`. It's a normal-proportion Demi, not
+  ultra-condensed like the old Big Shoulders stand-in, so it no longer needs
+  a separate small-size substitute — verified against every page's mobile
+  (375px) layout with no overflow after the swap.
+- Body (`font-body`): **Coordinates Variable**,
+  `fonts/coordinates-variable.otf` — a real variable font (Light through
+  Bold named instances). `body { font-weight: 300 }` in `globals.css` uses
+  its actual Light instance, not an approximation.
+- Mono (`font-tag`, eyebrows/prices/phone): **IBM Plex Mono** (Google
+  Fonts) — this one was never a guess, it's the real mono face from
+  d-stellar's own presentation deck, unchanged.
+
+Wired via `next/font/local` in `app/[locale]/layout.tsx` (not
+`next/font/google` — these aren't hosted fonts). If the font files ever need
+replacing, they live only in `fonts/` at the repo root; nothing else
+references the old Big Shoulders/Archivo/Inter Google Fonts imports anymore.
 
 ### Texture & graphic elements — extracted, not redrawn
 
@@ -279,18 +288,25 @@ patch release.
 
 ## Missing assets — needs your intervention
 
-1. **Adobe Fonts kit for Franklin Gothic URW Demi + Coordinates Variable.**
-   This is the one thing in the manual that genuinely cannot be self-served —
-   both are commercial fonts on Typekit. If d-stellar (or Brada Studio) has an
-   Adobe Fonts kit ID with these two families active, add the kit's embed
-   script to `app/[locale]/layout.tsx` and swap the `font-display`/`font-body`
-   variables in `globals.css` to point at the real families. Until then, Big
-   Shoulders / Archivo / Inter stand in.
+1. ~~Adobe Fonts kit~~ — resolved 2026-08-14, see "Typography" above.
 2. **Real event photography** — currently gradient+logo placeholders.
-3. **Full-resolution location/product photos** — current files are small
-   Photos.app derivatives; fine at current sizes, would look soft any larger.
-4. **Day-by-day opening hours, exact coordinates, official phone hours** — to
-   verify against Google Business Profile.
+3. ~~Full-resolution product photos~~ — partially resolved 2026-08-14. The
+   client shared a real studio shoot (`Fotos d-stellar estudio/`, ~1667×2500,
+   professional light/shadow work) — three of the lowest-quality slots were
+   swapped in from it (center-cropped + re-encoded, originals not committed):
+   `public/images/products/cookie-display-dark.webp` (wall-mounted shelf
+   with the star cookies — same subject as before, just sharp and level now),
+   `cookie-display-bright.webp` (hand piping cream onto a cookie — home
+   intro section), `cookie-display-lit.webp` (three cookies in the branded
+   box — home photo strip). The shoot is *studio product photography only* —
+   no location/interior/exterior shots — so `public/images/location/*` still
+   needs real photography; still small Photos.app derivatives, fine at
+   current sizes, would look soft any larger. The rest of the shoot (~30
+   more shots: process, packaging, drink pairings, macro detail) is
+   unused — good source for future menu/event imagery.
+4. **Exact coordinates, official phone hours** — hours themselves are now
+   confirmed (see "What d-stellar actually is"); coordinates are still
+   block-approximate, verify against Google Business Profile.
 
 ## Deploy
 
