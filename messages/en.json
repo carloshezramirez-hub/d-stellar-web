@@ -88,7 +88,7 @@
     "order": {
       "eyebrow": "Order ahead",
       "title": "Order for pickup",
-      "intro": "Pick what you want, tell us when you're coming, and pay when you arrive at the shop.",
+      "intro": "Pick what you want, tell us when you're coming, and pay by bank transfer or a payment link we'll send you before you pick up your order.",
       "total": "Estimated total",
       "emptyError": "Choose at least one item before sending your order.",
       "name": "Name",
@@ -201,7 +201,11 @@
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, Mexico City",
-    "hours": "11:00 am–7:00 pm · Tue/Wed/Fri vary",
+    "hours": [
+      "Monday, Thursday, Saturday and Sunday: 11:00 am – 7:00 pm.",
+      "Tuesday: 2:00 pm – 7:00 pm.",
+      "Wednesday and Friday: 12:00 pm – 7:00 pm."
+    ],
     "rights": "All rights reserved."
   },
   "mobileBar": {

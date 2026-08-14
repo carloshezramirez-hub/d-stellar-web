@@ -26,7 +26,13 @@ export function Footer() {
             className="h-7 w-auto"
           />
           <p className="mt-4 max-w-xs text-sm text-stellar-white/70">{t("address")}</p>
-          <p className="mt-1 text-sm text-stellar-white/70">{t("hours")}</p>
+          <div className="mt-1">
+            {t.raw("hours").map((line: string, i: number) => (
+              <p key={i} className="text-sm text-stellar-white/70">
+                {line}
+              </p>
+            ))}
+          </div>
           <a
             href={`tel:${BUSINESS.phoneHref}`}
             className="mt-1 inline-block font-tag text-sm text-stellar-white/70 hover:text-stellar-pink"

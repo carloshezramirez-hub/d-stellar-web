@@ -88,7 +88,7 @@
     "order": {
       "eyebrow": "Pedido anticipado",
       "title": "Ordena para recoger",
-      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga al llegar a la tienda.",
+      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga por transferencia o con un link de pago que te compartimos antes de que recojas tu pedido.",
       "total": "Total estimado",
       "emptyError": "Elige al menos un producto antes de enviar tu pedido.",
       "name": "Nombre",
@@ -201,7 +201,11 @@
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, CDMX",
-    "hours": "11:00–19:00 · mar/mié/vie varía",
+    "hours": [
+      "Lunes, jueves, sábado y domingo: 11:00 a.m. – 7:00 p.m.",
+      "Martes: 2:00 p.m. – 7:00 p.m.",
+      "Miércoles y viernes: 12:00 p.m. – 7:00 p.m."
+    ],
     "rights": "Todos los derechos reservados."
   },
   "mobileBar": {
