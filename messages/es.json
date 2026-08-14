@@ -24,6 +24,7 @@
     "instagram": "Instagram",
     "tiktok": "TikTok",
     "call": "Llamar",
+    "whatsapp": "WhatsApp",
     "addToCalendar": "Agregar al calendario",
     "sendInquiry": "Enviar solicitud",
     "openInMaps": "Abrir en Google Maps",
@@ -31,7 +32,7 @@
   },
   "home": {
     "eyebrow": "Condesa, Ciudad de México",
-    "heroKicker": "Cookie shop · cacao · comunidad",
+    "heroKicker": "Cookie shop · café · experiencias",
     "heroTitle": "Cookies de otro universo.",
     "heroSubtitle": "Un cookie shop escondido dentro del Pabellón Nuevo León. Cookies gourmet horneadas en tandas cortas, bebidas de autor y un menú que cambia cada mes.",
     "heroTag": "Junt★s brillamos más",
@@ -39,16 +40,16 @@
     "introBody": "d-stellar horneamos en tandas cortas, servimos cacao y café con intención, y abrimos las noches para proyecciones, viewing parties y encuentros que hacen comunidad. Es un lugar chico que se siente enorme cuando estás dentro.",
     "statementTitle": "Auténtic★s. Original★s. Inquebrantables.",
     "statementBody": "Una marca transgresora, imparable y amable, donde te puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un universo propio.",
-    "menuTeaserTitle": "El cast de agosto",
+    "menuTeaserTitle": "La propuesta de agosto",
     "menuTeaserBody": "Cinco cookies, bebidas de autor y todo lo demás — cambia mes a mes, así que si te gustó algo, vuelve pronto.",
     "eventsTeaserTitle": "Lo que viene",
     "eventsTeaserBody": "Viewing parties, colaboraciones y noches privadas en un espacio de cupo limitado.",
     "visitTeaserTitle": "Encuéntranos",
     "visitTeaserBody": "Dentro del Pabellón Nuevo León, a unas cuadras del Parque México.",
-    "valuesTitle": "Un espacio abierto para todes",
+    "valuesTitle": "Un espacio abierto para tod★s",
     "values": [
       { "title": "LGBTQ+ friendly", "body": "Trans safe space, siempre." },
-      { "title": "Pet friendly", "body": "Tu perro también puede entrar." },
+      { "title": "Pet friendly", "body": "Tu mascota también puede entrar." },
       { "title": "Cupo íntimo", "body": "Chico a propósito, no por accidente." },
       { "title": "Menú rotativo", "body": "Nuevos sabores cada mes." }
     ]
@@ -56,7 +57,7 @@
   "menu": {
     "eyebrow": "Menú",
     "title": "El menú",
-    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes — este es el cast de agosto.",
+    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes — esta es la propuesta de agosto.",
     "note": "Avísanos si tienes alguna alergia o restricción. Precios en pesos mexicanos."
   },
   "events": {
@@ -81,8 +82,8 @@
     "intro": "Pide con anticipación y paga al recoger — así garantizamos que cada cookie llegue a ti recién horneada.",
     "steps": [
       { "title": "Llena tu pedido", "body": "Elige tus cookies, focaccias o packs aquí abajo." },
-      { "title": "Te confirmamos", "body": "Te escribimos por teléfono o WhatsApp para confirmar la hora." },
-      { "title": "Recoge y paga", "body": "Pasas al mostrador, pagas ahí — efectivo o tarjeta." }
+      { "title": "Te confirmamos", "body": "Te escribimos por WhatsApp para confirmar la hora." },
+      { "title": "Recoge y paga", "body": "Te compartimos los datos para pagar por transferencia o con un link de pago antes de recoger." }
     ],
     "order": {
       "eyebrow": "Pedido anticipado",
@@ -95,10 +96,12 @@
       "date": "Fecha de recolección",
       "time": "Hora aproximada",
       "notes": "Notas (opcional)",
+      "packFlavorsTitle": "Elige tus cookies",
+      "packFlavorSlot": "Cookie {n}",
       "submit": "Enviar pedido",
-      "payNote": "No se cobra en línea. Pagas en tienda al recoger tu pedido, en efectivo o con tarjeta."
+      "payNote": "No se cobra en línea. Te enviamos los datos para pagar por transferencia o con un link de pago."
     },
-    "altTitle": "¿Prefieres llamar o escribir?"
+    "altTitle": "Solo por WhatsApp — no hay señal en el local para llamadas"
   },
   "visit": {
     "eyebrow": "Visita",
@@ -112,12 +115,20 @@
     ],
     "addressTitle": "Dirección",
     "hoursTitle": "Horario",
-    "hoursBody": "Todos los días, 11:00 a.m. – 7:00 p.m.",
+    "hoursBody": [
+      "Lunes, jueves, sábado y domingo: 11:00 a.m. – 7:00 p.m.",
+      "Martes: 2:00 p.m. – 7:00 p.m.",
+      "Miércoles y viernes: 12:00 p.m. – 7:00 p.m."
+    ],
     "gettingHereTitle": "Cómo llegar",
     "gettingHere": [
       { "title": "Caminando", "body": "A 10 minutos del Parque México y del corredor de Ámsterdam." },
-      { "title": "Metrobús / Metro", "body": "La estación más cercana es Chilpancingo (Línea 9 / Metrobús)." },
-      { "title": "Auto", "body": "Estacionamiento en la calle, de paga, en Nuevo León y calles aledañas." }
+      { "title": "Metrobús / Metro", "body": "Hay 2 metrobuses cercanos: Nuevo León línea 2, y Chilpancingo línea 9, o metro Chilpancingo." },
+      {
+        "title": "Auto",
+        "body": "Estacionamiento en la calle, de paga, en Nuevo León y calles aledañas. ¿Buscas parquímetro? Coloca la siguiente dirección y te llevará a la calle paralela para estacionarte.",
+        "link": { "label": "Ver dirección para estacionarte", "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8" }
+      }
     ],
     "amenitiesTitle": "En el lugar",
     "amenities": [
@@ -190,7 +201,7 @@
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, CDMX",
-    "hours": "Todos los días · 11:00–19:00",
+    "hours": "11:00–19:00 · mar/mié/vie varía",
     "rights": "Todos los derechos reservados."
   },
   "mobileBar": {

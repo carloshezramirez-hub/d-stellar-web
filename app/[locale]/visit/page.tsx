@@ -50,7 +50,7 @@ export default async function VisitPage({ params }: Props) {
 
       <div className="mx-auto max-w-3xl">
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("eyebrow")}</p>
-        <h1 className="mt-4 font-display text-5xl font-black uppercase leading-[0.9] text-stellar-white md:text-7xl">
+        <h1 className="mt-4 break-words font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white sm:text-5xl md:text-7xl">
           {t("title")}
         </h1>
         <p className="mt-5 max-w-xl text-stellar-white/75">{t("intro")}</p>
@@ -94,18 +94,36 @@ export default async function VisitPage({ params }: Props) {
           </p>
 
           <h2 className="mt-8 font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("hoursTitle")}</h2>
-          <p className="mt-3 text-lg text-stellar-white">{t("hoursBody")}</p>
+          <div className="mt-3 space-y-1">
+            {t.raw("hoursBody").map((line: string, i: number) => (
+              <p key={i} className="text-lg text-stellar-white">
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
 
         <div>
           <h2 className="font-tag text-xs uppercase tracking-widest text-stellar-blue">{t("gettingHereTitle")}</h2>
           <div className="mt-4 space-y-4">
-            {t.raw("gettingHere").map((item: { title: string; body: string }, i: number) => (
-              <div key={i}>
-                <p className="font-demi font-bold text-stellar-white">{item.title}</p>
-                <p className="text-sm text-stellar-white/65">{item.body}</p>
-              </div>
-            ))}
+            {t.raw("gettingHere").map(
+              (item: { title: string; body: string; link?: { label: string; url: string } }, i: number) => (
+                <div key={i}>
+                  <p className="font-demi font-bold text-stellar-white">{item.title}</p>
+                  <p className="text-sm text-stellar-white/65">{item.body}</p>
+                  {item.link && (
+                    <a
+                      href={item.link.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 text-sm text-stellar-pink underline decoration-2 underline-offset-4 hover:text-stellar-white"
+                    >
+                      {item.link.label} <ArrowUpRight size={12} />
+                    </a>
+                  )}
+                </div>
+              ),
+            )}
           </div>
         </div>
       </div>

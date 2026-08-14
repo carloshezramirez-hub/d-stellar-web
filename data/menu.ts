@@ -3,6 +3,12 @@ export type MenuItem = {
   name: string;
   description: { es: string; en: string };
   priceMXN: number;
+  // Original (pre-discount) price, shown struck through next to priceMXN.
+  // Only cookie-packs use this — it's the count × single-cookie price.
+  compareAtPriceMXN?: number;
+  // Number of cookies in a pack, so the pickup order form knows how many
+  // flavor pickers to render. Only cookie-packs use this.
+  packSize?: number;
   tags?: Array<"vegan" | "caffeine-free" | "seasonal" | "signature">;
 };
 
@@ -26,8 +32,8 @@ export const menu: MenuSection[] = [
     title: { es: "Gourmet Cookies", en: "Gourmet Cookies" },
     accent: "green",
     intro: {
-      es: "El cast del mes. Cinco cookies horneadas en tandas cortas — cuando se acaban, se acaban.",
-      en: "This month's cast. Five cookies baked in short batches — when they're gone, they're gone.",
+      es: "La propuesta del mes. Cinco cookies horneadas en tandas cortas — cuando se acaban, se acaban.",
+      en: "This month's lineup. Five cookies baked in short batches — when they're gone, they're gone.",
     },
     items: [
       {
@@ -148,7 +154,7 @@ export const menu: MenuSection[] = [
       { slug: "chasen-hojicha-latte", name: "Chasen Hojicha Latte", description: { es: "Té hojicha tostado, batido a mano.", en: "Roasted hojicha tea, hand-whisked." }, priceMXN: 90, tags: ["caffeine-free"] },
       { slug: "taro-latte", name: "Taro Latte", description: { es: "Taro cremoso con leche vaporizada.", en: "Creamy taro with steamed milk." }, priceMXN: 90, tags: ["caffeine-free"] },
       { slug: "leche-de-lavanda", name: "Leche de Lavanda", description: { es: "Leche vaporizada infusionada con lavanda.", en: "Steamed milk infused with lavender." }, priceMXN: 80, tags: ["caffeine-free"] },
-      { slug: "leche-para-cookies", name: "Leche para Cookies", description: { es: "Leche entera fría, hecha para acompañar.", en: "Cold whole milk, made for dunking." }, priceMXN: 60, tags: ["caffeine-free"] },
+      { slug: "leche-para-cookies", name: "Leche para Cookies", description: { es: "Leche a tu elección, fría, hecha para acompañar.", en: "Milk of your choice, cold, made for dunking." }, priceMXN: 60, tags: ["caffeine-free"] },
     ],
   },
   {
@@ -168,8 +174,8 @@ export const menu: MenuSection[] = [
     title: { es: "Focaccias", en: "Focaccias" },
     accent: "red",
     intro: {
-      es: "Nuestro pan de masa madre, dorado y prensado al momento. Pregunta por el melt de hoy.",
-      en: "Our sourdough, pressed and browned to order. Ask about today's melt.",
+      es: "Nuestra masa fermentada por más de 28hrs, con un intenso sabor a ajo con perejil.",
+      en: "Our dough, fermented for over 28 hours, with an intense garlic-and-parsley flavor.",
     },
     items: [
       {
@@ -205,9 +211,9 @@ export const menu: MenuSection[] = [
     accent: "pink",
     intro: { es: "Para llevar la colección completa a donde vayas.", en: "Take the whole collection wherever you're going." },
     items: [
-      { slug: "3-pack", name: "3-Pack", description: { es: "Tres cookies a elegir.", en: "Three cookies, your choice." }, priceMXN: 262 },
-      { slug: "5-pack", name: "5-Pack", description: { es: "La colección casi completa.", en: "Nearly the whole collection." }, priceMXN: 428 },
-      { slug: "10-pack", name: "10-Pack", description: { es: "Para compartir — o no.", en: "For sharing — or not." }, priceMXN: 810 },
+      { slug: "3-pack", name: "3-Pack", description: { es: "Tres cookies a elegir.", en: "Three cookies, your choice." }, priceMXN: 262, compareAtPriceMXN: 270, packSize: 3 },
+      { slug: "5-pack", name: "5-Pack", description: { es: "La colección completa.", en: "The whole collection." }, priceMXN: 428, compareAtPriceMXN: 450, packSize: 5 },
+      { slug: "10-pack", name: "10-Pack", description: { es: "Para compartir — o no.", en: "For sharing — or not." }, priceMXN: 810, compareAtPriceMXN: 900, packSize: 10 },
     ],
   },
 ];

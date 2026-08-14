@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ArrowUpRight } from "lucide-react";
+import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { menuSchema, breadcrumbSchema } from "@/lib/schema";
 import { menu, MENU_MONTH_LABEL, type MenuSection } from "@/data/menu";
-import { SITE_URL } from "@/data/site";
+import { BUSINESS, SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
 type Locale = "es" | "en";
@@ -39,6 +41,7 @@ export default async function MenuPage({ params }: Props) {
   setRequestLocale(locale);
   const loc = locale as Locale;
   const t = await getTranslations("menu");
+  const cta = await getTranslations("cta");
 
   const schemaSections = menu.map((section) => ({
     title: section.title[loc],
@@ -101,7 +104,12 @@ export default async function MenuPage({ params }: Props) {
                   <li key={item.slug} className="border-b border-line pb-4">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="font-demi text-lg font-bold text-stellar-white">{item.name}</span>
-                      <span className="font-tag text-sm text-stellar-white/70">${item.priceMXN}</span>
+                      <span className="flex items-baseline gap-1.5 font-tag text-sm">
+                        {item.compareAtPriceMXN && (
+                          <span className="text-stellar-white/40 line-through">${item.compareAtPriceMXN}</span>
+                        )}
+                        <span className="text-stellar-white/70">${item.priceMXN}</span>
+                      </span>
                     </div>
                     <p className="mt-1 text-sm text-stellar-white/65">{item.description[loc]}</p>
                     {item.tags?.length ? (
@@ -118,6 +126,15 @@ export default async function MenuPage({ params }: Props) {
       </div>
 
       <p className="mx-auto mt-16 max-w-4xl text-center text-xs text-stellar-white/50">{t("note")}</p>
+
+      <div className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-4">
+        <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+          {cta("directions")} <ArrowUpRight size={14} />
+        </CtaAnchor>
+        <CtaLink href="/pickup" variant="outline">
+          {cta("orderPickup")}
+        </CtaLink>
+      </div>
     </div>
   );
 }

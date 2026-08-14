@@ -20,8 +20,8 @@ export const events: EventRecord[] = [
   {
     slug: "la-mas-draga-viewing-party",
     title: "La Más Draga — Viewing Party",
-    dateISO: "2026-09-04T20:00:00-06:00",
-    endISO: "2026-09-04T23:00:00-06:00",
+    dateISO: "2026-08-15T20:00:00-06:00",
+    endISO: "2026-08-15T23:00:00-06:00",
     doorsNote: { es: "Cupo limitado, llega con tiempo.", en: "Limited capacity, arrive early." },
     summary: {
       es: "Pantalla, cacao caliente y la comunidad de Condesa reunida para ver el episodio en vivo.",
@@ -29,7 +29,7 @@ export const events: EventRecord[] = [
     },
     description: {
       es: [
-        "Una vez por temporada convertimos d-stellar en sala de proyección. Apagamos las luces, servimos bebidas de autor y vemos el episodio juntos, en pantalla grande.",
+        "Una vez por temporada convertimos d-stellar en sala de proyección. Apagamos las luces, servimos bebidas de autor y vemos el episodio junt★s, en pantalla grande.",
         "Es un evento chico a propósito — así se siente d-stellar: íntimo, ruidoso en las risas, cero pretensión.",
       ],
       en: [
@@ -41,7 +41,7 @@ export const events: EventRecord[] = [
       es: ["Acceso a la proyección", "Una bebida de autor incluida", "Cookie de cortesía"],
       en: ["Screening access", "One signature drink included", "Complimentary cookie"],
     },
-    capacity: 25,
+    capacity: 10,
     coverImage: "/images/events/la-mas-draga-viewing-party.svg",
     imageAlt: {
       es: "Interior de d-stellar preparado para viewing party con pantalla e iluminación cálida",

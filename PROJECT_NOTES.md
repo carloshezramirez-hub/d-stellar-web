@@ -84,15 +84,32 @@ puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un
 universo propio."**; and the campaign line **"Bend the rules. Star the
 show."** on `/events`. The inclusive star (replacing gendered `a`/`o`) is used
 only in these editorial statements, never in body copy — per the manual's own
-instruction not to apply it everywhere for legibility.
+instruction not to apply it everywhere for legibility. Two explicit client-
+requested exceptions (2026-08-14 feedback deck): `home.valuesTitle` ("Un
+espacio abierto para tod★s") and the La Más Draga event description ("vemos
+el episodio junt★s") — both approved by name, don't revert to `todes`/
+`juntos` even though they read as body copy rather than a headline statement.
+
+### Body font weight
+
+`body { font-weight: 300 }` in `globals.css` — client asked for "Coordinates
+Variable Light" (2026-08-14); since Coordinates Variable itself isn't
+licensed here (see above), this applies Light weight to the already-adopted
+Inter fallback instead of sourcing a new typeface. Headings/labels are
+unaffected since they set their own explicit weight classes (`font-black`,
+`font-bold`, etc.).
 
 ## What d-stellar actually is
 
 - Cookie shop at **Av. Nuevo León 217, Hipódromo Condesa, CDMX**, inside
   **Pabellón Nuevo León** — the entrance is genuinely easy to miss, which is
-  why `/visit` walks through it as three photographed steps. Open daily,
-  **11:00–19:00** (Instagram bio; no published day-by-day breakdown — verify
-  against Google Business Profile before tightening the schema.org hours).
+  why `/visit` walks through it as three photographed steps. Hours (per the
+  owner, 2026-08-14): **11:00–19:00 daily, except Tuesday (opens 14:00) and
+  Wednesday/Friday (opens 12:00)** — closing time is always 19:00. Source of
+  truth is `BUSINESS.hours` + `BUSINESS.hoursExceptions` in `data/site.ts`,
+  which both `lib/schema.ts` (per-day `OpeningHoursSpecification` array) and
+  `visit.hoursBody` / `footer.hours` in `messages/*.json` must stay in sync
+  with if the schedule changes again.
 - Founded **2024** by **Hernán Castilla** and **Eduardo Hernández** (verified
   from their own printed business cards inside the manual — LinkedIn's public
   copy says "Eduardo de Castilla," the business card is more likely correct
@@ -130,10 +147,17 @@ clearly labeled) — no real event photos were supplied. Swap
   prefix; English under `/en`. `proxy.ts` (Next 16 rename of `middleware.ts`)
   runs locale negotiation.
 - `data/site.ts` — address, hours, phone, socials, amenities. Single source
-  read by schema.org, footer, and `/visit`.
+  read by schema.org, footer, and `/visit`. `phone`/`phoneHref` corrected to
+  `+52 55 6502 4440` on 2026-08-14 (the old number on file was wrong).
+  `whatsappUrl` is the real contact CTA on `/pickup` — there's no cell signal
+  in-store for calls, so `tel:` links are deliberately avoided there.
 - `data/menu.ts` — `MenuSection[]` with an `accent` field (one of the 7 brand
   colors) driving the category color-block on `/menu`. See "Updating content"
-  below.
+  below. `MenuItem.packSize` + `compareAtPriceMXN` are cookie-packs-only:
+  `packSize` drives the per-cookie flavor pickers in `PickupOrderForm`
+  (customers choose which cookies fill their 3/5/10-pack, repeats allowed),
+  `compareAtPriceMXN` is the struck-through "before discount" price
+  (`packSize × single-cookie price`) shown next to the pack price on `/menu`.
 - `data/events.ts` — `EventRecord[]`. See "Updating content."
 - `data/cookie-calendar.ts` — `CalendarMonth[]`, the monthly cookie archive
   rendered on `/calendar`. Separate from `data/menu.ts` on purpose: `menu.ts`
@@ -225,6 +249,22 @@ Bilingual hreflang/canonical/alternates on every route. Local SEO intents
 (galletas Condesa, best cookies Mexico City, queer-friendly cafe Mexico City,
 etc.) worked into titles/descriptions/body copy naturally. JSON-LD is
 verifiable-facts-only.
+
+## Fixed: language-switch crash on dynamic routes
+
+`components/layout/header.tsx`'s locale-switch link used
+`<Link href={pathname as never} locale={otherLocale}>`, where `pathname`
+comes from next-intl's `usePathname()`. On a **static** route that's the
+resolved path (`/menu`), fine — but on a **dynamic** route (`/events/[slug]`)
+`usePathname()` returns the unresolved *template*, and next-intl's `Link`
+then throws `Insufficient params provided for localized pathname` trying to
+compile `/events/[slug]` with no params. This broke client-side hydration on
+every event detail page (caught during the 2026-08-14 pass — silent in
+production builds' initial HTML, but the language switcher crashed the whole
+page on mount). Fixed by also reading `useParams()` (from `next/navigation`)
+and passing `href={{ pathname, params } as never}` — works for both static
+routes (empty `params`) and dynamic ones. If you add another `/foo/[slug]`
+style route, this pattern already covers it; no per-route change needed.
 
 ## Known upstream issue (not app code)
 

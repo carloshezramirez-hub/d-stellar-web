@@ -71,8 +71,8 @@ export default async function PickupPage({ params }: Props) {
       <div className="mx-auto mt-14 max-w-4xl text-center">
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("altTitle")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
-          <CtaAnchor href={`tel:${BUSINESS.phoneHref}`} variant="outline">
-            {cta("call")}
+          <CtaAnchor href={BUSINESS.whatsappUrl} target="_blank" rel="noreferrer" variant="outline">
+            {cta("whatsapp")}
           </CtaAnchor>
           <CtaAnchor href={BUSINESS.social.instagram} target="_blank" rel="noreferrer" variant="outline">
             {cta("instagram")}

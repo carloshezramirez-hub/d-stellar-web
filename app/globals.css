@@ -81,6 +81,7 @@ body {
   background: var(--color-stellar-black);
   color: var(--color-stellar-white);
   font-family: var(--font-body);
+  font-weight: 300;
 }
 
 ::selection {

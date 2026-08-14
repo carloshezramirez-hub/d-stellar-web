@@ -24,6 +24,7 @@
     "instagram": "Instagram",
     "tiktok": "TikTok",
     "call": "Call",
+    "whatsapp": "WhatsApp",
     "addToCalendar": "Add to calendar",
     "sendInquiry": "Send inquiry",
     "openInMaps": "Open in Google Maps",
@@ -31,7 +32,7 @@
   },
   "home": {
     "eyebrow": "Condesa, Mexico City",
-    "heroKicker": "Cookie shop · cacao · community",
+    "heroKicker": "Cookie shop · coffee · experiences",
     "heroTitle": "Cookies from another universe.",
     "heroSubtitle": "A cookie shop hidden inside Pabellón Nuevo León. Gourmet cookies baked in short batches, signature drinks, and a menu that changes every month.",
     "heroTag": "Together we shine brighter",
@@ -39,7 +40,7 @@
     "introBody": "At d-stellar we bake in short batches, serve cacao and coffee with intention, and open our doors at night for screenings, viewing parties, and gatherings that build community. It's a small place that feels huge once you're inside.",
     "statementTitle": "Authentic. Original. Unbreakable.",
     "statementBody": "A brand that's transgressive, unstoppable and kind — where you can express yourself freely, with no fear of judgment. A community. A universe of your own.",
-    "menuTeaserTitle": "The August cast",
+    "menuTeaserTitle": "August's lineup",
     "menuTeaserBody": "Five cookies, signature drinks, and everything else — it changes every month, so if you loved something, come back soon.",
     "eventsTeaserTitle": "What's coming up",
     "eventsTeaserBody": "Viewing parties, collaborations, and private nights in a limited-capacity space.",
@@ -48,7 +49,7 @@
     "valuesTitle": "A space open to everyone",
     "values": [
       { "title": "LGBTQ+ friendly", "body": "A trans safe space, always." },
-      { "title": "Pet friendly", "body": "Bring your dog." },
+      { "title": "Pet friendly", "body": "Bring your pet." },
       { "title": "Intimate capacity", "body": "Small on purpose, not by accident." },
       { "title": "Rotating menu", "body": "New flavors every month." }
     ]
@@ -56,7 +57,7 @@
   "menu": {
     "eyebrow": "Menu",
     "title": "The menu",
-    "intro": "These categories stay put. The flavors inside each one rotate month to month — this is the August cast.",
+    "intro": "These categories stay put. The flavors inside each one rotate month to month — this is August's lineup.",
     "note": "Let us know about any allergies or dietary needs. Prices in Mexican pesos."
   },
   "events": {
@@ -81,8 +82,8 @@
     "intro": "Order ahead and pay when you pick up — that's how we make sure every cookie reaches you fresh out of the oven.",
     "steps": [
       { "title": "Fill out your order", "body": "Pick your cookies, focaccias or packs below." },
-      { "title": "We confirm", "body": "We'll call or message you on WhatsApp to confirm the time." },
-      { "title": "Pick up and pay", "body": "Come to the counter and pay there — cash or card." }
+      { "title": "We confirm", "body": "We'll message you on WhatsApp to confirm the time." },
+      { "title": "Pick up and pay", "body": "We'll send you the details to pay by transfer or a payment link before you pick up." }
     ],
     "order": {
       "eyebrow": "Order ahead",
@@ -95,10 +96,12 @@
       "date": "Pickup date",
       "time": "Approximate time",
       "notes": "Notes (optional)",
+      "packFlavorsTitle": "Choose your cookies",
+      "packFlavorSlot": "Cookie {n}",
       "submit": "Send order",
-      "payNote": "Nothing is charged online. You pay in store when you pick up your order, cash or card."
+      "payNote": "Nothing is charged online. We'll send you the details to pay by transfer or a payment link."
     },
-    "altTitle": "Prefer to call or message?"
+    "altTitle": "WhatsApp only — no cell signal in-store for calls"
   },
   "visit": {
     "eyebrow": "Visit",
@@ -112,12 +115,20 @@
     ],
     "addressTitle": "Address",
     "hoursTitle": "Hours",
-    "hoursBody": "Open daily, 11:00 am – 7:00 pm.",
+    "hoursBody": [
+      "Monday, Thursday, Saturday and Sunday: 11:00 am – 7:00 pm.",
+      "Tuesday: 2:00 pm – 7:00 pm.",
+      "Wednesday and Friday: 12:00 pm – 7:00 pm."
+    ],
     "gettingHereTitle": "Getting here",
     "gettingHere": [
       { "title": "On foot", "body": "10 minutes from Parque México and the Ámsterdam corridor." },
-      { "title": "Metrobús / Metro", "body": "The closest station is Chilpancingo (Metro Line 9 / Metrobús)." },
-      { "title": "By car", "body": "Paid street parking on Nuevo León and nearby streets." }
+      { "title": "Metrobús / Metro", "body": "2 nearby Metrobús lines: Nuevo León line 2, and Chilpancingo line 9, or Chilpancingo metro station." },
+      {
+        "title": "By car",
+        "body": "Paid street parking on Nuevo León and nearby streets. Looking for a spot? Drop this address into your GPS and it'll take you to the parallel street to park.",
+        "link": { "label": "Get parking directions", "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8" }
+      }
     ],
     "amenitiesTitle": "On site",
     "amenities": [
@@ -190,7 +201,7 @@
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, Mexico City",
-    "hours": "Open daily · 11:00 am–7:00 pm",
+    "hours": "11:00 am–7:00 pm · Tue/Wed/Fri vary",
     "rights": "All rights reserved."
   },
   "mobileBar": {

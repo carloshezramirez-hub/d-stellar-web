@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -22,6 +23,10 @@ export function Header() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
+  // `pathname` is the unresolved template (e.g. "/events/[slug]") on dynamic
+  // routes, so the locale-switch Link needs the route params too — without
+  // them next-intl throws trying to compile the template.
+  const params = useParams();
   const [open, setOpen] = useState(false);
   const otherLocale = locale === "es" ? "en" : "es";
 
@@ -53,7 +58,7 @@ export function Header() {
 
         <div className="hidden items-center gap-4 xl:flex">
           <Link
-            href={pathname as never}
+            href={{ pathname, params } as never}
             locale={otherLocale}
             onClick={() => trackEvent("language_switch", { to: otherLocale })}
             className="font-tag text-xs uppercase tracking-widest text-stellar-white/60 transition-colors hover:text-stellar-pink"
@@ -86,7 +91,7 @@ export function Header() {
             </Link>
           ))}
           <Link
-            href={pathname as never}
+            href={{ pathname, params } as never}
             locale={otherLocale}
             onClick={() => {
               trackEvent("language_switch", { to: otherLocale });
