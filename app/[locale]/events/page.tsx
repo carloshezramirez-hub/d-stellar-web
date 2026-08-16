@@ -4,7 +4,7 @@ import { CalendarDays, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
-import { upcomingEvents, pastEvents } from "@/data/events";
+import { upcomingEvents, pastEvents, type EventRecord } from "@/data/events";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -24,7 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function formatDate(iso: string, locale: string) {
+function formatDate(event: EventRecord, locale: string) {
+  const loc = locale === "en" ? "en" : "es";
+  if (!event.dateISO) return event.monthLabel?.[loc] ?? "";
   return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-MX", {
     weekday: "long",
     day: "numeric",
@@ -32,7 +34,7 @@ function formatDate(iso: string, locale: string) {
     // Always show d-stellar's local time (CDMX) — see the same fix in
     // events/[slug]/page.tsx for why this is required.
     timeZone: "America/Mexico_City",
-  }).format(new Date(iso));
+  }).format(new Date(event.dateISO));
 }
 
 export default async function EventsPage({ params }: Props) {
@@ -88,12 +90,14 @@ export default async function EventsPage({ params }: Props) {
                         {event.title}
                       </p>
                       <p className="mt-1 flex items-center gap-2 text-sm text-stellar-white/65">
-                        <CalendarDays size={14} /> {formatDate(event.dateISO, locale)}
+                        <CalendarDays size={14} /> {formatDate(event, locale)}
                       </p>
                     </div>
-                    <p className="flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-green">
-                      <Users size={14} /> {event.capacity} {t("capacityUnit")}
-                    </p>
+                    {event.capacity != null && (
+                      <p className="flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-green">
+                        <Users size={14} /> {event.capacity} {t("capacityUnit")}
+                      </p>
+                    )}
                   </Link>
                 </li>
               ))}
@@ -112,7 +116,7 @@ export default async function EventsPage({ params }: Props) {
                     className="flex flex-col gap-1 border border-line/60 p-6 opacity-70 transition-opacity hover:opacity-100 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
-                    <p className="text-sm text-stellar-white/60">{formatDate(event.dateISO, locale)}</p>
+                    <p className="text-sm text-stellar-white/60">{formatDate(event, locale)}</p>
                   </Link>
                 </li>
               ))}

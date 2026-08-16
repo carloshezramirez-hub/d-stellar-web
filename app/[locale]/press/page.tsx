@@ -71,15 +71,21 @@ export default async function PressPage({ params }: Props) {
                   className="group flex flex-col gap-2 border-2 border-line p-6 transition-colors hover:border-stellar-pink"
                 >
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <span className="flex h-9 items-center rounded bg-stellar-white px-3">
-                      <Image
-                        src={mention.logo}
-                        alt={mention.outlet}
-                        width={140}
-                        height={28}
-                        className="h-5 w-auto object-contain"
-                      />
-                    </span>
+                    {mention.logo ? (
+                      <span className="flex h-9 items-center rounded bg-stellar-white px-3">
+                        <Image
+                          src={mention.logo}
+                          alt={mention.outlet}
+                          width={140}
+                          height={28}
+                          className="h-5 w-auto object-contain"
+                        />
+                      </span>
+                    ) : (
+                      <span className="flex h-9 items-center rounded border-2 border-line px-3 font-demi text-sm font-bold text-stellar-white">
+                        {mention.outlet}
+                      </span>
+                    )}
                     <span className="font-tag text-xs uppercase tracking-widest text-stellar-white/40">
                       {mention.dateLabel[loc]}
                     </span>

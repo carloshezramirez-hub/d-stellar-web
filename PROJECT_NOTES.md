@@ -178,14 +178,22 @@ clearly labeled) — no real event photos were supplied. Swap
   be a verified, live URL that actually names "d-stellar" — several roundup
   articles were checked and discarded during research because they didn't.
   Don't add a listicle link on the strength of its title alone. Each entry
-  also carries a `logo` path into `public/press-logos/` — real outlet
-  logos, not fabricated: `el-economista.svg` and `cronista.png` are the
-  outlets' own files from Wikimedia Commons (public-domain/no-threshold-of-
-  originality, trademark still applies), `almomento.png` was pulled directly
-  from the `<header>` of almomento.mx. Rendered on a white chip
-  (`bg-stellar-white`) in the press cards since El Economista's wordmark is
-  black and invisible on the dark theme otherwise. New mention → source a
-  real logo the same way before adding the entry.
+  also carries an optional `logo` path into `public/press-logos/` — real
+  outlet logos, not fabricated: `el-economista.svg`, `cronista.png`, and
+  `yahoo.svg` are the outlets' own files from Wikimedia Commons (public-
+  domain/no-threshold-of-originality, trademark still applies);
+  `almomento.png`, `sociedad-noticias.png`, `monchi-time.png`, and
+  `godin-chilango.png` were pulled directly from each outlet's own site
+  (`<header>` logo or, for `style-shockvisual.png`, its favicon — no bigger
+  mark exists on that site). Rendered on a white chip (`bg-stellar-white`)
+  in the press cards since some wordmarks (El Economista) are black and
+  invisible on the dark theme otherwise. `logo` is optional — when a real
+  logo genuinely can't be sourced (e.g. Nómada Capital's site lazy-loads its
+  logo behind JS with no static URL), omit it and the card falls back to
+  the outlet name as plain text; never fabricate a mark. New mention →
+  source a real logo the same way before adding the entry, and always
+  verify the URL actually names "d-stellar" first — don't add either on the
+  strength of the title alone.
 - `data/reviews.ts` — `ReviewQuote[]` + `googleReviewStats`, real Google
   Maps review quotes (copied verbatim, lightly trimmed, never invented) and
   the real aggregate rating/count, both supplied by the business owner from
@@ -252,6 +260,19 @@ script), and `status: "upcoming" | "past"` (flip manually once it's over —
 there's no automatic date-based sorting). Sitemap, JSON-LD, and the Google
 Calendar link all derive from this automatically.
 
+`dateISO`, `capacity`, and `includes` are all optional (added 2026-08-16 for
+retroactively-documented past events where those details were never
+tracked) — don't invent a time, headcount, or perk list to fill them in.
+When even the day is unknown, omit `dateISO` entirely and set `monthLabel`
+instead (`{ es: "Julio 2026", en: "July 2026" }`); when the day is known but
+the hour isn't, keep `dateISO` at midnight and set `timeKnown: false` so the
+formatted date drops the time instead of showing a fake one. The "Agregar al
+calendario" button only renders for `status: "upcoming"` events with a real
+`dateISO` — past events never get one, even if they have a full timestamp,
+since adding a past event to your calendar makes no sense. `externalUrl` is
+an optional CTA button (labeled "Instagram" today, but generic) linking out
+to a real social post about the event, when one exists.
+
 ## SEO / GEO
 
 Bilingual hreflang/canonical/alternates on every route. Local SEO intents
@@ -289,7 +310,12 @@ patch release.
 ## Missing assets — needs your intervention
 
 1. ~~Adobe Fonts kit~~ — resolved 2026-08-14, see "Typography" above.
-2. **Real event photography** — currently gradient+logo placeholders.
+2. **Real event photography** — partially resolved 2026-08-16: the three
+   events added from `Eventos Dstellar.pdf` (`todas-las-mas-2`,
+   `presentacion-video-musical`, `idilio-taller-poesia`) use real photos
+   extracted straight out of that PDF (`pdfimages`, cropped to 16:9). The
+   two original flagship events (`la-mas-draga-viewing-party`,
+   `pride-block-party`) still use the gradient+logo SVG placeholder.
 3. ~~Full-resolution product photos~~ — partially resolved 2026-08-14. The
    client shared a real studio shoot (`Fotos d-stellar estudio/`, ~1667×2500,
    professional light/shadow work) — three of the lowest-quality slots were

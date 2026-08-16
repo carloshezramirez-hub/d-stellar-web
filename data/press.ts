@@ -3,8 +3,10 @@ export type PressMention = {
   // Official outlet logo, sourced from the outlet itself or Wikimedia
   // Commons — see PROJECT_NOTES.md for provenance. Rendered on a white
   // chip so dark-text marks (e.g. El Economista) stay legible on our
-  // dark background.
-  logo: string;
+  // dark background. Omit only when no real logo could be sourced (e.g.
+  // Nómada Capital's site lazy-loads its logo behind JS) — the card then
+  // falls back to the outlet name as plain text, never a fabricated mark.
+  logo?: string;
   title: string;
   url: string;
   // Human-readable, deliberately not a precise ISO date — publish dates on
@@ -51,6 +53,71 @@ export const press: PressMention[] = [
     summary: {
       es: "d-stellar como caso central de un reportaje sobre emprendimiento LGBT+ como forma de activismo en México.",
       en: "d-stellar featured as the central case study in a piece on LGBT+ entrepreneurship as activism in Mexico.",
+    },
+  },
+  {
+    outlet: "Sociedad Noticias",
+    logo: "/press-logos/sociedad-noticias.png",
+    title: "Emprendedores LGBT+ enfrentan retos y buscan mayor apoyo",
+    url: "https://sociedad-noticias.com/2026/06/28/emprendedores-lgbt-enfrentan-retos-y-buscan-mayor-apoyo/",
+    dateLabel: { es: "Junio 2026", en: "June 2026" },
+    summary: {
+      es: "Eduardo de Castilla, cofundador de d-stellar, explica cómo el negocio nació para construir un espacio seguro donde la comunidad LGBTQ+ pueda sentirse protegida y auténtica.",
+      en: "Eduardo de Castilla, d-stellar's co-founder, explains how the business was built to create a safe space where the LGBTQ+ community can feel protected and authentic.",
+    },
+  },
+  {
+    outlet: "Nómada Capital",
+    title: "¿La mejor cookie shop de CDMX? D-Stellar conquista la Condesa con galletas que cambian cada mes",
+    url: "https://nomada-capital.com/la-mejor-cookie-shop-de-cdmx-d-stellar-conquista-la-condesa-con-galletas-que-cambian-cada-mes/",
+    dateLabel: { es: "Agosto 2026", en: "August 2026" },
+    summary: {
+      es: "Un perfil de d-stellar como la tienda conceptual en la Condesa que reinventa su menú cada mes, con la colección \"All Stars\" de julio como ejemplo de su propuesta inclusiva.",
+      en: "A profile of d-stellar as the concept shop in Condesa that reinvents its menu every month, spotlighting July's \"All Stars\" collection as an example of its inclusive approach.",
+    },
+  },
+  {
+    outlet: "Style by ShockVisual",
+    logo: "/press-logos/style-shockvisual.png",
+    title: "Todo lo que debes saber de D-Stellar",
+    url: "https://style.shockvisual.net/todo-lo-que-debes-saber-de-d-stellar/",
+    dateLabel: { es: "Julio 2026", en: "July 2026" },
+    summary: {
+      es: "Una guía completa sobre d-stellar: la cookie shop conceptual de la Condesa que renueva su menú cada mes y combina repostería artesanal con watch parties y eventos comunitarios.",
+      en: "A complete guide to d-stellar: the concept cookie shop in Condesa that renews its menu every month, blending artisanal baking with watch parties and community events.",
+    },
+  },
+  {
+    outlet: "Yahoo Noticias",
+    logo: "/press-logos/yahoo.svg",
+    title: "D-Stellar: más que un negocio de galletas, un espacio seguro para la comunidad LGBTQ+",
+    url: "https://es-us.noticias.yahoo.com/d-stellar-negocio-galletas-espacio-130000468.html",
+    dateLabel: { es: "Junio 2026", en: "June 2026" },
+    summary: {
+      es: "d-stellar presentado como un espacio seguro para la comunidad LGBTQ+ construido a partir de una cookie shop, incluyendo los retos financieros que ha enfrentado el negocio.",
+      en: "d-stellar presented as a safe space for the LGBTQ+ community built out of a cookie shop, including the financial challenges the business has faced.",
+    },
+  },
+  {
+    outlet: "Monchi Time",
+    logo: "/press-logos/monchi-time.png",
+    title: "D-Stellar, la cookie shop mexicana que está conquistando a una creciente comunidad foodie",
+    url: "https://monchitime.com/2026/07/d-stellar-la-cookie-shop-mexicana-que-esta-conquistando-a-una-creciente-comunidad-foodie/",
+    dateLabel: { es: "Julio 2026", en: "July 2026" },
+    summary: {
+      es: "d-stellar como el emprendimiento de Condesa que se reinventa cada mes con colecciones temáticas de cookies artesanales, construyendo comunidad a través de experiencias que mezclan repostería y cultura pop.",
+      en: "d-stellar as the Condesa venture that reinvents itself every month with themed artisanal cookie collections, building community through experiences that blend baking and pop culture.",
+    },
+  },
+  {
+    outlet: "Godínez Chilangxs",
+    logo: "/press-logos/godin-chilango.png",
+    title: "D-Stellar renueva su menú cada mes y se convierte en una parada obligada para los amantes de las cookies en CDMX",
+    url: "https://godinchilango.com.mx/d-stellar-renueva-su-menu-cada-mes-y-se-convierte-en-una-parada-obligada-para-los-amantes-de-las-cookies-en-cdmx/",
+    dateLabel: { es: "Julio 2026", en: "July 2026" },
+    summary: {
+      es: "d-stellar en Hipódromo Condesa, con su menú mensual y la colección \"All Stars\" de julio reuniendo las cinco cookies más populares según la comunidad.",
+      en: "d-stellar in Hipódromo Condesa, spotlighting its monthly menu and July's \"All Stars\" collection, bringing together its five most popular cookies as chosen by the community.",
     },
   },
 ];
