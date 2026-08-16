@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CalendarDays, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -83,15 +84,26 @@ export default async function EventsPage({ params }: Props) {
                 <li key={event.slug}>
                   <Link
                     href={{ pathname: "/events/[slug]", params: { slug: event.slug } }}
-                    className="group flex flex-col gap-3 border-2 border-line p-6 transition-colors hover:border-stellar-pink sm:flex-row sm:items-center sm:justify-between"
+                    className="group flex flex-col gap-4 border-2 border-line p-6 transition-colors hover:border-stellar-pink sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <div>
-                      <p className="font-demi text-xl font-bold text-stellar-white group-hover:text-stellar-pink">
-                        {event.title}
-                      </p>
-                      <p className="mt-1 flex items-center gap-2 text-sm text-stellar-white/65">
-                        <CalendarDays size={14} /> {formatDate(event, locale)}
-                      </p>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden border border-line bg-stellar-black-soft sm:w-40">
+                        <Image
+                          src={event.coverImage}
+                          alt=""
+                          fill
+                          sizes="(min-width: 640px) 160px, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-demi text-xl font-bold text-stellar-white group-hover:text-stellar-pink">
+                          {event.title}
+                        </p>
+                        <p className="mt-1 flex items-center gap-2 text-sm text-stellar-white/65">
+                          <CalendarDays size={14} /> {formatDate(event, locale)}
+                        </p>
+                      </div>
                     </div>
                     {event.capacity != null && (
                       <p className="flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-green">
@@ -108,15 +120,26 @@ export default async function EventsPage({ params }: Props) {
         {past.length > 0 && (
           <section className="mx-auto mt-16 max-w-4xl">
             <h2 className="font-display text-2xl font-black uppercase text-stellar-white/60">{t("pastTitle")}</h2>
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {past.map((event) => (
                 <li key={event.slug}>
                   <Link
                     href={{ pathname: "/events/[slug]", params: { slug: event.slug } }}
-                    className="flex flex-col gap-1 border border-line/60 p-6 opacity-70 transition-opacity hover:opacity-100 sm:flex-row sm:items-center sm:justify-between"
+                    className="group flex flex-col gap-3 border border-line/60 p-4 opacity-80 transition-opacity hover:opacity-100"
                   >
-                    <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
-                    <p className="text-sm text-stellar-white/60">{formatDate(event, locale)}</p>
+                    <div className="relative aspect-[16/9] w-full overflow-hidden border border-line bg-stellar-black-soft">
+                      <Image
+                        src={event.coverImage}
+                        alt=""
+                        fill
+                        sizes="(min-width: 640px) 45vw, 100vw"
+                        className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
+                      <p className="text-sm text-stellar-white/60">{formatDate(event, locale)}</p>
+                    </div>
                   </Link>
                 </li>
               ))}

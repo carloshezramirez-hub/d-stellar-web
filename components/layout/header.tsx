@@ -10,7 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const NAV_ITEMS = [
   { href: "/menu" as const, key: "menu" },
-  { href: "/calendar" as const, key: "calendar" },
+  { href: "/historias" as const, key: "historias" },
   { href: "/events" as const, key: "events" },
   { href: "/pickup" as const, key: "pickup" },
   { href: "/visit" as const, key: "visit" },

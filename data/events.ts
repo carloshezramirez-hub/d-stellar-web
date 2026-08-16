@@ -57,7 +57,7 @@ export const events: EventRecord[] = [
       es: "Interior de d-stellar preparado para viewing party con pantalla e iluminación cálida",
       en: "d-stellar's interior set up for a viewing party with screen and warm lighting",
     },
-    status: "upcoming",
+    status: "past",
   },
   {
     slug: "pride-block-party",

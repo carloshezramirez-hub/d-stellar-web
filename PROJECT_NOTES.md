@@ -168,11 +168,16 @@ clearly labeled) — no real event photos were supplied. Swap
   `compareAtPriceMXN` is the struck-through "before discount" price
   (`packSize × single-cookie price`) shown next to the pack price on `/menu`.
 - `data/events.ts` — `EventRecord[]`. See "Updating content."
-- `data/cookie-calendar.ts` — `CalendarMonth[]`, the monthly cookie archive
-  rendered on `/calendar`. Separate from `data/menu.ts` on purpose: `menu.ts`
-  only ever holds the *current* rotation, this file keeps every past month
-  on the record. `CalendarCookie` has no `priceMXN` on purpose — `/calendar`
-  is a flavor archive, not a price list; current prices live on `/menu` only.
+- `data/menu-history.ts` — `MonthlyStory[]`, rendered on `/historias` (was
+  `/calendar` until 2026-08-16, when the client sent 9 months of real
+  monthly narratives — see "Historias del menú" in "Updating content" for
+  where that content lives and how to add the next chapter). Separate from
+  `data/menu.ts` on purpose: `menu.ts` only ever holds the *current*
+  rotation, this file is the permanent archive. Sorted newest-first;
+  `chapterNumber` counts up chronologically from December 2025 (1) so
+  prev/next navigation on the detail page reads forward in time even
+  though the array itself is newest-first — see the comment in
+  `historias/[mes]/page.tsx` before changing that logic.
 - `data/press.ts` — `PressMention[]`, real third-party coverage rendered on
   `/press` (media-only page — no reviews there, see below). Every entry must
   be a verified, live URL that actually names "d-stellar" — several roundup
@@ -231,9 +236,25 @@ clearly labeled) — no real event photos were supplied. Swap
 **Monthly cookie rotation** — edit `data/menu.ts` → `cookies` section (well,
 `gourmet-cookies`): replace the five items' `name`/`description`/`priceMXN`,
 update `MENU_MONTH_LABEL`. The homepage marquee reads the same section
-automatically. Also push a new entry to `data/cookie-calendar.ts` with the
-*outgoing* month's lineup before overwriting `menu.ts` — that array is the
-archive `/calendar` reads, so it only grows, never gets overwritten.
+automatically.
+
+**Historias del menú** — d-stellar writes an in-house narrative for every
+monthly collection (why the theme, what each cookie means) and hands it over
+as a `.docx` per month once that month wraps, plus a folder of real photos.
+Add the *outgoing* month to `data/menu-history.ts` — `MonthlyStory` (title,
+hook, intro, one `CookieStory` per flavor with `tagline` + `story`, a closing
+section, `oneLiner`) — **before** overwriting `menu.ts` for the new month, so
+nothing gets lost. Push the new entry to the *front* of the array (it's
+newest-first) and bump `chapterNumber` by one. Never invent copy here if a
+month's `.docx` isn't ready yet — leave that month out of the archive until
+the real write-up arrives, the way August 2026 was left out at launch.
+Photos: pick 2–4 from the month's folder, run through
+`ImageOps.exif_transpose` (phone photos come in every orientation) before
+cropping — see the git history around 2026-08-16 for the exact script — save
+to `public/images/historias/{slug}/` as `hero.webp` + `gallery-N.webp`. Every
+paragraph needs both `es` and `en` — this content is real editorial writing
+supplied by the client, not filler, so translate it properly, don't
+machine-summarize it down to nothing.
 
 **New press mention** — add to `data/press.ts`: `outlet`, `title`, `url`,
 `dateLabel`, bilingual `summary`. Verify the URL actually names "d-stellar"

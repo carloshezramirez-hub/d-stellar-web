@@ -5,7 +5,7 @@
   },
   "nav": {
     "menu": "Menú",
-    "calendar": "Calendario",
+    "historias": "Historias",
     "events": "Eventos",
     "pickup": "Pickup",
     "visit": "Visita",
@@ -192,12 +192,14 @@
     "mediaIntro": "Notas y reportajes donde se habla de d-stellar — el negocio, el espacio y la comunidad que construimos.",
     "readMore": "Leer la nota"
   },
-  "calendar": {
-    "eyebrow": "Calendario",
-    "title": "Las cookies, mes a mes",
-    "intro": "Cada mes reinventamos la colección completa. Aquí queda el registro — lo que está en la barra ahora, y lo que ya pasó a la historia.",
-    "currentBadge": "En la barra ahora",
-    "viewMenu": "Ver el menú completo"
+  "historias": {
+    "eyebrow": "Historias del menú",
+    "title": "La historia detrás de cada mes",
+    "intro": "Cada colección tiene un porqué. Aquí guardamos la historia real detrás de cada menú, mes a mes, desde el primero.",
+    "readStory": "Leer la historia",
+    "backToHistorias": "Volver a historias",
+    "chapter": "Capítulo {n}",
+    "viewMenu": "Ver el menú actual"
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, CDMX",

@@ -5,7 +5,7 @@
   },
   "nav": {
     "menu": "Menu",
-    "calendar": "Calendar",
+    "historias": "Stories",
     "events": "Events",
     "pickup": "Pickup",
     "visit": "Visit",
@@ -192,12 +192,14 @@
     "mediaIntro": "Articles and features covering d-stellar — the business, the space, and the community we've built.",
     "readMore": "Read the article"
   },
-  "calendar": {
-    "eyebrow": "Calendar",
-    "title": "The cookies, month by month",
-    "intro": "Every month we reinvent the full collection. This is the record — what's on the counter now, and what's already history.",
-    "currentBadge": "On the counter now",
-    "viewMenu": "See the full menu"
+  "historias": {
+    "eyebrow": "Menu stories",
+    "title": "The story behind every month",
+    "intro": "Every collection has a why. This is where we keep the real story behind each menu, month by month, since the first one.",
+    "readStory": "Read the story",
+    "backToHistorias": "Back to stories",
+    "chapter": "Chapter {n}",
+    "viewMenu": "See the current menu"
   },
   "footer": {
     "address": "Av. Nuevo León 217, Hipódromo Condesa, Mexico City",
