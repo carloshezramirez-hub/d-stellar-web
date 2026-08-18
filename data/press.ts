@@ -120,4 +120,24 @@ export const press: PressMention[] = [
       en: "d-stellar in Hipódromo Condesa, spotlighting its monthly menu and July's \"All Stars\" collection, bringing together its five most popular cookies as chosen by the community.",
     },
   },
+  {
+    outlet: "Real Estate Market & Lifestyle",
+    title: "Comprar productos mexicanos también es apostar por el futuro del país",
+    url: "https://www.realestatemarket.com.mx/noticias/turismo/8-noticias/51293-comprar-productos-mexicanos-tambien-es-apostar-por-el-futuro-del-pais",
+    dateLabel: { es: "Agosto 2026", en: "August 2026" },
+    summary: {
+      es: "d-stellar citado como ejemplo de cookie shop conceptual de la Condesa fundada por Eduardo de Castilla y Hernán Castilla, en un reportaje sobre el valor de apoyar productos y negocios mexicanos.",
+      en: "d-stellar cited as an example of a concept cookie shop in Condesa founded by Eduardo de Castilla and Hernán Castilla, in a piece on the value of supporting Mexican products and businesses.",
+    },
+  },
+  {
+    outlet: "Índice Corporativo",
+    title: "Apoyo al Talento Mexicano",
+    url: "https://indicecorporativo.com/2026/08/apoyo-al-talento-mexicano/",
+    dateLabel: { es: "Agosto 2026", en: "August 2026" },
+    summary: {
+      es: "d-stellar destacado como ejemplo de negocio mexicano innovador en Hipódromo Condesa, con declaraciones de su cofundador Eduardo de Castilla sobre apoyar el talento local.",
+      en: "d-stellar highlighted as an example of an innovative Mexican business in Hipódromo Condesa, featuring comments from co-founder Eduardo de Castilla on supporting local talent.",
+    },
+  },
 ];
