@@ -5,7 +5,8 @@ import { ArrowUpRight, Star } from "lucide-react";
 import { CtaLink, CtaAnchor } from "@/components/ui/cta-link";
 import { StarField } from "@/components/ui/star-field";
 import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
-import { menu } from "@/data/menu";
+import { HeroCarousel } from "@/components/sections/hero-carousel";
+import { menu, MENU_MONTH_LABEL } from "@/data/menu";
 import { BUSINESS } from "@/data/site";
 import { googleReviews, googleReviewStats } from "@/data/reviews";
 
@@ -37,41 +38,92 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-line px-5 pb-16 pt-14 md:pb-24 md:pt-20">
-        <StarField />
-        <div className="relative mx-auto grid max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
-          <div>
-            <p className="font-tag text-xs uppercase tracking-[0.35em] text-stellar-pink">{t("heroKicker")}</p>
-            <h1 className="mt-4 font-display text-[15vw] font-black uppercase leading-[0.85] tracking-tight text-stellar-white sm:text-7xl md:text-8xl lg:text-[7.5rem]">
-              {t("heroTitle")}
-            </h1>
-            <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
-              {t("heroSubtitle")}
-            </p>
-            <p className="star-rule mt-4 font-tag text-xs uppercase text-stellar-green">{t("heroTag")}</p>
+      {/* HERO — carousel: brand intro slide + this month's cookie lineup */}
+      <section className="border-b border-line">
+        <HeroCarousel
+          slides={[
+            <div
+              key="brand"
+              className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20"
+            >
+              <StarField />
+              <div className="relative mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
+                <div>
+                  <p className="font-tag text-xs uppercase tracking-[0.35em] text-stellar-pink">{t("heroKicker")}</p>
+                  <h1 className="mt-4 font-display text-[15vw] font-black uppercase leading-[0.85] tracking-tight text-stellar-white sm:text-7xl md:text-8xl lg:text-[7.5rem]">
+                    {t("heroTitle")}
+                  </h1>
+                  <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
+                    {t("heroSubtitle")}
+                  </p>
+                  <p className="star-rule mt-4 font-tag text-xs uppercase text-stellar-green">{t("heroTag")}</p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
-                {cta("directions")} <ArrowUpRight size={14} />
-              </CtaAnchor>
-              <CtaLink href="/menu" variant="outline">
-                {cta("viewMenu")}
-              </CtaLink>
-            </div>
-          </div>
+                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+                      {cta("directions")} <ArrowUpRight size={14} />
+                    </CtaAnchor>
+                    <CtaLink href="/menu" variant="outline">
+                      {cta("viewMenu")}
+                    </CtaLink>
+                  </div>
+                </div>
 
-          <div className="relative hidden shrink-0 md:block">
-            <Image
-              src="/brand/illustrations/star-person-run-white.png"
-              alt=""
-              width={2956}
-              height={3053}
-              className="h-56 w-auto opacity-90 lg:h-72"
-              priority
-            />
-          </div>
-        </div>
+                <div className="relative hidden shrink-0 md:block">
+                  <Image
+                    src="/brand/illustrations/star-person-run-white.png"
+                    alt=""
+                    width={2956}
+                    height={3053}
+                    className="h-56 w-auto opacity-90 lg:h-72"
+                    priority
+                  />
+                </div>
+              </div>
+            </div>,
+            <div key="monthly" className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20">
+              <Image
+                src="/images/products/cookie-display-dark.webp"
+                alt=""
+                fill
+                sizes="100vw"
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-stellar-black/70" />
+              <div className="relative mx-auto w-full max-w-6xl">
+                <p className="inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
+                  {MENU_MONTH_LABEL[loc]}
+                </p>
+                <p className="mt-5 font-tag text-xs uppercase tracking-[0.35em] text-stellar-green">
+                  {t("heroMonthlyKicker")}
+                </p>
+                <h2 className="mt-4 max-w-2xl font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white sm:text-6xl md:text-7xl">
+                  {t("heroMonthlyTitle")}
+                </h2>
+                <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
+                  {t("heroMonthlySubtitle")}
+                </p>
+
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {cookieNames.map((name) => (
+                    <li
+                      key={name}
+                      className="border-2 border-stellar-white/30 px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-white/85"
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-8">
+                  <CtaLink href="/menu" variant="solid">
+                    {cta("viewMenu")} <ArrowUpRight size={14} />
+                  </CtaLink>
+                </div>
+              </div>
+            </div>,
+          ]}
+        />
       </section>
 
       {/* MARQUEE */}
