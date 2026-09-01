@@ -44,7 +44,7 @@ export default async function HomePage({ params }: Props) {
           slides={[
             <div
               key="brand"
-              className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20"
+              className="relative flex min-h-[560px] items-start overflow-hidden px-5 pb-16 pt-16 md:min-h-[620px] md:pb-24 md:pt-28"
             >
               <StarField />
               <div className="relative mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
@@ -82,23 +82,25 @@ export default async function HomePage({ params }: Props) {
             </div>,
             <div
               key="monthly"
-              className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20"
+              className="relative flex min-h-[560px] items-start overflow-hidden px-5 pb-16 pt-16 md:min-h-[620px] md:pb-24 md:pt-28"
             >
               <StarField />
               <div className="relative mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-10">
                 <div>
-                  <p className="inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
-                    {MENU_MONTH_LABEL[loc]}
-                  </p>
-                  <p className="mt-5 font-tag text-xs uppercase tracking-[0.35em] text-stellar-green">
-                    {t("heroMonthlyKicker")}
-                  </p>
-                  <h2 className="mt-4 max-w-2xl font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white sm:text-6xl md:text-7xl">
+                  <p className="font-tag text-xs uppercase tracking-[0.35em] text-stellar-pink">{MENU_MONTH_LABEL[loc]}</p>
+                  <h2 className="mt-4 font-display text-[15vw] font-black uppercase leading-[0.85] tracking-tight text-stellar-white sm:text-7xl md:text-8xl lg:text-[7.5rem]">
                     {t("heroMonthlyTitle")}
                   </h2>
                   <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
                     {t("heroMonthlySubtitle")}
                   </p>
+                  <p className="star-rule mt-4 font-tag text-xs uppercase text-stellar-green">{t("heroMonthlyKicker")}</p>
+
+                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <CtaLink href="/menu" variant="solid">
+                      {cta("viewMenu")} <ArrowUpRight size={14} />
+                    </CtaLink>
+                  </div>
 
                   <ul className="mt-6 flex flex-wrap gap-2">
                     {cookieNames.map((name) => (
@@ -110,12 +112,6 @@ export default async function HomePage({ params }: Props) {
                       </li>
                     ))}
                   </ul>
-
-                  <div className="mt-8">
-                    <CtaLink href="/menu" variant="solid">
-                      {cta("viewMenu")} <ArrowUpRight size={14} />
-                    </CtaLink>
-                  </div>
                 </div>
 
                 <div className="relative mx-auto aspect-[3/4] w-48 shrink-0 overflow-hidden border-2 border-line sm:w-56 md:mx-0 md:w-72 lg:w-80">

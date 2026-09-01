@@ -12,8 +12,8 @@ export function HeroCarousel({ slides }: { slides: ReactNode[] }) {
   const goTo = useCallback((index: number) => {
     const track = trackRef.current;
     const slide = track?.children[index];
-    if (slide instanceof HTMLElement) {
-      slide.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    if (track && slide instanceof HTMLElement) {
+      track.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
     }
   }, []);
 
