@@ -80,45 +80,52 @@ export default async function HomePage({ params }: Props) {
                 </div>
               </div>
             </div>,
-            <div key="monthly" className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20">
-              <Image
-                src="/images/products/cookie-display-dark.webp"
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-stellar-black/70" />
-              <div className="relative mx-auto w-full max-w-6xl">
-                <p className="inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
-                  {MENU_MONTH_LABEL[loc]}
-                </p>
-                <p className="mt-5 font-tag text-xs uppercase tracking-[0.35em] text-stellar-green">
-                  {t("heroMonthlyKicker")}
-                </p>
-                <h2 className="mt-4 max-w-2xl font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white sm:text-6xl md:text-7xl">
-                  {t("heroMonthlyTitle")}
-                </h2>
-                <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
-                  {t("heroMonthlySubtitle")}
-                </p>
+            <div
+              key="monthly"
+              className="relative flex min-h-[560px] items-center overflow-hidden px-5 pb-16 pt-14 md:min-h-[620px] md:pb-24 md:pt-20"
+            >
+              <StarField />
+              <div className="relative mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-10">
+                <div>
+                  <p className="inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
+                    {MENU_MONTH_LABEL[loc]}
+                  </p>
+                  <p className="mt-5 font-tag text-xs uppercase tracking-[0.35em] text-stellar-green">
+                    {t("heroMonthlyKicker")}
+                  </p>
+                  <h2 className="mt-4 max-w-2xl font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white sm:text-6xl md:text-7xl">
+                    {t("heroMonthlyTitle")}
+                  </h2>
+                  <p className="mt-6 max-w-lg text-balance text-base text-stellar-white/75 md:text-lg">
+                    {t("heroMonthlySubtitle")}
+                  </p>
 
-                <ul className="mt-6 flex flex-wrap gap-2">
-                  {cookieNames.map((name) => (
-                    <li
-                      key={name}
-                      className="border-2 border-stellar-white/30 px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-white/85"
-                    >
-                      {name}
-                    </li>
-                  ))}
-                </ul>
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {cookieNames.map((name) => (
+                      <li
+                        key={name}
+                        className="border-2 border-stellar-white/30 px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-white/85"
+                      >
+                        {name}
+                      </li>
+                    ))}
+                  </ul>
 
-                <div className="mt-8">
-                  <CtaLink href="/menu" variant="solid">
-                    {cta("viewMenu")} <ArrowUpRight size={14} />
-                  </CtaLink>
+                  <div className="mt-8">
+                    <CtaLink href="/menu" variant="solid">
+                      {cta("viewMenu")} <ArrowUpRight size={14} />
+                    </CtaLink>
+                  </div>
+                </div>
+
+                <div className="relative mx-auto aspect-[3/4] w-48 shrink-0 overflow-hidden border-2 border-line sm:w-56 md:mx-0 md:w-72 lg:w-80">
+                  <Image
+                    src="/images/products/cookie-display-lit.webp"
+                    alt="Cookies del mes en su caja d-stellar"
+                    fill
+                    sizes="(min-width: 768px) 320px, 220px"
+                    className="object-cover"
+                  />
                 </div>
               </div>
             </div>,
