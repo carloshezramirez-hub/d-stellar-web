@@ -40,7 +40,7 @@
     "introBody": "At d-stellar we bake in short batches, serve cacao and coffee with intention, and open our doors at night for screenings, viewing parties, and gatherings that build community. It's a small place that feels huge once you're inside.",
     "statementTitle": "Authentic. Original. Unbreakable.",
     "statementBody": "A brand that's transgressive, unstoppable and kind — where you can express yourself freely, with no fear of judgment. A community. A universe of your own.",
-    "menuTeaserTitle": "August's lineup",
+    "menuTeaserTitle": "September's lineup",
     "menuTeaserBody": "Five cookies, signature drinks, and everything else — it changes every month, so if you loved something, come back soon.",
     "eventsTeaserTitle": "What's coming up",
     "eventsTeaserBody": "Viewing parties, collaborations, and private nights in a limited-capacity space.",
@@ -57,7 +57,7 @@
   "menu": {
     "eyebrow": "Menu",
     "title": "The menu",
-    "intro": "These categories stay put. The flavors inside each one rotate month to month — this is August's lineup.",
+    "intro": "These categories stay put. The flavors inside each one rotate month to month — this is September's lineup.",
     "note": "Let us know about any allergies or dietary needs. Prices in Mexican pesos."
   },
   "events": {
@@ -113,6 +113,8 @@
       { "title": "2. Walk into the passage", "body": "The pavilion is a shared indoor passage — walk in and head toward the back, past the other shops." },
       { "title": "3. Look for the d-stellar door", "body": "The \"d-stellar\" sign hangs over a narrow doorway next to the community flag — that's it." }
     ],
+    "videoTitle": "Still can't spot it? Watch the video",
+    "videoBody": "A real walkthrough, filmed on site, so you don't circle the block looking for the entrance.",
     "addressTitle": "Address",
     "hoursTitle": "Hours",
     "hoursBody": [
@@ -170,12 +172,14 @@
     "title": "The Sweet Universe Company",
     "lead": "d-stellar started in 2024, founded by Hernán Castilla and Eduardo Hernández, on one simple idea: cookies can be the excuse to build community.",
     "body": [
-      "We started baking in short batches for a handful of Condesa neighbors. We're still doing exactly that — we just fit exactly right now, and that feels perfect.",
-      "Every month we reinvent the cookie and drinks collection. Every so often, we dim the lights for a screening, a collaboration, or a small party that feels enormous."
+      "D-stellar is a Mexican brand that turns signature baking into a platform for gastronomic, cultural, and participatory experiences that builds community and empowerment.",
+      "Love, family, pride, courage, and resilience are the values that have been with us since the beginning. Diversity and authenticity aren't campaigns to us: they're part of how we build our brand, our relationships, and the spaces we want to create.",
+      "Our future is to keep expanding this universe: developing new gastronomic experiences, opening new gathering spots, and building a Mexican brand capable of giving voice to those who have always needed it.",
+      "Because we can change, evolve, and go much further, but there's one idea that will always remain:"
     ],
     "brandStatementTitle": "Authentic. Original. Unbreakable. Iconic. Defiant.",
     "brandStatement": "We're a brand that's transgressive, unstoppable and kind — where you can express yourself freely, with no fear of judgment. A community. A universe of your own.",
-    "quote": "Together we shine brighter — it's not just a tagline, it's why we open the door every morning."
+    "quote": "Together we shine brighter."
   },
   "press": {
     "eyebrow": "Press",

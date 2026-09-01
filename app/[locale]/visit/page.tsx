@@ -82,6 +82,23 @@ export default async function VisitPage({ params }: Props) {
         </div>
       </div>
 
+      <div className="mx-auto mt-16 max-w-2xl">
+        <h2 className="font-display text-2xl font-black uppercase text-stellar-white">{t("videoTitle")}</h2>
+        <p className="mt-2 text-sm text-stellar-white/65">{t("videoBody")}</p>
+        <div className="relative mx-auto mt-6 aspect-[9/16] max-w-xs overflow-hidden border-2 border-line">
+          <video
+            src="/videos/como-llegar.mp4"
+            poster="/images/location/como-llegar-poster.webp"
+            controls
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          >
+            <track kind="captions" />
+          </video>
+        </div>
+      </div>
+
       <div className="mx-auto mt-16 grid max-w-5xl gap-10 md:grid-cols-2">
         <div>
           <h2 className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("addressTitle")}</h2>

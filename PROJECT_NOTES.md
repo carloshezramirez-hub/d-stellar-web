@@ -150,6 +150,17 @@ original camera roll before using any of them larger than ~700px wide.
 clearly labeled) — no real event photos were supplied. Swap
 `data/events.ts` → `coverImage` for real photos when available.
 
+**Entrance walkthrough video** (added 2026-09-01) — `public/videos/como-llegar.mp4`
+is a real phone recording supplied by the client (WhatsApp export, 478×850,
+h264/aac, ~5.9MB, remuxed with `-movflags +faststart` for progressive
+playback, no re-encode/quality loss) showing the actual walk from the street
+into the hidden entrance. Rendered on `/visit` right under the 3-step photo
+grid via a native `<video controls>` (no autoplay — vertical video with
+audio), poster frame at `public/images/location/como-llegar-poster.webp`
+(extracted with ffmpeg, not a placeholder). If the client ever sends a
+higher-resolution source (not run through WhatsApp's compression), replace
+the file in place — no code change needed since the path is fixed.
+
 ## Architecture
 
 - `app/[locale]/...` — `next-intl` `as-needed` prefix: Spanish at the root, no

@@ -40,7 +40,7 @@
     "introBody": "d-stellar horneamos en tandas cortas, servimos cacao y café con intención, y abrimos las noches para proyecciones, viewing parties y encuentros que hacen comunidad. Es un lugar chico que se siente enorme cuando estás dentro.",
     "statementTitle": "Auténtic★s. Original★s. Inquebrantables.",
     "statementBody": "Una marca transgresora, imparable y amable, donde te puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un universo propio.",
-    "menuTeaserTitle": "La propuesta de agosto",
+    "menuTeaserTitle": "La propuesta de septiembre",
     "menuTeaserBody": "Cinco cookies, bebidas de autor y todo lo demás — cambia mes a mes, así que si te gustó algo, vuelve pronto.",
     "eventsTeaserTitle": "Lo que viene",
     "eventsTeaserBody": "Viewing parties, colaboraciones y noches privadas en un espacio de cupo limitado.",
@@ -57,7 +57,7 @@
   "menu": {
     "eyebrow": "Menú",
     "title": "El menú",
-    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes — esta es la propuesta de agosto.",
+    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes — esta es la propuesta de septiembre.",
     "note": "Avísanos si tienes alguna alergia o restricción. Precios en pesos mexicanos."
   },
   "events": {
@@ -113,6 +113,8 @@
       { "title": "2. Entra al pasillo", "body": "El pabellón es un pasillo compartido — entra y camina hacia el fondo, pasando otros locales." },
       { "title": "3. Busca la puerta d-stellar", "body": "El letrero \"d-stellar\" cuelga sobre una puerta angosta junto a la bandera de la comunidad — ahí es." }
     ],
+    "videoTitle": "¿Todavía no la ubicas? Mira el video",
+    "videoBody": "Un recorrido real, grabado en el lugar, para que no le des la vuelta a la cuadra buscando la entrada.",
     "addressTitle": "Dirección",
     "hoursTitle": "Horario",
     "hoursBody": [
@@ -170,12 +172,14 @@
     "title": "The Sweet Universe Company",
     "lead": "d-stellar nació en 2024, de la mano de Hernán Castilla y Eduardo Hernández, con una idea simple: las cookies pueden ser una excusa para construir comunidad.",
     "body": [
-      "Empezamos horneando en tandas cortas para un puñado de vecinos de la Condesa. Hoy seguimos haciendo lo mismo — solo que ahora cabemos justo, y eso nos parece perfecto.",
-      "Cada mes reinventamos la colección de cookies y bebidas. Cada tanto, apagamos las luces para una proyección, una colaboración o una fiesta chica que se siente enorme."
+      "D-stellar es una marca mexicana que convierte la repostería de autor en una plataforma de experiencias gastronómicas, culturales y participativas que genera comunidad y empoderamiento.",
+      "Amor, familia, orgullo, valentía y resiliencia son los valores que nos acompañan desde el origen. La diversidad y la autenticidad no son campañas para nosotros: forman parte de la manera en la que construimos nuestra marca, nuestras relaciones y los espacios que queremos crear.",
+      "Nuestro futuro es seguir expandiendo este universo: desarrollar nuevas experiencias gastronómicas, abrir nuevos puntos de encuentro y construir una marca mexicana capaz de dar voz a quienes siempre la han necesitado.",
+      "Porque podemos cambiar, evolucionar y llegar mucho más lejos, pero hay una idea que permanecerá siempre:"
     ],
     "brandStatementTitle": "Auténtic★s. Original★s. Inquebrantables. Icónic★s. Desafiantes.",
     "brandStatement": "Somos una marca transgresora, imparable y amable, donde te puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un universo propio.",
-    "quote": "Junt★s brillamos más — no es solo un eslogan, es la razón por la que abrimos la puerta cada mañana."
+    "quote": "Junt★s brillamos más."
   },
   "press": {
     "eyebrow": "Prensa",

@@ -20,11 +20,12 @@ export type MenuSection = {
   items: MenuItem[];
 };
 
-// Verified against the menu board photographed in-store, August. To update
-// the monthly cookie rotation: edit the `cookies` section (names, descriptions,
-// prices) and `MENU_MONTH_LABEL` below — everything else tends to hold steady
-// month to month. See PROJECT_NOTES.md → "Cómo actualizar el menú".
-export const MENU_MONTH_LABEL = { es: "Menú de agosto", en: "August menu" };
+// Verified against the September menu board (photo supplied by the client,
+// 2026-09-01). To update the monthly cookie rotation: edit the `cookies`
+// section (names, descriptions, prices) and `MENU_MONTH_LABEL` below —
+// everything else tends to hold steady month to month. See
+// PROJECT_NOTES.md → "Cómo actualizar el menú".
+export const MENU_MONTH_LABEL = { es: "Menú de septiembre", en: "September menu" };
 
 export const menu: MenuSection[] = [
   {
@@ -37,53 +38,53 @@ export const menu: MenuSection[] = [
     },
     items: [
       {
-        slug: "nube-ambar",
-        name: "Nube Ámbar",
+        slug: "primer-latido",
+        name: "Primer Latido",
         description: {
-          es: "Cookie de vainilla con corazón de pera rostizada, crema sedosa de mascarpone y tierra crujiente de cacao y café.",
-          en: "Vanilla cookie with a roasted-pear center, silky mascarpone cream and a crunchy cacao-coffee crumble.",
+          es: "Cookie inspirada en el elotamal veracruzano, con guajolote, chile rojo y hoja santa.",
+          en: "Cookie inspired by Veracruz-style elotamal, with turkey, red chile and hoja santa.",
         },
         priceMXN: 90,
         tags: ["signature"],
       },
       {
-        slug: "bruma-zarza",
-        name: "Bruma Zarza",
+        slug: "dulce-ceniza",
+        name: "Dulce Ceniza",
         description: {
-          es: "Cookie vegana con confit de zarzamora y crema de frutos rojos.",
-          en: "Vegan cookie with blackberry confit and red berry cream.",
+          es: "Cookie de amaranto, cajeta quemada y jamaica ácida.",
+          en: "Amaranth cookie with burnt cajeta and tart hibiscus.",
+        },
+        priceMXN: 90,
+      },
+      {
+        slug: "granada-nocturna",
+        name: "Granada Nocturna",
+        description: {
+          es: "Cookie inspirada en el chile en nogada, con poblano, nogada y granada fresca.",
+          en: "Cookie inspired by chile en nogada, with poblano chile, walnut cream and fresh pomegranate.",
+        },
+        priceMXN: 90,
+        tags: ["seasonal"],
+      },
+      {
+        slug: "milpa-negra",
+        name: "Milpa Negra",
+        description: {
+          es: "Cookie vegana de frijol negro, cocoa, piloncillo, praliné de pepita y tortilla crujiente.",
+          en: "Vegan black bean cookie with cocoa, piloncillo, pumpkin-seed praline and crunchy tortilla.",
         },
         priceMXN: 90,
         tags: ["vegan"],
       },
       {
-        slug: "aurora-rosada",
-        name: "Aurora Rosada",
+        slug: "alba-rosada",
+        name: "Alba Rosada",
         description: {
-          es: "Cookie de limón amarillo con crema ligera de vainilla y compota de tuna rosa.",
-          en: "Yellow lemon cookie with light vanilla cream and pink prickly-pear compote.",
-        },
-        priceMXN: 90,
-      },
-      {
-        slug: "eclipse-rubi",
-        name: "Eclipse Rubí",
-        description: {
-          es: "Cookie de cacao intenso con crujiente oculto, ganache montada de chocolate y un centro ácido de granada.",
-          en: "Intense cacao cookie with a hidden crunch, whipped chocolate ganache and a tart pomegranate center.",
+          es: "Cookie de mantequilla avellanada con mole rosa de Taxco y plátano macho.",
+          en: "Brown-butter cookie with Taxco pink mole and plantain.",
         },
         priceMXN: 90,
         tags: ["signature"],
-      },
-      {
-        slug: "ultima-de-verano",
-        name: "Última de Verano",
-        description: {
-          es: "Cookie de hojicha con crocante de arroz tostado, mango ácido y ganache aireada de chocolate blanco tostado.",
-          en: "Hojicha cookie with toasted rice crunch, tart mango and airy toasted white chocolate ganache.",
-        },
-        priceMXN: 90,
-        tags: ["seasonal"],
       },
     ],
   },
@@ -97,34 +98,34 @@ export const menu: MenuSection[] = [
     },
     items: [
       {
-        slug: "cielo-ambar",
-        name: "Cielo Ámbar",
-        description: { es: "Pera fresca y burbujeante con un doble espresso.", en: "Fresh, bubbly pear with a double espresso." },
-        priceMXN: 90,
+        slug: "semilla-en-agua",
+        name: "Semilla en Agua",
+        description: { es: "Bebida tibia de cacao, maíz tostado y chile mulato.", en: "Warm cacao drink with toasted corn and mulato chile." },
+        priceMXN: 80,
       },
       {
-        slug: "gota-amatista",
-        name: "Gota Amatista",
-        description: { es: "Soda de zarzamora y limón coronada con cold foam.", en: "Blackberry-lime soda topped with cold foam." },
-        priceMXN: 90,
+        slug: "otra-orilla",
+        name: "Otra Orilla",
+        description: { es: "Soda fría de tamarindo, caña y sal. Con cold foam.", en: "Cold tamarind, cane and salt soda, topped with cold foam." },
+        priceMXN: 80,
       },
       {
-        slug: "agua-de-cuarzo",
-        name: "Agua de Cuarzo",
-        description: { es: "Soda de tuna rosa y limón con cold foam.", en: "Pink prickly-pear and lime soda with cold foam." },
-        priceMXN: 90,
+        slug: "eco-carmin",
+        name: "Eco Carmín",
+        description: { es: "Cebadina fría de jamaica, cebada tostada y piloncillo; efervescente al servir.", en: "Cold hibiscus cebadina with toasted barley and piloncillo, poured effervescent." },
+        priceMXN: 80,
       },
       {
-        slug: "bergamota-rubi",
-        name: "Bergamota Rubí",
-        description: { es: "Soda de granada y Earl Grey, agua mineral y bergamota.", en: "Pomegranate and Earl Grey soda, mineral water and bergamot." },
-        priceMXN: 90,
+        slug: "verde-nacar",
+        name: "Verde Nácar",
+        description: { es: "Leche de pepita tostada, piloncillo y sal.", en: "Toasted pumpkin-seed milk with piloncillo and salt." },
+        priceMXN: 80,
       },
       {
-        slug: "ultimo-atardecer",
-        name: "Último Atardecer",
-        description: { es: "Mango y azahar burbujeantes con un shot de hojicha.", en: "Bubbly mango and orange blossom with a shot of hojicha." },
-        priceMXN: 90,
+        slug: "horchata",
+        name: "Horchata",
+        description: { es: "Horchata fría de arroz, ligeramente tostada y con una pizca de sal.", en: "Cold rice horchata, lightly toasted with a pinch of salt." },
+        priceMXN: 80,
       },
     ],
   },
@@ -134,15 +135,15 @@ export const menu: MenuSection[] = [
     accent: "blue",
     intro: { es: "Los clásicos, hechos como se debe.", en: "The classics, done right." },
     items: [
-      { slug: "americano", name: "Americano", description: { es: "Espresso alargado con agua caliente.", en: "Espresso lengthened with hot water." }, priceMXN: 60 },
-      { slug: "capuccino", name: "Capuccino", description: { es: "Espresso, leche vaporizada y espuma densa.", en: "Espresso, steamed milk and dense foam." }, priceMXN: 70 },
-      { slug: "latte", name: "Latte", description: { es: "Espresso con leche vaporizada.", en: "Espresso with steamed milk." }, priceMXN: 70 },
-      { slug: "cacao-kosher", name: "Cacao Kosher", description: { es: "Cacao de origen, certificado kosher.", en: "Origin cacao, kosher-certified." }, priceMXN: 70 },
-      { slug: "mocha", name: "Mocha", description: { es: "Espresso, cacao y leche vaporizada.", en: "Espresso, cacao and steamed milk." }, priceMXN: 90 },
-      { slug: "white-mocha", name: "White Mocha", description: { es: "Espresso, chocolate blanco y leche vaporizada.", en: "Espresso, white chocolate and steamed milk." }, priceMXN: 90 },
-      { slug: "chai-latte", name: "Chai Latte", description: { es: "Té chai especiado con leche vaporizada.", en: "Spiced chai tea with steamed milk." }, priceMXN: 90 },
-      { slug: "dirty-chai", name: "Dirty Chai", description: { es: "Chai latte con un shot de espresso.", en: "Chai latte with a shot of espresso." }, priceMXN: 90 },
-      { slug: "organic-chasen-matcha", name: "Organic Chasen Matcha", description: { es: "Matcha orgánico batido a mano con chasen.", en: "Organic matcha, hand-whisked with a chasen." }, priceMXN: 90 },
+      { slug: "americano", name: "Americano", description: { es: "Espresso alargado con agua caliente.", en: "Espresso lengthened with hot water." }, priceMXN: 35 },
+      { slug: "capuccino", name: "Capuccino", description: { es: "Espresso, leche vaporizada y espuma densa.", en: "Espresso, steamed milk and dense foam." }, priceMXN: 50 },
+      { slug: "latte", name: "Latte", description: { es: "Espresso con leche vaporizada.", en: "Espresso with steamed milk." }, priceMXN: 50 },
+      { slug: "cacao-kosher", name: "Cacao Kosher", description: { es: "Cacao de origen, certificado kosher.", en: "Origin cacao, kosher-certified." }, priceMXN: 50 },
+      { slug: "mocha", name: "Mocha", description: { es: "Espresso, cacao y leche vaporizada.", en: "Espresso, cacao and steamed milk." }, priceMXN: 70 },
+      { slug: "white-mocha", name: "White Mocha", description: { es: "Espresso, chocolate blanco y leche vaporizada.", en: "Espresso, white chocolate and steamed milk." }, priceMXN: 70 },
+      { slug: "chai-latte", name: "Chai Latte", description: { es: "Té chai especiado con leche vaporizada.", en: "Spiced chai tea with steamed milk." }, priceMXN: 70 },
+      { slug: "dirty-chai", name: "Dirty Chai", description: { es: "Chai latte con un shot de espresso.", en: "Chai latte with a shot of espresso." }, priceMXN: 70 },
+      { slug: "organic-chasen-matcha", name: "Chasen Matcha", description: { es: "Matcha batido a mano con chasen.", en: "Matcha, hand-whisked with a chasen." }, priceMXN: 70 },
     ],
   },
   {
@@ -151,10 +152,10 @@ export const menu: MenuSection[] = [
     accent: "green",
     intro: { es: "Toda la ceremonia, sin la cafeína.", en: "All the ritual, none of the caffeine." },
     items: [
-      { slug: "chasen-hojicha-latte", name: "Chasen Hojicha Latte", description: { es: "Té hojicha tostado, batido a mano.", en: "Roasted hojicha tea, hand-whisked." }, priceMXN: 90, tags: ["caffeine-free"] },
-      { slug: "taro-latte", name: "Taro Latte", description: { es: "Taro cremoso con leche vaporizada.", en: "Creamy taro with steamed milk." }, priceMXN: 90, tags: ["caffeine-free"] },
-      { slug: "leche-de-lavanda", name: "Leche de Lavanda", description: { es: "Leche vaporizada infusionada con lavanda.", en: "Steamed milk infused with lavender." }, priceMXN: 80, tags: ["caffeine-free"] },
-      { slug: "leche-para-cookies", name: "Leche para Cookies", description: { es: "Leche a tu elección, fría, hecha para acompañar.", en: "Milk of your choice, cold, made for dunking." }, priceMXN: 60, tags: ["caffeine-free"] },
+      { slug: "chasen-hojicha-latte", name: "Chasen Hojicha Latte", description: { es: "Té hojicha tostado, batido a mano.", en: "Roasted hojicha tea, hand-whisked." }, priceMXN: 70, tags: ["caffeine-free"] },
+      { slug: "taro-latte", name: "Taro Latte", description: { es: "Taro cremoso con leche vaporizada.", en: "Creamy taro with steamed milk." }, priceMXN: 70, tags: ["caffeine-free"] },
+      { slug: "leche-de-lavanda", name: "Leche de Lavanda", description: { es: "Leche vaporizada infusionada con lavanda.", en: "Steamed milk infused with lavender." }, priceMXN: 70, tags: ["caffeine-free"] },
+      { slug: "leche-para-cookies", name: "Leche para Cookies", description: { es: "Leche a tu elección, fría, hecha para acompañar.", en: "Milk of your choice, cold, made for dunking." }, priceMXN: 35, tags: ["caffeine-free"] },
     ],
   },
   {
