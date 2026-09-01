@@ -5,6 +5,7 @@ import { CalendarDays, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { PrivateEventForm } from "@/components/sections/private-event-form";
 import { upcomingEvents, pastEvents, type EventRecord } from "@/data/events";
 import { SITE_URL } from "@/data/site";
 
@@ -16,8 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: isEn ? "Events — Viewing Parties & Screenings in Condesa" : "Eventos — Viewing parties y screenings en Condesa",
     description: isEn
-      ? "Upcoming and past events at d-stellar: viewing parties, screenings, LGBTQ+ nights and collaborations in an intimate Condesa space."
-      : "Eventos próximos y pasados en d-stellar: viewing parties, screenings, noches LGBTQ+ y colaboraciones en un espacio íntimo de Condesa.",
+      ? "Upcoming and past events at d-stellar, plus private bookings: viewing parties, screenings, LGBTQ+ nights, birthdays and brand activations in an intimate Condesa space."
+      : "Eventos próximos y pasados en d-stellar, y renta del espacio: viewing parties, screenings, noches LGBTQ+, cumpleaños y activaciones de marca en un espacio íntimo de Condesa.",
     alternates: {
       canonical: isEn ? "/en/events" : "/events",
       languages: { es: "/events", en: "/en/events", "x-default": "/events" },
@@ -42,6 +43,7 @@ export default async function EventsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("events");
+  const tPrivate = await getTranslations("privateEvents");
   const cta = await getTranslations("cta");
 
   const upcoming = upcomingEvents();
@@ -148,13 +150,46 @@ export default async function EventsPage({ params }: Props) {
         )}
 
         <div className="mx-auto mt-16 max-w-4xl text-center">
-          <Link
-            href="/private-events"
+          <a
+            href="#private-events"
             className="font-tag text-xs uppercase tracking-widest text-stellar-white/60 underline decoration-stellar-pink underline-offset-4 hover:text-stellar-pink"
           >
             {cta("sendInquiry")}
-          </Link>
+          </a>
         </div>
+
+        <section id="private-events" className="mx-auto mt-24 max-w-4xl scroll-mt-24 border-t border-line pt-16">
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{tPrivate("eyebrow")}</p>
+          <h2 className="mt-4 font-display text-4xl font-black uppercase leading-[0.9] text-stellar-white md:text-5xl">
+            {tPrivate("title")}
+          </h2>
+          <p className="mt-5 max-w-2xl text-stellar-white/75">{tPrivate("intro")}</p>
+
+          <div className="mt-10 border-2 border-line bg-stellar-black-soft p-8">
+            <p className="font-tag text-xs uppercase tracking-widest text-stellar-green">{tPrivate("pitchTitle")}</p>
+            <p className="mt-3 text-lg text-stellar-white/85">{tPrivate("pitchBody")}</p>
+          </div>
+
+          <div className="mt-10">
+            <h3 className="font-display text-2xl font-black uppercase text-stellar-white">{tPrivate("useCasesTitle")}</h3>
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {tPrivate.raw("useCases").map((item: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-stellar-white/80">
+                  <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="mt-0.5 h-3.5 w-auto shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-14 border-t border-line pt-14">
+            <h3 className="font-display text-2xl font-black uppercase text-stellar-white">{tPrivate("formTitle")}</h3>
+            <p className="mt-2 text-stellar-white/70">{tPrivate("formBody")}</p>
+            <div className="mt-8">
+              <PrivateEventForm />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ export const routing = defineRouting({
     "/events/[slug]": { es: "/events/[slug]", en: "/events/[slug]" },
     "/pickup": { es: "/pickup", en: "/pickup" },
     "/visit": { es: "/visit", en: "/visit" },
-    "/private-events": { es: "/private-events", en: "/private-events" },
     "/about": { es: "/about", en: "/about" },
     "/press": { es: "/press", en: "/press" },
     "/historias": { es: "/historias", en: "/historias" },

@@ -14,7 +14,6 @@ const NAV_ITEMS = [
   { href: "/events" as const, key: "events" },
   { href: "/pickup" as const, key: "pickup" },
   { href: "/visit" as const, key: "visit" },
-  { href: "/private-events" as const, key: "privateEvents" },
   { href: "/press" as const, key: "press" },
   { href: "/about" as const, key: "about" },
 ];

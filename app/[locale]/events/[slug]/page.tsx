@@ -173,7 +173,7 @@ export default async function EventDetailPage({ params }: Props) {
           <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline">
             {cta("openInMaps")}
           </CtaAnchor>
-          <CtaLink href="/private-events" variant="ghost">
+          <CtaLink href={{ pathname: "/events", hash: "private-events" }} variant="ghost">
             {cta("sendInquiry")}
           </CtaLink>
         </div>

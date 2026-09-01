@@ -3,7 +3,7 @@ import { SITE_URL } from "@/data/site";
 import { events } from "@/data/events";
 import { menuHistory } from "@/data/menu-history";
 
-const staticPaths = ["", "/menu", "/events", "/pickup", "/visit", "/private-events", "/about", "/press", "/historias"];
+const staticPaths = ["", "/menu", "/events", "/pickup", "/visit", "/about", "/press", "/historias"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({

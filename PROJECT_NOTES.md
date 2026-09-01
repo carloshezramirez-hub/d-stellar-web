@@ -238,9 +238,20 @@ the file in place — no code change needed since the path is fixed.
   `www.d-stellar.co`) is set as `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel →
   Production + Preview as of 2026-08-13. Not set locally on purpose (see
   `.env.example`) — the component just renders nothing in dev.
-- `/private-events` form has **no backend** — submitting opens a pre-filled
+- The private-events form has **no backend** — submitting opens a pre-filled
   `mailto:` to `BUSINESS.email`. Swap in a real endpoint (Resend, Formspree)
   when ready; the form markup won't need to change.
+- **`/private-events` was folded into `/events`** (2026-09-01, at the client's
+  request to merge the two nav tabs) as a `#private-events` section below the
+  upcoming/past events lists — same `privateEvents` translation namespace and
+  `PrivateEventForm` component, just rendered inline on
+  `app/[locale]/events/page.tsx` instead of a standalone route. The old route
+  is gone; `next.config.ts` has permanent redirects from
+  `/private-events` → `/events#private-events` (and the `/en` equivalent) so
+  old links/bookmarks/search results still land somewhere correct. Header nav
+  no longer has a separate "Private events" tab — the footer link and the
+  events/[slug] "send inquiry" CTA both point at the `#private-events` anchor
+  instead.
 
 ## Updating content
 
