@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { BUSINESS } from "@/data/site";
 import { SocialLinks } from "@/components/layout/social-links";
 import { PreferredSourceButton } from "@/components/preferred-source-button";
+import { PhoneLink } from "@/components/layout/phone-link";
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -34,12 +35,7 @@ export function Footer() {
               </p>
             ))}
           </div>
-          <a
-            href={`tel:${BUSINESS.phoneHref}`}
-            className="mt-1 inline-block font-tag text-sm text-stellar-white/70 hover:text-stellar-pink"
-          >
-            {BUSINESS.phone}
-          </a>
+          <PhoneLink className="mt-1 inline-block font-tag text-sm text-stellar-white/70 hover:text-stellar-pink" />
         </div>
 
         <nav className="flex flex-col gap-2 font-tag text-xs uppercase tracking-widest text-stellar-white/70">

@@ -1,4 +1,4 @@
-export const SITE_URL = "https://d-stellar.com";
+export const SITE_URL = "https://www.d-stellar.co";
 
 export const BUSINESS = {
   name: "d-stellar",

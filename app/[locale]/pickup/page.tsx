@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
+import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { PickupOrderForm } from "@/components/sections/pickup-order-form";
@@ -71,9 +72,15 @@ export default async function PickupPage({ params }: Props) {
       <div className="mx-auto mt-14 max-w-4xl text-center">
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("altTitle")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
-          <CtaAnchor href={BUSINESS.whatsappUrl} target="_blank" rel="noreferrer" variant="outline">
+          <TrackedCtaAnchor
+            href={BUSINESS.whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            variant="outline"
+            event="click_whatsapp"
+          >
             {cta("whatsapp")}
-          </CtaAnchor>
+          </TrackedCtaAnchor>
           <CtaAnchor href={BUSINESS.social.instagram} target="_blank" rel="noreferrer" variant="outline">
             {cta("instagram")}
           </CtaAnchor>

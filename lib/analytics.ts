@@ -8,6 +8,7 @@ export type AnalyticsEvent =
   | "click_instagram"
   | "click_tiktok"
   | "click_phone"
+  | "click_whatsapp"
   | "submit_pickup_order"
   | "language_switch"
   | "click_preferred_source";
