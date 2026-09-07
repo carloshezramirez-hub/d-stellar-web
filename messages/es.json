@@ -28,7 +28,9 @@
     "addToCalendar": "Agregar al calendario",
     "sendInquiry": "Enviar solicitud",
     "openInMaps": "Abrir en Google Maps",
-    "comingSoon": "Pickup en línea, muy pronto"
+    "comingSoon": "Pickup en línea, muy pronto",
+    "preferredSource": "Añadir como fuente preferida",
+    "preferredSourceAriaLabel": "Añadir d-stellar como fuente preferida en Google"
   },
   "home": {
     "eyebrow": "Condesa, Ciudad de México",

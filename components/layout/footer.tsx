@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { BUSINESS } from "@/data/site";
 import { SocialLinks } from "@/components/layout/social-links";
+import { PreferredSourceButton } from "@/components/preferred-source-button";
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -56,6 +57,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-4">
           <SocialLinks />
+          <PreferredSourceButton />
           <p className="font-tag text-[11px] text-stellar-white/40">
             &copy; {year} {BUSINESS.name}. {t("rights")}
           </p>

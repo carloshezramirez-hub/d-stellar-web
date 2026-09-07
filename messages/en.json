@@ -28,7 +28,9 @@
     "addToCalendar": "Add to calendar",
     "sendInquiry": "Send inquiry",
     "openInMaps": "Open in Google Maps",
-    "comingSoon": "Online pickup coming soon"
+    "comingSoon": "Online pickup coming soon",
+    "preferredSource": "Add as a preferred source",
+    "preferredSourceAriaLabel": "Add d-stellar as a preferred source on Google"
   },
   "home": {
     "eyebrow": "Condesa, Mexico City",

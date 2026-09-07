@@ -9,7 +9,8 @@ export type AnalyticsEvent =
   | "click_tiktok"
   | "click_phone"
   | "submit_pickup_order"
-  | "language_switch";
+  | "language_switch"
+  | "click_preferred_source";
 
 declare global {
   interface Window {
