@@ -58,11 +58,11 @@ export function PreferredSourceButton({ className }: { className?: string }) {
         }}
         aria-label={t("preferredSourceAriaLabel")}
         className={cn(
-          "inline-flex items-center gap-1.5 font-tag text-xs uppercase tracking-widest text-stellar-white/70 transition-colors hover:text-stellar-pink disabled:cursor-default disabled:opacity-40 disabled:hover:text-stellar-white/70",
+          "inline-flex items-center gap-2 border border-stellar-white/30 px-4 py-2 font-tag text-[11px] font-bold uppercase tracking-widest text-stellar-white transition-colors hover:border-stellar-pink hover:text-stellar-pink disabled:cursor-default disabled:opacity-40 disabled:hover:border-stellar-white/30 disabled:hover:text-stellar-white",
           className
         )}
       >
-        <Star size={14} aria-hidden="true" />
+        <Star size={13} className="fill-current" aria-hidden="true" />
         {t("preferredSource")}
       </button>
     </>
