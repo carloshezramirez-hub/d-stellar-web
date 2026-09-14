@@ -62,8 +62,8 @@ export default async function HomePage({ params }: Props) {
                     <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
                       {cta("directions")} <ArrowUpRight size={14} />
                     </CtaAnchor>
-                    <CtaLink href="/menu" variant="outline">
-                      {cta("viewMenu")}
+                    <CtaLink href="/pickup" variant="outline">
+                      {cta("orderPickup")}
                     </CtaLink>
                   </div>
                 </div>
