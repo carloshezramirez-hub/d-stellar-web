@@ -6,9 +6,13 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { PickupOrderForm } from "@/components/sections/pickup-order-form";
+import { PickupPaymentBanner } from "@/components/sections/pickup-payment-banner";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ status?: string; code?: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -23,11 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function PickupPage({ params }: Props) {
+export default async function PickupPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { status, code } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("pickup");
   const cta = await getTranslations("cta");
+  const paymentStatus = status === "approved" || status === "pending" || status === "failure" ? status : null;
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -43,6 +49,12 @@ export default async function PickupPage({ params }: Props) {
         <h1 className="mt-4 font-display text-5xl font-black uppercase leading-[0.9] text-stellar-white md:text-6xl">{t("title")}</h1>
         <p className="mt-5 text-stellar-white/75">{t("intro")}</p>
       </div>
+
+      {paymentStatus && (
+        <div className="mx-auto mt-14 max-w-4xl">
+          <PickupPaymentBanner status={paymentStatus} code={code} />
+        </div>
+      )}
 
       <div className="mx-auto mt-14 max-w-4xl">
         <ol className="grid gap-6 sm:grid-cols-3">

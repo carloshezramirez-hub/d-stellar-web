@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { menu } from "@/data/menu";
-import { BUSINESS } from "@/data/site";
 import { trackEvent } from "@/lib/analytics";
 
 type Locale = "es" | "en";
@@ -25,6 +24,8 @@ export function PickupOrderForm() {
   // e.g. a qty-2 3-Pack has 6 slots, repeats allowed.
   const [packFlavors, setPackFlavors] = useState<Record<string, string[]>>({});
   const [showEmptyError, setShowEmptyError] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [confirmationCode, setConfirmationCode] = useState<string | null>(null);
 
   const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -34,6 +35,7 @@ export function PickupOrderForm() {
         section.items
           .filter((item) => (quantities[item.slug] ?? 0) > 0)
           .map((item) => ({
+            slug: item.slug,
             name: item.name,
             qty: quantities[item.slug],
             priceMXN: item.priceMXN,
@@ -70,53 +72,86 @@ export function PickupOrderForm() {
     });
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (lines.length === 0) {
       setShowEmptyError(true);
       return;
     }
 
-    const data = new FormData(e.currentTarget);
-    const name = data.get("name");
-    const phone = data.get("phone");
-    const date = data.get("date");
-    const time = data.get("time");
-    const notes = data.get("notes");
+    const form = new FormData(e.currentTarget);
+    const items = lines.map((line) => ({
+      slug: line.slug,
+      name: line.name,
+      qty: line.qty,
+      priceMXN: line.priceMXN,
+      flavors: line.flavors?.length
+        ? line.flavors.map((slug) => gourmetCookies.find((c) => c.slug === slug)?.name ?? slug)
+        : undefined,
+    }));
 
-    const body = [
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      `Pickup date: ${date}`,
-      `Pickup time: ${time}`,
-      "",
-      "Order:",
-      ...lines.flatMap((line) => {
-        const header = `- ${line.qty}x ${line.name} — $${line.subtotal}`;
-        if (!line.flavors?.length) return [header];
-        const flavorNames = line.flavors.map(
-          (slug) => gourmetCookies.find((c) => c.slug === slug)?.name ?? slug,
-        );
-        return [header, `  Cookies: ${flavorNames.join(", ")}`];
-      }),
-      "",
-      `Estimated total: $${total} MXN`,
-      "(Pay by bank transfer or payment link — sent after confirming.)",
-      "",
-      notes ? `Notes: ${notes}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
+    setStatus("submitting");
+    try {
+      const res = await fetch("/api/pickup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.get("name"),
+          email: form.get("email"),
+          phone: form.get("phone"),
+          date: form.get("date"),
+          time: form.get("time"),
+          notes: form.get("notes") || undefined,
+          items,
+          locale,
+          website: form.get("website"),
+        }),
+      });
 
-    trackEvent("submit_pickup_order", { total });
+      if (!res.ok) throw new Error("request_failed");
+      const json = await res.json();
 
-    window.location.href = `mailto:${BUSINESS.email}?subject=${encodeURIComponent(
-      "Pickup order — d-stellar",
-    )}&body=${encodeURIComponent(body)}`;
+      trackEvent("submit_pickup_order", { total });
+
+      if (json.checkoutUrl) {
+        trackEvent("begin_checkout_pickup", { total });
+        window.location.href = json.checkoutUrl;
+        return;
+      }
+
+      setConfirmationCode(json.code ?? null);
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="grid gap-3 py-6 text-center">
+        <p className="font-demi text-xl font-bold text-stellar-green">{t("successTitle")}</p>
+        <p className="text-sm text-stellar-white/70">{t("successBody")}</p>
+        {confirmationCode && (
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">
+            {t("successCode", { code: confirmationCode })}
+          </p>
+        )}
+      </div>
+    );
   }
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-10">
+      {/* Honeypot: hidden from real users, bots tend to fill every field. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
+
       <div className="grid gap-10 sm:grid-cols-3">
         {orderSections.map((section) => (
           <div key={section.slug}>
@@ -188,6 +223,15 @@ export function PickupOrderForm() {
           />
         </label>
         <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
+          {t("email")}
+          <input
+            type="email"
+            name="email"
+            required
+            className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
+          />
+        </label>
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
           {t("phone")}
           <input
             type="tel"
@@ -230,11 +274,13 @@ export function PickupOrderForm() {
       <div>
         <button
           type="submit"
-          className="inline-flex items-center justify-center bg-stellar-pink px-6 py-3 font-demi text-xs font-bold uppercase tracking-widest text-stellar-black transition-colors hover:bg-stellar-white"
+          disabled={status === "submitting"}
+          className="inline-flex items-center justify-center bg-stellar-pink px-6 py-3 font-demi text-xs font-bold uppercase tracking-widest text-stellar-black transition-colors hover:bg-stellar-white disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {t("submit")}
+          {status === "submitting" ? t("submitting") : t("submit")}
         </button>
         <p className="mt-3 text-xs text-stellar-white/50">{t("payNote")}</p>
+        {status === "error" && <p className="mt-3 text-sm text-stellar-red">{t("errorBody")}</p>}
       </div>
     </form>
   );

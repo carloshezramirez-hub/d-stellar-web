@@ -53,10 +53,22 @@
     "visitTeaserBody": "Inside Pabellón Nuevo León, a short walk from Parque México.",
     "valuesTitle": "A space open to everyone",
     "values": [
-      { "title": "LGBTQ+ friendly", "body": "A trans safe space, always." },
-      { "title": "Pet friendly", "body": "Bring your pet." },
-      { "title": "Intimate capacity", "body": "Small on purpose, not by accident." },
-      { "title": "Rotating menu", "body": "New flavors every month." }
+      {
+        "title": "LGBTQ+ friendly",
+        "body": "A trans safe space, always."
+      },
+      {
+        "title": "Pet friendly",
+        "body": "Bring your pet."
+      },
+      {
+        "title": "Intimate capacity",
+        "body": "Small on purpose, not by accident."
+      },
+      {
+        "title": "Rotating menu",
+        "body": "New flavors every month."
+      }
     ]
   },
   "menu": {
@@ -84,19 +96,29 @@
   "pickup": {
     "eyebrow": "Pickup",
     "title": "Pickup at Nuevo León 217. No delivery.",
-    "intro": "Order ahead and pay when you pick up — that's how we make sure every cookie reaches you fresh out of the oven.",
+    "intro": "Order ahead and pay online right away — that way your order is guaranteed and ready when you arrive.",
     "steps": [
-      { "title": "Fill out your order", "body": "Pick your cookies, focaccias or packs below." },
-      { "title": "We confirm", "body": "We'll message you on WhatsApp to confirm the time." },
-      { "title": "Pick up and pay", "body": "We'll send you the details to pay by transfer or a payment link before you pick up." }
+      {
+        "title": "Fill out your order",
+        "body": "Pick your cookies, focaccias or packs below."
+      },
+      {
+        "title": "We confirm",
+        "body": "We'll message you on WhatsApp to confirm the time."
+      },
+      {
+        "title": "Pick up and pay",
+        "body": "Show up at the time you picked, already paid — nothing else to do."
+      }
     ],
     "order": {
       "eyebrow": "Order ahead",
       "title": "Order for pickup",
-      "intro": "Pick what you want, tell us when you're coming, and pay by bank transfer or a payment link we'll send you before you pick up your order.",
+      "intro": "Pick what you want, tell us when you're coming, and pay online with Mercado Pago to confirm your order instantly.",
       "total": "Estimated total",
       "emptyError": "Choose at least one item before sending your order.",
       "name": "Name",
+      "email": "Email",
       "phone": "Phone",
       "date": "Pickup date",
       "time": "Approximate time",
@@ -104,7 +126,18 @@
       "packFlavorsTitle": "Choose your cookies",
       "packFlavorSlot": "Cookie {n}",
       "submit": "Send order",
-      "payNote": "Nothing is charged online. We'll send you the details to pay by transfer or a payment link."
+      "submitting": "Sending...",
+      "payNote": "Sending your order takes you to Mercado Pago's secure page to pay online.",
+      "errorBody": "We couldn't send your order. Try again or message us on WhatsApp.",
+      "successTitle": "Order received!",
+      "successBody": "We'll confirm availability and send you the payment details by email or WhatsApp before you pick up.",
+      "successCode": "Ref. {code}",
+      "paymentApprovedTitle": "Payment confirmed!",
+      "paymentApprovedBody": "Your order {code} is confirmed. We've emailed you the details.",
+      "paymentPendingTitle": "Payment in process",
+      "paymentPendingBody": "We're confirming your payment for order {code}. We'll email you as soon as it clears.",
+      "paymentFailureTitle": "Payment didn't go through",
+      "paymentFailureBody": "Your order's payment wasn't processed. You can try again below or message us on WhatsApp."
     },
     "altTitle": "WhatsApp only — no cell signal in-store for calls"
   },
@@ -114,9 +147,18 @@
     "intro": "d-stellar is at Av. Nuevo León 217, inside Pabellón Nuevo León, right in the heart of Hipódromo Condesa. The entrance is hidden — here's how to find it.",
     "stepsTitle": "How to find it",
     "steps": [
-      { "title": "1. Nuevo León 217", "body": "Look for the \"Pabellón Nuevo León\" sign on the avenue, between storefronts and apartment buildings." },
-      { "title": "2. Walk into the passage", "body": "The pavilion is a shared indoor passage — walk in and head toward the back, past the other shops." },
-      { "title": "3. Look for the d-stellar door", "body": "The \"d-stellar\" sign hangs over a narrow doorway next to the community flag — that's it." }
+      {
+        "title": "1. Nuevo León 217",
+        "body": "Look for the \"Pabellón Nuevo León\" sign on the avenue, between storefronts and apartment buildings."
+      },
+      {
+        "title": "2. Walk into the passage",
+        "body": "The pavilion is a shared indoor passage — walk in and head toward the back, past the other shops."
+      },
+      {
+        "title": "3. Look for the d-stellar door",
+        "body": "The \"d-stellar\" sign hangs over a narrow doorway next to the community flag — that's it."
+      }
     ],
     "videoTitle": "Still can't spot it? Watch the video",
     "videoBody": "A real walkthrough, filmed on site, so you don't circle the block looking for the entrance.",
@@ -129,12 +171,21 @@
     ],
     "gettingHereTitle": "Getting here",
     "gettingHere": [
-      { "title": "On foot", "body": "10 minutes from Parque México and the Ámsterdam corridor." },
-      { "title": "Metrobús / Metro", "body": "2 nearby Metrobús lines: Nuevo León line 2, and Chilpancingo line 9, or Chilpancingo metro station." },
+      {
+        "title": "On foot",
+        "body": "10 minutes from Parque México and the Ámsterdam corridor."
+      },
+      {
+        "title": "Metrobús / Metro",
+        "body": "2 nearby Metrobús lines: Nuevo León line 2, and Chilpancingo line 9, or Chilpancingo metro station."
+      },
       {
         "title": "By car",
         "body": "Paid street parking on Nuevo León and nearby streets. Looking for a spot? Drop this address into your GPS and it'll take you to the parallel street to park.",
-        "link": { "label": "Get parking directions", "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8" }
+        "link": {
+          "label": "Get parking directions",
+          "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8"
+        }
       }
     ],
     "amenitiesTitle": "On site",

@@ -10,6 +10,8 @@ export type AnalyticsEvent =
   | "click_phone"
   | "click_whatsapp"
   | "submit_pickup_order"
+  | "begin_checkout_pickup"
+  | "pickup_payment_approved"
   | "language_switch"
   | "click_preferred_source";
 

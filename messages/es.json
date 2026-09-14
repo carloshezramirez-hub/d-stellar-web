@@ -53,10 +53,22 @@
     "visitTeaserBody": "Dentro del Pabellón Nuevo León, a unas cuadras del Parque México.",
     "valuesTitle": "Un espacio abierto para tod★s",
     "values": [
-      { "title": "LGBTQ+ friendly", "body": "Trans safe space, siempre." },
-      { "title": "Pet friendly", "body": "Tu mascota también puede entrar." },
-      { "title": "Cupo íntimo", "body": "Chico a propósito, no por accidente." },
-      { "title": "Menú rotativo", "body": "Nuevos sabores cada mes." }
+      {
+        "title": "LGBTQ+ friendly",
+        "body": "Trans safe space, siempre."
+      },
+      {
+        "title": "Pet friendly",
+        "body": "Tu mascota también puede entrar."
+      },
+      {
+        "title": "Cupo íntimo",
+        "body": "Chico a propósito, no por accidente."
+      },
+      {
+        "title": "Menú rotativo",
+        "body": "Nuevos sabores cada mes."
+      }
     ]
   },
   "menu": {
@@ -84,19 +96,29 @@
   "pickup": {
     "eyebrow": "Pickup",
     "title": "Pickup en Nuevo León 217. Sin delivery.",
-    "intro": "Pide con anticipación y paga al recoger — así garantizamos que cada cookie llegue a ti recién horneada.",
+    "intro": "Pide con anticipación y paga en línea al momento — así garantizamos tu pedido y lo tenemos listo cuando llegues.",
     "steps": [
-      { "title": "Llena tu pedido", "body": "Elige tus cookies, focaccias o packs aquí abajo." },
-      { "title": "Te confirmamos", "body": "Te escribimos por WhatsApp para confirmar la hora." },
-      { "title": "Recoge y paga", "body": "Te compartimos los datos para pagar por transferencia o con un link de pago antes de recoger." }
+      {
+        "title": "Llena tu pedido",
+        "body": "Elige tus cookies, focaccias o packs aquí abajo."
+      },
+      {
+        "title": "Te confirmamos",
+        "body": "Te escribimos por WhatsApp para confirmar la hora."
+      },
+      {
+        "title": "Recoge y paga",
+        "body": "Pasa a la hora acordada, ya está pagado — no necesitas nada más."
+      }
     ],
     "order": {
       "eyebrow": "Pedido anticipado",
       "title": "Ordena para recoger",
-      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga por transferencia o con un link de pago que te compartimos antes de que recojas tu pedido.",
+      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga en línea con Mercado Pago para confirmar tu pedido al instante.",
       "total": "Total estimado",
       "emptyError": "Elige al menos un producto antes de enviar tu pedido.",
       "name": "Nombre",
+      "email": "Email",
       "phone": "Teléfono",
       "date": "Fecha de recolección",
       "time": "Hora aproximada",
@@ -104,7 +126,18 @@
       "packFlavorsTitle": "Elige tus cookies",
       "packFlavorSlot": "Cookie {n}",
       "submit": "Enviar pedido",
-      "payNote": "No se cobra en línea. Te enviamos los datos para pagar por transferencia o con un link de pago."
+      "submitting": "Enviando...",
+      "payNote": "Al enviar tu pedido pasarás a la página segura de Mercado Pago para pagar en línea.",
+      "errorBody": "No pudimos enviar tu pedido. Intenta de nuevo o escríbenos por WhatsApp.",
+      "successTitle": "¡Pedido recibido!",
+      "successBody": "Te confirmaremos disponibilidad y te enviamos los detalles de pago por email o WhatsApp antes de que recojas.",
+      "successCode": "Ref. {code}",
+      "paymentApprovedTitle": "¡Pago confirmado!",
+      "paymentApprovedBody": "Tu pedido {code} quedó confirmado. Te enviamos los detalles por correo.",
+      "paymentPendingTitle": "Pago en proceso",
+      "paymentPendingBody": "Estamos confirmando tu pago para el pedido {code}. Te avisaremos por correo en cuanto se acredite.",
+      "paymentFailureTitle": "El pago no se completó",
+      "paymentFailureBody": "No se procesó el pago de tu pedido. Puedes intentar de nuevo aquí abajo o escribirnos por WhatsApp."
     },
     "altTitle": "Solo por WhatsApp — no hay señal en el local para llamadas"
   },
@@ -114,9 +147,18 @@
     "intro": "d-stellar está en Av. Nuevo León 217, dentro del Pabellón Nuevo León, en el corazón de Hipódromo Condesa. La entrada está escondida — así se llega.",
     "stepsTitle": "Así se llega",
     "steps": [
-      { "title": "1. Nuevo León 217", "body": "Busca el letrero \"Pabellón Nuevo León\" sobre la avenida, entre negocios y edificios de departamentos." },
-      { "title": "2. Entra al pasillo", "body": "El pabellón es un pasillo compartido — entra y camina hacia el fondo, pasando otros locales." },
-      { "title": "3. Busca la puerta d-stellar", "body": "El letrero \"d-stellar\" cuelga sobre una puerta angosta junto a la bandera de la comunidad — ahí es." }
+      {
+        "title": "1. Nuevo León 217",
+        "body": "Busca el letrero \"Pabellón Nuevo León\" sobre la avenida, entre negocios y edificios de departamentos."
+      },
+      {
+        "title": "2. Entra al pasillo",
+        "body": "El pabellón es un pasillo compartido — entra y camina hacia el fondo, pasando otros locales."
+      },
+      {
+        "title": "3. Busca la puerta d-stellar",
+        "body": "El letrero \"d-stellar\" cuelga sobre una puerta angosta junto a la bandera de la comunidad — ahí es."
+      }
     ],
     "videoTitle": "¿Todavía no la ubicas? Mira el video",
     "videoBody": "Un recorrido real, grabado en el lugar, para que no le des la vuelta a la cuadra buscando la entrada.",
@@ -129,12 +171,21 @@
     ],
     "gettingHereTitle": "Cómo llegar",
     "gettingHere": [
-      { "title": "Caminando", "body": "A 10 minutos del Parque México y del corredor de Ámsterdam." },
-      { "title": "Metrobús / Metro", "body": "Hay 2 metrobuses cercanos: Nuevo León línea 2, y Chilpancingo línea 9, o metro Chilpancingo." },
+      {
+        "title": "Caminando",
+        "body": "A 10 minutos del Parque México y del corredor de Ámsterdam."
+      },
+      {
+        "title": "Metrobús / Metro",
+        "body": "Hay 2 metrobuses cercanos: Nuevo León línea 2, y Chilpancingo línea 9, o metro Chilpancingo."
+      },
       {
         "title": "Auto",
         "body": "Estacionamiento en la calle, de paga, en Nuevo León y calles aledañas. ¿Buscas parquímetro? Coloca la siguiente dirección y te llevará a la calle paralela para estacionarte.",
-        "link": { "label": "Ver dirección para estacionarte", "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8" }
+        "link": {
+          "label": "Ver dirección para estacionarte",
+          "url": "https://maps.app.goo.gl/AaQAb2zmYAqmj9PN8"
+        }
       }
     ],
     "amenitiesTitle": "En el lugar",
