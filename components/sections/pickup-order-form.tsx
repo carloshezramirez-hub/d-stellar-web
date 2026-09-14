@@ -1,24 +1,56 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { menu } from "@/data/menu";
+import { ACCENT_STYLES } from "@/lib/menu-accent";
 import { trackEvent } from "@/lib/analytics";
 
 type Locale = "es" | "en";
 
-// Cookies, focaccias and packs are worth ordering ahead — they take time to
-// prepare or hold. Drinks are made fresh at the counter, so they're left off
-// this form on purpose (see PROJECT_NOTES.md).
-const ORDERABLE_SECTIONS = ["gourmet-cookies", "focaccias", "cookie-packs"];
-
-const orderSections = menu.filter((section) => ORDERABLE_SECTIONS.includes(section.slug));
-const allItems = orderSections.flatMap((section) => section.items);
+const allItems = menu.flatMap((section) => section.items);
 const gourmetCookies = menu.find((section) => section.slug === "gourmet-cookies")!.items;
+
+function QuantityStepper({
+  value,
+  onChange,
+  label,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  label: string;
+}) {
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <motion.button
+        type="button"
+        whileTap={{ scale: 0.85 }}
+        onClick={() => onChange(value - 1)}
+        disabled={value <= 0}
+        aria-label={`-1 ${label}`}
+        className="grid size-8 place-items-center border-2 border-line text-stellar-white transition-colors hover:border-stellar-pink disabled:cursor-not-allowed disabled:opacity-30"
+      >
+        −
+      </motion.button>
+      <span className="w-5 text-center text-sm tabular-nums text-stellar-white">{value}</span>
+      <motion.button
+        type="button"
+        whileTap={{ scale: 0.85 }}
+        onClick={() => onChange(value + 1)}
+        aria-label={`+1 ${label}`}
+        className="grid size-8 place-items-center border-2 border-line text-stellar-white transition-colors hover:border-stellar-pink"
+      >
+        +
+      </motion.button>
+    </div>
+  );
+}
 
 export function PickupOrderForm() {
   const t = useTranslations("pickup.order");
   const locale = useLocale() as Locale;
+  const [activeSection, setActiveSection] = useState(menu[0].slug);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   // Per pack slug, the chosen cookie slug for each unit in the pack —
   // e.g. a qty-2 3-Pack has 6 slots, repeats allowed.
@@ -31,7 +63,7 @@ export function PickupOrderForm() {
 
   const lines = useMemo(
     () =>
-      orderSections.flatMap((section) =>
+      menu.flatMap((section) =>
         section.items
           .filter((item) => (quantities[item.slug] ?? 0) > 0)
           .map((item) => ({
@@ -47,6 +79,7 @@ export function PickupOrderForm() {
   );
 
   const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
+  const totalItemCount = lines.reduce((sum, line) => sum + line.qty, 0);
 
   function setQty(slug: string, value: number) {
     const qty = Math.max(0, Math.min(20, Number.isNaN(value) ? 0 : value));
@@ -140,8 +173,10 @@ export function PickupOrderForm() {
     );
   }
 
+  const activeItems = menu.find((section) => section.slug === activeSection)!.items;
+
   return (
-    <form onSubmit={handleSubmit} className="grid gap-10">
+    <form onSubmit={handleSubmit} className="grid gap-8">
       {/* Honeypot: hidden from real users, bots tend to fill every field. */}
       <input
         type="text"
@@ -152,34 +187,68 @@ export function PickupOrderForm() {
         className="hidden"
       />
 
-      <div className="grid gap-10 sm:grid-cols-3">
-        {orderSections.map((section) => (
-          <div key={section.slug}>
-            <p className="font-demi text-sm font-bold uppercase tracking-wide text-stellar-white">
-              {section.title[locale]}
-            </p>
-            <ul className="mt-4 space-y-3">
-              {section.items.map((item) => (
-                <li key={item.slug}>
-                  <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 md:-mx-10 md:px-10 [&::-webkit-scrollbar]:hidden">
+          {menu.map((section) => {
+            const accent = ACCENT_STYLES[section.accent];
+            const isActive = section.slug === activeSection;
+            const sectionCount = section.items.reduce((sum, item) => sum + (quantities[item.slug] ?? 0), 0);
+            return (
+              <motion.button
+                key={section.slug}
+                type="button"
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setActiveSection(section.slug)}
+                className={`shrink-0 whitespace-nowrap px-4 py-2 font-tag text-xs uppercase tracking-widest transition-colors ${
+                  isActive ? `${accent.bg} ${accent.text}` : "border-2 border-line text-stellar-white/70 hover:border-stellar-white/40"
+                }`}
+              >
+                {section.title[locale]}
+                {sectionCount > 0 && <span className="ml-1.5 opacity-70">({sectionCount})</span>}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        <div className="sticky top-16 z-10 -mx-6 mt-4 flex items-center justify-between border-y-2 border-line bg-stellar-black-soft/95 px-6 py-3 backdrop-blur md:-mx-10 md:px-10">
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">
+            {totalItemCount > 0 ? t("cartCount", { count: totalItemCount }) : t("cartEmpty")}
+          </p>
+          <p className="font-demi text-lg font-bold text-stellar-green">${total} MXN</p>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="mt-6 grid gap-3 sm:grid-cols-2"
+          >
+            {activeItems.map((item) => {
+              const qty = quantities[item.slug] ?? 0;
+              return (
+                <div
+                  key={item.slug}
+                  className={`border-2 p-4 transition-colors ${qty > 0 ? "border-stellar-pink" : "border-line"}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm text-stellar-white">{item.name}</p>
-                      <p className="font-tag text-xs text-stellar-white/50">${item.priceMXN}</p>
+                      <p className="font-demi text-sm font-bold text-stellar-white">{item.name}</p>
+                      <p className="mt-1 text-xs text-stellar-white/60">{item.description[locale]}</p>
+                      <p className="mt-2 font-tag text-xs text-stellar-white/50">
+                        {item.compareAtPriceMXN && (
+                          <span className="mr-1.5 text-stellar-white/30 line-through">${item.compareAtPriceMXN}</span>
+                        )}
+                        ${item.priceMXN} MXN
+                      </p>
                     </div>
-                    <input
-                      type="number"
-                      min={0}
-                      max={20}
-                      inputMode="numeric"
-                      aria-label={item.name}
-                      value={quantities[item.slug] ?? 0}
-                      onChange={(e) => setQty(item.slug, e.currentTarget.valueAsNumber)}
-                      className="w-14 border-2 border-line bg-transparent px-2 py-1.5 text-center text-stellar-white outline-none focus:border-stellar-pink"
-                    />
+                    <QuantityStepper value={qty} onChange={(value) => setQty(item.slug, value)} label={item.name} />
                   </div>
 
-                  {item.packSize && (quantities[item.slug] ?? 0) > 0 && (
-                    <div className="mt-3 grid gap-2 border-l-2 border-line pl-3">
+                  {item.packSize && qty > 0 && (
+                    <div className="mt-4 grid gap-2 border-l-2 border-line pl-3">
                       <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-white/50">
                         {t("packFlavorsTitle")}
                       </p>
@@ -200,18 +269,39 @@ export function PickupOrderForm() {
                       ))}
                     </div>
                   )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                </div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      <div className="flex items-center justify-between border-y-2 border-line py-4">
-        <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">{t("total")}</p>
-        <p className="font-demi text-xl font-bold text-stellar-green">${total} MXN</p>
-      </div>
-      {showEmptyError && <p className="-mt-6 text-sm text-stellar-red">{t("emptyError")}</p>}
+      {lines.length > 0 && (
+        <div className="border-2 border-line bg-stellar-black-soft/60 p-5">
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("orderSummary")}</p>
+          <ul className="mt-3 space-y-2">
+            {lines.map((line) => (
+              <li key={line.slug} className="flex items-center justify-between gap-3 text-sm">
+                <span className="text-stellar-white/80">
+                  {line.qty}× {line.name}
+                  {line.flavors?.length ? (
+                    <span className="text-stellar-white/40">
+                      {" "}
+                      ({line.flavors.map((slug) => gourmetCookies.find((c) => c.slug === slug)?.name ?? slug).join(", ")})
+                    </span>
+                  ) : null}
+                </span>
+                <span className="shrink-0 text-stellar-white/60">${line.subtotal} MXN</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 flex items-center justify-between border-t-2 border-line pt-3">
+            <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">{t("total")}</p>
+            <p className="font-demi text-xl font-bold text-stellar-green">${total} MXN</p>
+          </div>
+        </div>
+      )}
+      {showEmptyError && <p className="text-sm text-stellar-red">{t("emptyError")}</p>}
 
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
@@ -272,13 +362,14 @@ export function PickupOrderForm() {
       </label>
 
       <div>
-        <button
+        <motion.button
           type="submit"
+          whileTap={{ scale: 0.98 }}
           disabled={status === "submitting"}
           className="inline-flex items-center justify-center bg-stellar-pink px-6 py-3 font-demi text-xs font-bold uppercase tracking-widest text-stellar-black transition-colors hover:bg-stellar-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === "submitting" ? t("submitting") : t("submit")}
-        </button>
+        </motion.button>
         <p className="mt-3 text-xs text-stellar-white/50">{t("payNote")}</p>
         {status === "error" && <p className="mt-3 text-sm text-stellar-red">{t("errorBody")}</p>}
       </div>

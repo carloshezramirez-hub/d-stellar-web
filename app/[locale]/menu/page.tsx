@@ -5,19 +5,12 @@ import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { menuSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { menu, MENU_MONTH_LABEL, type MenuSection } from "@/data/menu";
+import { menu, MENU_MONTH_LABEL } from "@/data/menu";
 import { BUSINESS, SITE_URL } from "@/data/site";
+import { ACCENT_STYLES } from "@/lib/menu-accent";
 
 type Props = { params: Promise<{ locale: string }> };
 type Locale = "es" | "en";
-
-const ACCENT: Record<MenuSection["accent"], { bg: string; text: string }> = {
-  green: { bg: "bg-stellar-green", text: "text-stellar-black" },
-  pink: { bg: "bg-stellar-pink", text: "text-stellar-black" },
-  blue: { bg: "bg-stellar-blue", text: "text-stellar-white" },
-  purple: { bg: "bg-stellar-purple", text: "text-stellar-white" },
-  red: { bg: "bg-stellar-red", text: "text-stellar-white" },
-};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -73,7 +66,7 @@ export default async function MenuPage({ params }: Props) {
 
       <nav aria-label={t("title")} className="mx-auto mt-10 flex max-w-4xl flex-wrap gap-2">
         {menu.map((section) => {
-          const accent = ACCENT[section.accent];
+          const accent = ACCENT_STYLES[section.accent];
           return (
             <a
               key={section.slug}
@@ -88,7 +81,7 @@ export default async function MenuPage({ params }: Props) {
 
       <div className="mx-auto mt-16 max-w-4xl space-y-16">
         {menu.map((section) => {
-          const accent = ACCENT[section.accent];
+          const accent = ACCENT_STYLES[section.accent];
           return (
             <section key={section.slug} id={section.slug} aria-labelledby={`${section.slug}-heading`} className="scroll-mt-24">
               <div className={`${accent.bg} ${accent.text} inline-block px-3 py-1`}>

@@ -8,6 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import { PickupOrderForm } from "@/components/sections/pickup-order-form";
 import { PickupPaymentBanner } from "@/components/sections/pickup-payment-banner";
 import { BUSINESS, SITE_URL } from "@/data/site";
+import { MENU_MONTH_LABEL } from "@/data/menu";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -22,8 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/pickup",
     title: isEn ? "Pickup — Order Ahead at Nuevo León 217" : "Pickup — Pide para recoger en Nuevo León 217",
     description: isEn
-      ? "Order ahead for pickup at d-stellar, Nuevo León 217, Condesa. Pay in store when you arrive. No delivery."
-      : "Pide con anticipación para recoger en d-stellar, Nuevo León 217, Condesa. Pagas al llegar. Sin delivery.",
+      ? "Order ahead from the full menu and pay online for pickup at d-stellar, Nuevo León 217, Condesa. No delivery."
+      : "Pide con anticipación del menú completo y paga en línea para recoger en d-stellar, Nuevo León 217, Condesa. Sin delivery.",
   });
 }
 
@@ -74,6 +75,9 @@ export default async function PickupPage({ params, searchParams }: Props) {
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-green">{t("order.eyebrow")}</p>
         <h2 className="mt-2 font-display text-3xl font-black uppercase text-stellar-white">{t("order.title")}</h2>
         <p className="mt-2 max-w-xl text-sm text-stellar-white/70">{t("order.intro")}</p>
+        <p className="mt-3 inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
+          {MENU_MONTH_LABEL[locale === "en" ? "en" : "es"]}
+        </p>
 
         <div className="mt-10">
           <PickupOrderForm />

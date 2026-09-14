@@ -100,7 +100,7 @@
     "steps": [
       {
         "title": "Llena tu pedido",
-        "body": "Elige tus cookies, focaccias o packs aquí abajo."
+        "body": "Elige lo que quieras del menú completo aquí abajo."
       },
       {
         "title": "Te confirmamos",
@@ -114,8 +114,11 @@
     "order": {
       "eyebrow": "Pedido anticipado",
       "title": "Ordena para recoger",
-      "intro": "Elige lo que quieres, dinos cuándo pasas por él, y paga en línea con Mercado Pago para confirmar tu pedido al instante.",
+      "intro": "Elige del menú completo lo que quieras, dinos cuándo pasas por él, y paga en línea con Mercado Pago para confirmar tu pedido al instante.",
       "total": "Total estimado",
+      "orderSummary": "Tu pedido",
+      "cartCount": "{count, plural, one {# producto en tu pedido} other {# productos en tu pedido}}",
+      "cartEmpty": "Elige productos del menú de aquí abajo",
       "emptyError": "Elige al menos un producto antes de enviar tu pedido.",
       "name": "Nombre",
       "email": "Email",

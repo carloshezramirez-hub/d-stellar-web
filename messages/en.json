@@ -100,7 +100,7 @@
     "steps": [
       {
         "title": "Fill out your order",
-        "body": "Pick your cookies, focaccias or packs below."
+        "body": "Pick whatever you want from the full menu below."
       },
       {
         "title": "We confirm",
@@ -114,8 +114,11 @@
     "order": {
       "eyebrow": "Order ahead",
       "title": "Order for pickup",
-      "intro": "Pick what you want, tell us when you're coming, and pay online with Mercado Pago to confirm your order instantly.",
+      "intro": "Pick anything from the full menu, tell us when you're coming, and pay online with Mercado Pago to confirm your order instantly.",
       "total": "Estimated total",
+      "orderSummary": "Your order",
+      "cartCount": "{count, plural, one {# item in your order} other {# items in your order}}",
+      "cartEmpty": "Pick items from the menu below",
       "emptyError": "Choose at least one item before sending your order.",
       "name": "Name",
       "email": "Email",
