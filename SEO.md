@@ -51,12 +51,13 @@ and the backlink strategy.
    domain-level 301 at the Hostinger/DNS layer, or pointing the domain at
    Vercel — both outside this codebase. See `PROJECT_NOTES.md` for the full
    writeup of this issue.
-3. **Real event photography** — `la-mas-draga-viewing-party`,
-   `pride-block-party`, and the new `cata-galletas-septiembre` still use the
-   gradient+logo SVG placeholder (`scripts/gen-event-placeholders.mjs`).
-   Swap in real photos when available — no code change needed beyond
-   updating `coverImage` in `data/events.ts`.
-4. **Cata de Galletas — Septiembre**: the exact start time and a capacity
+3. **Real event photography** — `la-mas-draga-viewing-party` and
+   `pride-block-party` still use the gradient+logo SVG placeholder
+   (`scripts/gen-event-placeholders.mjs`). `cata-galletas-septiembre` uses a
+   real studio product photo (`cookie-display-lit.webp`) instead, but a real
+   photo from the tasting itself would be better once one exists — no code
+   change needed beyond updating `coverImage` in `data/events.ts`.
+4. **Cata Estelar de Septiembre**: the exact start time and a capacity
    number weren't provided, so they were deliberately left out rather than
    invented (`timeKnown: false`, no `capacity` field) — see `data/events.ts`.
    Add them (and a real event photo) as soon as they're confirmed.

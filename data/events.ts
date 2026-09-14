@@ -29,12 +29,12 @@ export type EventRecord = {
 export const events: EventRecord[] = [
   {
     slug: "cata-galletas-septiembre",
-    title: "Cata de Galletas — Septiembre",
+    title: "Cata Estelar de Septiembre",
     dateISO: "2026-09-25T00:00:00-06:00",
     timeKnown: false,
     summary: {
-      es: "Una cata guiada de las cinco cookies de la colección de septiembre, maridadas con Chasen Hojicha Latte, y una caja de 3 para llevar al final.",
-      en: "A guided tasting of all five cookies from the September collection, paired with a Chasen Hojicha Latte, ending with a 3-cookie box to take home.",
+      es: "Prueba las cinco cookies de la colección de septiembre maridadas con hojicha, y arma tu propia caja de 3 favoritas para llevar.",
+      en: "Taste all five cookies from the September collection paired with hojicha, then build your own 3-cookie box to take home.",
     },
     description: {
       es: [
@@ -55,10 +55,10 @@ export const events: EventRecord[] = [
       en: ["Tasting of all 5 September cookies", "Chasen Hojicha Latte pairing", "Take-home box of 3 cookies, your choice"],
     },
     priceMXN: 499,
-    coverImage: "/images/events/cata-galletas-septiembre.svg",
+    coverImage: "/images/products/cookie-display-lit.webp",
     imageAlt: {
-      es: "Colección de cookies de septiembre de d-stellar junto a una taza de hojicha, para la cata del 25 de septiembre",
-      en: "d-stellar's September cookie collection next to a cup of hojicha, for the September 25 tasting",
+      es: "Cookies de d-stellar en su caja de la marca, con el sello estelar, listas para la cata de septiembre",
+      en: "d-stellar cookies in their branded box, stamped with the starburst logo, ready for the September tasting",
     },
     status: "upcoming",
   },
