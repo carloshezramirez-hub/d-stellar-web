@@ -89,9 +89,11 @@
     "capacity": "Capacity",
     "capacityUnit": "people",
     "price": "Cost",
+    "priceFrom": "From ${price} MXN",
     "priceFree": "Free entry",
     "location": "Location",
-    "includesTitle": "What's included"
+    "includesTitle": "What's included",
+    "ticketsTitle": "Tickets"
   },
   "pickup": {
     "eyebrow": "Pickup",

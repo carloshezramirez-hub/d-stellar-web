@@ -53,14 +53,10 @@ and the backlink strategy.
    writeup of this issue.
 3. **Real event photography** — `la-mas-draga-viewing-party` and
    `pride-block-party` still use the gradient+logo SVG placeholder
-   (`scripts/gen-event-placeholders.mjs`). `cata-galletas-septiembre` uses a
-   real studio product photo (`cookie-display-lit.webp`) instead, but a real
-   photo from the tasting itself would be better once one exists — no code
+   (`scripts/gen-event-placeholders.mjs`). `5-latidos` uses a real studio
+   product photo (`cookie-display-lit.webp`) instead, but a real photo from
+   the blind-tasting event itself would be better once one exists — no code
    change needed beyond updating `coverImage` in `data/events.ts`.
-4. **Cata Estelar de Septiembre**: the exact start time and a capacity
-   number weren't provided, so they were deliberately left out rather than
-   invented (`timeKnown: false`, no `capacity` field) — see `data/events.ts`.
-   Add them (and a real event photo) as soon as they're confirmed.
 
 ## Backlink strategy
 

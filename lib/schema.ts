@@ -116,17 +116,28 @@ export function eventSchema(event: EventRecord, locale: string) {
       name: BUSINESS.name,
       url: SITE_URL,
     },
-    ...(event.priceMXN
+    ...(event.tickets?.length
       ? {
-          offers: {
+          offers: event.tickets.map((ticket) => ({
             "@type": "Offer",
-            price: event.priceMXN,
+            name: ticket.name[locale as "es" | "en"],
+            price: ticket.priceMXN,
             priceCurrency: "MXN",
             availability: "https://schema.org/InStock",
             url: `${SITE_URL}/${locale === "en" ? "en/" : ""}events/${event.slug}`,
-          },
+          })),
         }
-      : {}),
+      : event.priceMXN
+        ? {
+            offers: {
+              "@type": "Offer",
+              price: event.priceMXN,
+              priceCurrency: "MXN",
+              availability: "https://schema.org/InStock",
+              url: `${SITE_URL}/${locale === "en" ? "en/" : ""}events/${event.slug}`,
+            },
+          }
+        : {}),
   };
 }
 

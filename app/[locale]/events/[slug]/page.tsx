@@ -8,7 +8,7 @@ import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { events, getEvent } from "@/data/events";
+import { events, getEvent, eventStartingPrice } from "@/data/events";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -115,7 +115,12 @@ export default async function EventDetailPage({ params }: Props) {
           <div>
             <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("price")}</p>
             <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
-              <Tag size={14} /> {event.priceMXN != null ? `$${event.priceMXN} MXN` : t("priceFree")}
+              <Tag size={14} />{" "}
+              {(() => {
+                const price = eventStartingPrice(event);
+                if (price == null) return t("priceFree");
+                return event.tickets?.length ? t("priceFrom", { price }) : `$${price} MXN`;
+              })()}
             </p>
           </div>
           {event.capacity != null && (
@@ -140,18 +145,41 @@ export default async function EventDetailPage({ params }: Props) {
           ))}
         </div>
 
-        {event.includes && (
-          <div className="mt-8">
-            <p className="font-demi text-lg font-bold text-stellar-white">{t("includesTitle")}</p>
-            <ul className="mt-3 space-y-2">
-              {event.includes[loc].map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-stellar-white/75">
-                  <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="mt-0.5 h-3.5 w-auto shrink-0" />
-                  {item}
-                </li>
+        {event.tickets?.length ? (
+          <div className="mt-10">
+            <p className="font-demi text-lg font-bold text-stellar-white">{t("ticketsTitle")}</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {event.tickets.map((ticket) => (
+                <div key={ticket.name[loc]} className="border-2 border-line p-6">
+                  <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{ticket.name[loc]}</p>
+                  <p className="mt-2 font-demi text-2xl font-bold text-stellar-white">${ticket.priceMXN} MXN</p>
+                  <ul className="mt-4 space-y-2">
+                    {ticket.includes[loc].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-stellar-white/75">
+                        <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="mt-0.5 h-3.5 w-auto shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  {ticket.note && <p className="mt-4 text-xs italic text-stellar-white/50">{ticket.note[loc]}</p>}
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
+        ) : (
+          event.includes && (
+            <div className="mt-8">
+              <p className="font-demi text-lg font-bold text-stellar-white">{t("includesTitle")}</p>
+              <ul className="mt-3 space-y-2">
+                {event.includes[loc].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-stellar-white/75">
+                    <Image src="/brand/icons/pixel-star.png" alt="" width={622} height={552} className="mt-0.5 h-3.5 w-auto shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
         )}
 
         <div className="mt-10 flex flex-wrap gap-4">

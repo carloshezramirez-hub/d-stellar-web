@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { PrivateEventForm } from "@/components/sections/private-event-form";
-import { upcomingEvents, pastEvents, type EventRecord } from "@/data/events";
+import { upcomingEvents, pastEvents, eventStartingPrice, type EventRecord } from "@/data/events";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -81,7 +81,9 @@ export default async function EventsPage({ params }: Props) {
             <p className="mt-4 text-stellar-white/65">{t("emptyUpcoming")}</p>
           ) : (
             <ul className="mt-8 space-y-4">
-              {upcoming.map((event) => (
+              {upcoming.map((event) => {
+                const startingPrice = eventStartingPrice(event);
+                return (
                 <li key={event.slug}>
                   <Link
                     href={{ pathname: "/events/[slug]", params: { slug: event.slug } }}
@@ -107,9 +109,9 @@ export default async function EventsPage({ params }: Props) {
                       </div>
                     </div>
                     <div className="flex flex-col items-start gap-1 sm:items-end">
-                      {event.priceMXN != null && (
+                      {startingPrice != null && (
                         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">
-                          ${event.priceMXN} MXN
+                          {event.tickets?.length ? t("priceFrom", { price: startingPrice }) : `$${startingPrice} MXN`}
                         </p>
                       )}
                       {event.capacity != null && (
@@ -120,7 +122,8 @@ export default async function EventsPage({ params }: Props) {
                     </div>
                   </Link>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </section>

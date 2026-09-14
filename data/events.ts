@@ -1,3 +1,12 @@
+export type EventTicket = {
+  name: { es: string; en: string };
+  priceMXN: number;
+  includes: { es: string[]; en: string[] };
+  // Short caption under this ticket's includes — e.g. clarifying a "duo"
+  // ticket isn't only for romantic couples.
+  note?: { es: string; en: string };
+};
+
 export type EventRecord = {
   slug: string;
   title: string;
@@ -17,6 +26,10 @@ export type EventRecord = {
   includes?: { es: string[]; en: string[] };
   capacity?: number;
   priceMXN?: number;
+  // Multiple ticket tiers (e.g. solo vs. duo) with their own price and
+  // inclusions. When present, this takes over the tickets/price display
+  // instead of the single `priceMXN` + `includes` pair.
+  tickets?: EventTicket[];
   coverImage: string;
   imageAlt: { es: string; en: string };
   status: "upcoming" | "past";
@@ -24,41 +37,100 @@ export type EventRecord = {
   externalUrl?: string;
 };
 
+// Lowest ticket price to show as "from $X MXN" — falls back to the plain
+// single price for events that don't use `tickets`.
+export function eventStartingPrice(event: EventRecord): number | undefined {
+  if (event.tickets?.length) {
+    return Math.min(...event.tickets.map((ticket) => ticket.priceMXN));
+  }
+  return event.priceMXN;
+}
+
 // PLACEHOLDER CONTENT — replace dates, capacity and price with the real
 // details before publishing. See PROJECT_NOTES.md → "Crear un nuevo evento".
 export const events: EventRecord[] = [
   {
-    slug: "cata-galletas-septiembre",
-    title: "Cata Estelar de Septiembre",
-    dateISO: "2026-09-25T00:00:00-06:00",
-    timeKnown: false,
+    slug: "5-latidos",
+    title: "5 Latidos",
+    dateISO: "2026-09-25T19:00:00-06:00",
+    endISO: "2026-09-25T20:30:00-06:00",
     summary: {
-      es: "Prueba las cinco cookies de la colección de septiembre maridadas con hojicha, y arma tu propia caja de 3 favoritas para llevar.",
-      en: "Taste all five cookies from the September collection paired with hojicha, then build your own 3-cookie box to take home.",
+      es: "Cinco cookies. Cinco latidos. Una noche para sentirlas sin verlas — cata sensorial a ciegas del menú de septiembre de d-stellar.",
+      en: "Five cookies. Five heartbeats. One night to feel them without seeing them — a blind sensory tasting of d-stellar's September menu.",
     },
     description: {
       es: [
-        "El viernes 25 de septiembre abrimos una cata especial de la colección del mes: Primer Latido, Dulce Ceniza, Granada Nocturna, Milpa Negra y Alba Rosada, servidas una por una para probarlas con calma.",
-        "Entre cookie y cookie, un Chasen Hojicha Latte — nuestro té hojicha tostado, batido a mano — funciona como acompañamiento para limpiar el paladar durante toda la experiencia.",
-        "Al terminar la cata, cada asistente arma su propia caja con 3 cookies — las que más le hayan gustado de las cinco — para llevarse a casa.",
-        "Cupo limitado, como todos los eventos en d-stellar. Escríbenos para apartar tu lugar (botón abajo).",
+        "5 Latidos es una experiencia gastronómica íntima creada alrededor de las cinco cookies que forman la colección de septiembre de d-stellar.",
+        "Durante una noche, solo 10 personas probarán el menú completo de una manera distinta: con los ojos cubiertos, acompañadas por música y una guía sensorial diseñada para hacer que aroma, textura, temperatura, sabor y memoria ocupen el lugar que normalmente domina la vista.",
+        "Cada cookie se convierte en un latido. Después de cada degustación, las personas podrán descubrir qué probaron, conversar sobre lo que percibieron y conocer la intención detrás de cada creación.",
+        "Al terminar los cinco latidos, cada participante elegirá sus favoritas para llevarse una selección a casa.",
+        "No buscamos hacer una cata técnica ni enseñar cuál es la respuesta correcta. Buscamos que cada persona descubra qué siente cuando deja de ver y empieza realmente a probar.",
+        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Escríbenos para apartar tu lugar (botón abajo) — cupo máximo 10 personas.",
       ],
       en: [
-        "On Friday, September 25 we're hosting a special tasting of this month's collection: Primer Latido, Dulce Ceniza, Granada Nocturna, Milpa Negra and Alba Rosada, served one at a time so you can really taste each one.",
-        "Between cookies, a Chasen Hojicha Latte — our hand-whisked roasted hojicha tea — works as a palate cleanser throughout the experience.",
-        "At the end of the tasting, each guest builds their own box of 3 cookies — whichever three they liked best — to take home.",
-        "Limited capacity, like every d-stellar event. Message us to reserve your spot (button below).",
+        "5 Latidos is an intimate tasting experience built around the five cookies in d-stellar's September collection.",
+        "For one night, only 10 people will taste the full menu in a completely different way: blindfolded, guided by music and a sensory host designed to let aroma, texture, temperature, flavor and memory take the place vision usually holds.",
+        "Each cookie becomes a heartbeat. After each tasting, guests uncover what they just ate, talk through what they noticed, and hear the story behind each creation.",
+        "At the end of the five heartbeats, every guest picks their favorites to take home.",
+        "This isn't a technical tasting, and there's no \"correct\" answer to find. It's about discovering what you actually feel once you stop looking and start truly tasting.",
+        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes — message us to reserve your spot (button below), max. 10 people.",
       ],
     },
-    includes: {
-      es: ["Cata de las 5 cookies de septiembre", "Chasen Hojicha Latte de acompañamiento", "Caja de 3 cookies a elegir, para llevar"],
-      en: ["Tasting of all 5 September cookies", "Chasen Hojicha Latte pairing", "Take-home box of 3 cookies, your choice"],
-    },
-    priceMXN: 499,
+    tickets: [
+      {
+        name: { es: "Experiencia Individual", en: "Solo Experience" },
+        priceMXN: 450,
+        includes: {
+          es: [
+            "Acceso para 1 persona",
+            "Cata guiada de los 5 sabores de septiembre",
+            "Hojicha durante la experiencia",
+            "Experiencia con venda y ambientación musical",
+            "Conversación y revelación de cada sabor",
+            "3-Pack de cookies a elección para llevar",
+          ],
+          en: [
+            "Access for 1 person",
+            "Guided tasting of all 5 September flavors",
+            "Hojicha served during the experience",
+            "Blindfolded experience with music",
+            "Conversation and reveal after each flavor",
+            "3-Pack of cookies, your choice, to take home",
+          ],
+        },
+      },
+      {
+        name: { es: "Experiencia Dúo", en: "Duo Experience" },
+        priceMXN: 800,
+        includes: {
+          es: [
+            "Acceso para 2 personas",
+            "Cata guiada de los 5 sabores para ambas personas",
+            "2 hojichas",
+            "Experiencia con venda y ambientación musical",
+            "Conversación y revelación de cada sabor",
+            "1 5-Pack de cookies a elección para llevar",
+          ],
+          en: [
+            "Access for 2 people",
+            "Guided tasting of all 5 flavors for both people",
+            "2 hojichas",
+            "Blindfolded experience with music",
+            "Conversation and reveal after each flavor",
+            "One 5-Pack of cookies, your choice, to take home",
+          ],
+        },
+        note: {
+          es: "Ven con quien quieras — no es solo para parejas.",
+          en: "Come with anyone — it's not just for couples.",
+        },
+      },
+    ],
+    capacity: 10,
     coverImage: "/images/products/cookie-display-lit.webp",
     imageAlt: {
-      es: "Cookies de d-stellar en su caja de la marca, con el sello estelar, listas para la cata de septiembre",
-      en: "d-stellar cookies in their branded box, stamped with the starburst logo, ready for the September tasting",
+      es: "Las cinco cookies de septiembre de d-stellar, listas para la cata a ciegas 5 Latidos",
+      en: "d-stellar's five September cookies, ready for the 5 Latidos blind tasting",
     },
     status: "upcoming",
   },

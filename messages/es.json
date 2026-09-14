@@ -89,9 +89,11 @@
     "capacity": "Cupo",
     "capacityUnit": "personas",
     "price": "Costo",
+    "priceFrom": "Desde ${price} MXN",
     "priceFree": "Entrada libre",
     "location": "Ubicación",
-    "includesTitle": "Qué incluye"
+    "includesTitle": "Qué incluye",
+    "ticketsTitle": "Boletos"
   },
   "pickup": {
     "eyebrow": "Pickup",
