@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { menu } from "@/data/menu";
+import { Cookie, CupSoda, Coffee, Leaf, Droplet, Croissant, Package, type LucideIcon } from "lucide-react";
+import { menu, type MenuSection } from "@/data/menu";
 import { ACCENT_STYLES } from "@/lib/menu-accent";
 import { trackEvent } from "@/lib/analytics";
 
@@ -11,6 +12,16 @@ type Locale = "es" | "en";
 
 const allItems = menu.flatMap((section) => section.items);
 const gourmetCookies = menu.find((section) => section.slug === "gourmet-cookies")!.items;
+
+const SECTION_ICONS: Record<MenuSection["slug"], LucideIcon> = {
+  "gourmet-cookies": Cookie,
+  "bebidas-autor": CupSoda,
+  cafeina: Coffee,
+  "sin-cafeina": Leaf,
+  tonics: Droplet,
+  focaccias: Croissant,
+  "cookie-packs": Package,
+};
 
 function QuantityStepper({
   value,
@@ -33,7 +44,20 @@ function QuantityStepper({
       >
         −
       </motion.button>
-      <span className="w-5 text-center text-sm tabular-nums text-stellar-white">{value}</span>
+      <span className="relative grid w-5 place-items-center overflow-hidden text-sm tabular-nums text-stellar-white">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={value}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="col-start-1 row-start-1"
+          >
+            {value}
+          </motion.span>
+        </AnimatePresence>
+      </span>
       <motion.button
         type="button"
         whileTap={{ scale: 0.85 }}
@@ -193,18 +217,29 @@ export function PickupOrderForm() {
             const accent = ACCENT_STYLES[section.accent];
             const isActive = section.slug === activeSection;
             const sectionCount = section.items.reduce((sum, item) => sum + (quantities[item.slug] ?? 0), 0);
+            const Icon = SECTION_ICONS[section.slug];
             return (
               <motion.button
                 key={section.slug}
                 type="button"
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setActiveSection(section.slug)}
-                className={`shrink-0 whitespace-nowrap px-4 py-2 font-tag text-xs uppercase tracking-widest transition-colors ${
-                  isActive ? `${accent.bg} ${accent.text}` : "border-2 border-line text-stellar-white/70 hover:border-stellar-white/40"
+                className={`relative flex shrink-0 items-center gap-1.5 whitespace-nowrap border-2 px-4 py-2 font-tag text-xs uppercase tracking-widest transition-colors ${
+                  isActive ? `border-transparent ${accent.text}` : "border-line text-stellar-white/70 hover:border-stellar-white/40"
                 }`}
               >
-                {section.title[locale]}
-                {sectionCount > 0 && <span className="ml-1.5 opacity-70">({sectionCount})</span>}
+                {isActive && (
+                  <motion.span
+                    layoutId="pickup-active-tab"
+                    className={`absolute inset-0 ${accent.bg}`}
+                    transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+                  />
+                )}
+                <span className="relative flex items-center gap-1.5">
+                  <Icon size={14} strokeWidth={2.25} />
+                  {section.title[locale]}
+                  {sectionCount > 0 && <span className="opacity-70">({sectionCount})</span>}
+                </span>
               </motion.button>
             );
           })}
@@ -214,23 +249,40 @@ export function PickupOrderForm() {
           <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">
             {totalItemCount > 0 ? t("cartCount", { count: totalItemCount }) : t("cartEmpty")}
           </p>
-          <p className="font-demi text-lg font-bold text-stellar-green">${total} MXN</p>
+          <AnimatePresence mode="popLayout">
+            <motion.p
+              key={total}
+              initial={{ scale: 1.2, opacity: 0.6 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0.4 }}
+              className="font-demi text-lg font-bold text-stellar-green"
+            >
+              ${total} MXN
+            </motion.p>
+          </AnimatePresence>
         </div>
 
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
+            initial="hidden"
+            animate="show"
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.12 } }}
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.04 } },
+            }}
             className="mt-6 grid gap-3 sm:grid-cols-2"
           >
             {activeItems.map((item) => {
               const qty = quantities[item.slug] ?? 0;
               return (
-                <div
+                <motion.div
                   key={item.slug}
+                  variants={{
+                    hidden: { opacity: 0, y: 10 },
+                    show: { opacity: 1, y: 0 },
+                  }}
                   className={`border-2 p-4 transition-colors ${qty > 0 ? "border-stellar-pink" : "border-line"}`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -269,7 +321,7 @@ export function PickupOrderForm() {
                       ))}
                     </div>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </motion.div>

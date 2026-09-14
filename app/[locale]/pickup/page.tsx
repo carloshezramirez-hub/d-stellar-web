@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
@@ -78,6 +79,21 @@ export default async function PickupPage({ params, searchParams }: Props) {
         <p className="mt-3 inline-block bg-stellar-white px-3 py-1 font-tag text-xs uppercase tracking-widest text-stellar-black">
           {MENU_MONTH_LABEL[locale === "en" ? "en" : "es"]}
         </p>
+
+        <div className="mt-8 grid grid-cols-3 gap-2">
+          {["cookie-display-lit", "cookie-display-bright", "cookie-display-dark"].map((name) => (
+            <div key={name} className="relative aspect-square overflow-hidden border-2 border-line">
+              <Image
+                src={`/images/products/${name}.webp`}
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="(min-width: 768px) 260px, 33vw"
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </div>
 
         <div className="mt-10">
           <PickupOrderForm />
