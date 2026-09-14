@@ -80,13 +80,20 @@ export function breadcrumbSchema(items: Array<{ name: string; url: string }>) {
 }
 
 export function eventSchema(event: EventRecord, locale: string) {
+  // When only the day is confirmed (timeKnown === false), emit a date-only
+  // ISO string instead of the dateISO's midnight timestamp — schema.org
+  // accepts date-only startDate/endDate, and a literal midnight time would
+  // misrepresent an unconfirmed hour as a real one.
+  const includeTime = event.timeKnown !== false;
+  const startDate = includeTime ? event.dateISO : event.dateISO?.slice(0, 10);
+  const endDate = includeTime ? event.endISO : event.endISO?.slice(0, 10);
   return {
     "@context": "https://schema.org",
     "@type": "Event",
     "@id": `${SITE_URL}/${locale === "en" ? "en/" : ""}events/${event.slug}#event`,
     name: event.title,
-    startDate: event.dateISO,
-    endDate: event.endISO,
+    startDate,
+    endDate,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     description: event.summary[locale as "es" | "en"],

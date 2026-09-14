@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -10,16 +11,15 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/about",
     title: isEn ? "About d-stellar — The Sweet Universe Company" : "Nosotros — The Sweet Universe Company",
     description: isEn
       ? "d-stellar is a queer-friendly cookie shop in Condesa, founded in 2024 by Hernán Castilla and Eduardo Hernández."
       : "d-stellar es una cookie shop LGBTQ+ friendly en Condesa, fundada en 2024 por Hernán Castilla y Eduardo Hernández.",
-    alternates: {
-      canonical: isEn ? "/en/about" : "/about",
-      languages: { es: "/about", en: "/en/about", "x-default": "/about" },
-    },
-  };
+    image: "/images/products/cookie-display-dark.webp",
+  });
 }
 
 export default async function AboutPage({ params }: Props) {

@@ -321,7 +321,17 @@ to a real social post about the event, when one exists.
 Bilingual hreflang/canonical/alternates on every route. Local SEO intents
 (galletas Condesa, best cookies Mexico City, queer-friendly cafe Mexico City,
 etc.) worked into titles/descriptions/body copy naturally. JSON-LD is
-verifiable-facts-only.
+verifiable-facts-only. See `SEO.md` for the full technical-SEO writeup,
+pending manual steps (Search Console verification, the still-live
+`d-stellar.com` WordPress site), and the backlink strategy.
+
+Every page's Open Graph/Twitter metadata is built by `lib/seo.ts` →
+`pageMetadata()`, not hand-rolled per page — Next.js replaces the whole
+`openGraph` object per route segment instead of deep-merging it, so a page
+that only overrides one field (e.g. `url`) silently drops the site-wide
+`og:site_name`/`og:locale`. Every page below the homepage had `og:url`
+pointing at the homepage before this was fixed (2026-09-14). Use the helper
+for any new page instead of writing `openGraph`/`twitter` inline.
 
 ## Fixed: language-switch crash on dynamic routes
 

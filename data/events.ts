@@ -28,6 +28,41 @@ export type EventRecord = {
 // details before publishing. See PROJECT_NOTES.md → "Crear un nuevo evento".
 export const events: EventRecord[] = [
   {
+    slug: "cata-galletas-septiembre",
+    title: "Cata de Galletas — Septiembre",
+    dateISO: "2026-09-25T00:00:00-06:00",
+    timeKnown: false,
+    summary: {
+      es: "Una cata guiada de las cinco cookies de la colección de septiembre, maridadas con Chasen Hojicha Latte, y una caja de 3 para llevar al final.",
+      en: "A guided tasting of all five cookies from the September collection, paired with a Chasen Hojicha Latte, ending with a 3-cookie box to take home.",
+    },
+    description: {
+      es: [
+        "El viernes 25 de septiembre abrimos una cata especial de la colección del mes: Primer Latido, Dulce Ceniza, Granada Nocturna, Milpa Negra y Alba Rosada, servidas una por una para probarlas con calma.",
+        "Entre cookie y cookie, un Chasen Hojicha Latte — nuestro té hojicha tostado, batido a mano — funciona como acompañamiento para limpiar el paladar durante toda la experiencia.",
+        "Al terminar la cata, cada asistente arma su propia caja con 3 cookies — las que más le hayan gustado de las cinco — para llevarse a casa.",
+        "Cupo limitado, como todos los eventos en d-stellar. Escríbenos para apartar tu lugar (botón abajo).",
+      ],
+      en: [
+        "On Friday, September 25 we're hosting a special tasting of this month's collection: Primer Latido, Dulce Ceniza, Granada Nocturna, Milpa Negra and Alba Rosada, served one at a time so you can really taste each one.",
+        "Between cookies, a Chasen Hojicha Latte — our hand-whisked roasted hojicha tea — works as a palate cleanser throughout the experience.",
+        "At the end of the tasting, each guest builds their own box of 3 cookies — whichever three they liked best — to take home.",
+        "Limited capacity, like every d-stellar event. Message us to reserve your spot (button below).",
+      ],
+    },
+    includes: {
+      es: ["Cata de las 5 cookies de septiembre", "Chasen Hojicha Latte de acompañamiento", "Caja de 3 cookies a elegir, para llevar"],
+      en: ["Tasting of all 5 September cookies", "Chasen Hojicha Latte pairing", "Take-home box of 3 cookies, your choice"],
+    },
+    priceMXN: 499,
+    coverImage: "/images/events/cata-galletas-septiembre.svg",
+    imageAlt: {
+      es: "Colección de cookies de septiembre de d-stellar junto a una taza de hojicha, para la cata del 25 de septiembre",
+      en: "d-stellar's September cookie collection next to a cup of hojicha, for the September 25 tasting",
+    },
+    status: "upcoming",
+  },
+  {
     slug: "la-mas-draga-viewing-party",
     title: "La Más Draga — Viewing Party",
     dateISO: "2026-08-15T20:00:00-06:00",

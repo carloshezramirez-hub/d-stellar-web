@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { menuHistory } from "@/data/menu-history";
 import { SITE_URL } from "@/data/site";
 
@@ -15,16 +16,15 @@ type Locale = "es" | "en";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/historias",
     title: isEn ? "Menu Stories — The Story Behind Every Month" : "Historias del Menú — La historia detrás de cada mes",
     description: isEn
       ? "The real story behind every monthly cookie collection at d-stellar, since day one — the ideas, the people, and the flavors behind each menu."
       : "La historia real detrás de cada colección mensual de cookies de d-stellar, desde el primer día — las ideas, las personas y los sabores detrás de cada menú.",
-    alternates: {
-      canonical: isEn ? "/en/historias" : "/historias",
-      languages: { es: "/historias", en: "/en/historias", "x-default": "/historias" },
-    },
-  };
+    image: menuHistory[0]?.heroImage,
+  });
 }
 
 export default async function HistoriasPage({ params }: Props) {

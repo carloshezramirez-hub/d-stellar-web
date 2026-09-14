@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { CalendarDays, MapPin, Users, ArrowLeft } from "lucide-react";
+import { CalendarDays, MapPin, Users, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { events, getEvent } from "@/data/events";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
@@ -22,22 +23,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = getEvent(slug);
   if (!event) return {};
   const loc = locale as Locale;
-  const path = `${locale === "en" ? "/en" : ""}/events/${slug}`;
 
-  return {
+  return pageMetadata({
+    locale: loc,
+    path: `/events/${slug}`,
     title: event.title,
     description: event.summary[loc],
-    alternates: {
-      canonical: path,
-      languages: { es: `/events/${slug}`, en: `/en/events/${slug}`, "x-default": `/events/${slug}` },
-    },
-    openGraph: {
-      title: event.title,
-      description: event.summary[loc],
-      images: [{ url: event.coverImage }],
-      type: "article",
-    },
-  };
+    image: event.coverImage,
+    type: "article",
+  });
 }
 
 function googleCalendarUrl(event: NonNullable<ReturnType<typeof getEvent>> & { dateISO: string }) {
@@ -111,11 +105,17 @@ export default async function EventDetailPage({ params }: Props) {
         <h1 className="mt-8 font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-5xl">{event.title}</h1>
         <p className="mt-3 text-lg text-stellar-white/75">{event.summary[loc]}</p>
 
-        <div className="mt-8 grid gap-4 border-2 border-line p-6 sm:grid-cols-3">
+        <div className="mt-8 grid gap-4 border-2 border-line p-6 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("details")}</p>
             <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
               <CalendarDays size={14} /> {formattedDate}
+            </p>
+          </div>
+          <div>
+            <p className="font-tag text-[10px] uppercase tracking-widest text-stellar-pink">{t("price")}</p>
+            <p className="mt-2 flex items-center gap-2 text-sm text-stellar-white/80">
+              <Tag size={14} /> {event.priceMXN != null ? `$${event.priceMXN} MXN` : t("priceFree")}
             </p>
           </div>
           {event.capacity != null && (

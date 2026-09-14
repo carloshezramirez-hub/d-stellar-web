@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight, Newspaper } from "lucide-react";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { press } from "@/data/press";
 import { SITE_URL } from "@/data/site";
 
@@ -13,16 +14,14 @@ type Locale = "es" | "en";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
-    title: isEn ? "Press" : "Prensa",
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/press",
+    title: isEn ? "Press Coverage — d-stellar in the Media" : "Prensa — d-stellar en los medios",
     description: isEn
       ? "Press coverage of d-stellar — articles and features from the outlets that have covered the business."
       : "Cobertura de prensa de d-stellar — notas y reportajes de los medios que han hablado del negocio.",
-    alternates: {
-      canonical: isEn ? "/en/press" : "/press",
-      languages: { es: "/press", en: "/en/press", "x-default": "/press" },
-    },
-  };
+  });
 }
 
 export default async function PressPage({ params }: Props) {

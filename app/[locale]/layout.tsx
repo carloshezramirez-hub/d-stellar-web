@@ -61,7 +61,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: `d-stellar — ${isEn ? "Cookies, Drinks & Events in Condesa" : "Cookies, cacao y eventos en Condesa"}`, template: `%s · ${t("titleSuffix")}` },
+    title: {
+      default: isEn
+        ? "d-stellar — Cookies, Cacao & Events in Condesa, Mexico City"
+        : "d-stellar — Cookies, cacao y eventos en Condesa, CDMX",
+      template: `%s · ${t("titleSuffix")}`,
+    },
     description: t("defaultDescription"),
     alternates: {
       canonical: isEn ? "/en" : "/",
@@ -80,6 +85,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
     },
+    // Google Search Console domain verification — set GOOGLE_SITE_VERIFICATION
+    // in Vercel (the code string from Search Console's HTML tag method) once
+    // Carlos has added the www.d-stellar.co property there. Renders nothing
+    // if unset, so this is safe to ship ahead of that step.
+    ...(process.env.GOOGLE_SITE_VERIFICATION
+      ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+      : {}),
   };
 }
 

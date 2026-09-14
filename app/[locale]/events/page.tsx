@@ -5,6 +5,7 @@ import { CalendarDays, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { PrivateEventForm } from "@/components/sections/private-event-form";
 import { upcomingEvents, pastEvents, type EventRecord } from "@/data/events";
 import { SITE_URL } from "@/data/site";
@@ -14,16 +15,14 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/events",
     title: isEn ? "Events — Viewing Parties & Screenings in Condesa" : "Eventos — Viewing parties y screenings en Condesa",
     description: isEn
       ? "Upcoming and past events at d-stellar, plus private bookings: viewing parties, screenings, LGBTQ+ nights, birthdays and brand activations in an intimate Condesa space."
       : "Eventos próximos y pasados en d-stellar, y renta del espacio: viewing parties, screenings, noches LGBTQ+, cumpleaños y activaciones de marca en un espacio íntimo de Condesa.",
-    alternates: {
-      canonical: isEn ? "/en/events" : "/events",
-      languages: { es: "/events", en: "/en/events", "x-default": "/events" },
-    },
-  };
+  });
 }
 
 function formatDate(event: EventRecord, locale: string) {
@@ -107,11 +106,18 @@ export default async function EventsPage({ params }: Props) {
                         </p>
                       </div>
                     </div>
-                    {event.capacity != null && (
-                      <p className="flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-green">
-                        <Users size={14} /> {event.capacity} {t("capacityUnit")}
-                      </p>
-                    )}
+                    <div className="flex flex-col items-start gap-1 sm:items-end">
+                      {event.priceMXN != null && (
+                        <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">
+                          ${event.priceMXN} MXN
+                        </p>
+                      )}
+                      {event.capacity != null && (
+                        <p className="flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-stellar-green">
+                          <Users size={14} /> {event.capacity} {t("capacityUnit")}
+                        </p>
+                      )}
+                    </div>
                   </Link>
                 </li>
               ))}

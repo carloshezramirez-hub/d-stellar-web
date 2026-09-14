@@ -4,6 +4,7 @@ import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { PickupOrderForm } from "@/components/sections/pickup-order-form";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
@@ -12,16 +13,14 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/pickup",
     title: isEn ? "Pickup — Order Ahead at Nuevo León 217" : "Pickup — Pide para recoger en Nuevo León 217",
     description: isEn
       ? "Order ahead for pickup at d-stellar, Nuevo León 217, Condesa. Pay in store when you arrive. No delivery."
       : "Pide con anticipación para recoger en d-stellar, Nuevo León 217, Condesa. Pagas al llegar. Sin delivery.",
-    alternates: {
-      canonical: isEn ? "/en/pickup" : "/pickup",
-      languages: { es: "/pickup", en: "/en/pickup", "x-default": "/pickup" },
-    },
-  };
+  });
 }
 
 export default async function PickupPage({ params }: Props) {

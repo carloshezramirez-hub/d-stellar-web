@@ -5,6 +5,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 import { CtaAnchor } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -12,18 +13,17 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/visit",
     title: isEn
       ? "Visit d-stellar — Nuevo León 217, Condesa, Mexico City"
       : "Visita d-stellar — Nuevo León 217, Condesa, CDMX",
     description: isEn
       ? "How to find d-stellar inside Pabellón Nuevo León: address, hours, walking directions from Parque México, parking and accessibility."
       : "Cómo llegar a d-stellar dentro del Pabellón Nuevo León: dirección, horario, cómo llegar caminando desde el Parque México, estacionamiento y accesibilidad.",
-    alternates: {
-      canonical: isEn ? "/en/visit" : "/visit",
-      languages: { es: "/visit", en: "/en/visit", "x-default": "/visit" },
-    },
-  };
+    image: "/images/location/facade-entrance.webp",
+  });
 }
 
 const STEP_IMAGES = [

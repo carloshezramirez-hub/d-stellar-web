@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { menuSchema, breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { menu, MENU_MONTH_LABEL, type MenuSection } from "@/data/menu";
 import { BUSINESS, SITE_URL } from "@/data/site";
 
@@ -21,19 +22,17 @@ const ACCENT: Record<MenuSection["accent"], { bg: string; text: string }> = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
-  const path = isEn ? "/en/menu" : "/menu";
-  return {
+  return pageMetadata({
+    locale: isEn ? "en" : "es",
+    path: "/menu",
     title: isEn
       ? "Menu — Cookies, Coffee, Cacao & Matcha in Condesa"
       : "Menú — Cookies, café, cacao y matcha en Condesa",
     description: isEn
       ? "d-stellar's full menu: monthly cookies, signature drinks, coffee, cacao, matcha, tonics, focaccias and cookie packs. Nuevo León 217, Condesa."
       : "El menú completo de d-stellar: cookies del mes, bebidas de autor, café, cacao, matcha, tónicos, focaccias y cookie packs. Nuevo León 217, Condesa.",
-    alternates: {
-      canonical: path,
-      languages: { es: "/menu", en: "/en/menu", "x-default": "/menu" },
-    },
-  };
+    image: "/images/products/cookie-display-lit.webp",
+  });
 }
 
 export default async function MenuPage({ params }: Props) {

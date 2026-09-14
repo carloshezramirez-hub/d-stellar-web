@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { menuHistory, getMonthlyStory } from "@/data/menu-history";
 import { SITE_URL } from "@/data/site";
 
@@ -22,22 +23,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const month = getMonthlyStory(mes);
   if (!month) return {};
   const loc = locale as Locale;
-  const path = `${locale === "en" ? "/en" : ""}/historias/${mes}`;
 
-  return {
+  return pageMetadata({
+    locale: loc,
+    path: `/historias/${mes}`,
     title: `${month.title[loc]} · ${month.monthLabel[loc]}`,
     description: month.hook[loc],
-    alternates: {
-      canonical: path,
-      languages: { es: `/historias/${mes}`, en: `/en/historias/${mes}`, "x-default": `/historias/${mes}` },
-    },
-    openGraph: {
-      title: `${month.title[loc]} · ${month.monthLabel[loc]}`,
-      description: month.hook[loc],
-      images: [{ url: month.heroImage }],
-      type: "article",
-    },
-  };
+    image: month.heroImage,
+    type: "article",
+  });
 }
 
 export default async function HistoriaDetailPage({ params }: Props) {
