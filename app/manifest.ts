@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "d-stellar — Cookies, Cacao & Events in Condesa",
     short_name: "d-stellar",
-    description: "New York-style cookies, cacao and signature drinks in Condesa, Mexico City.",
+    description: "LGBTQ+ friendly cookie shop in Condesa, Mexico City — monthly rotating menu, cacao drinks and community events.",
     start_url: "/",
     display: "standalone",
     background_color: "#0E0E10",
