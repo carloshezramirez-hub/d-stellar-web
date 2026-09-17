@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { pickupOrderSchema } from "@/lib/pickup-schema";
-import { generatePickupCode } from "@/lib/notifications/reservation-code";
+import { generateOrderCode } from "@/lib/notifications/reservation-code";
 import { emailEnv } from "@/lib/notifications/env";
 import { sendMail } from "@/lib/notifications/mailer";
 import { buildPickupCustomerEmail, buildPickupOwnerEmail } from "@/lib/notifications/templates";
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   // Honeypot field: real users never fill it. Pretend success so bots move on.
   if (typeof website === "string" && website.length > 0) {
-    return NextResponse.json({ ok: true, code: generatePickupCode() });
+    return NextResponse.json({ ok: true, code: generateOrderCode("DS") });
   }
 
   const parsed = pickupOrderSchema.safeParse(rest);
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
-  const code = generatePickupCode();
+  const code = generateOrderCode("DS");
   const safeLocale = locale === "en" ? "en" : "es";
 
   // With Mercado Pago configured, payment happens online first — the

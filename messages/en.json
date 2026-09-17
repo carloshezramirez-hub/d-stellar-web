@@ -93,7 +93,30 @@
     "priceFree": "Free entry",
     "location": "Location",
     "includesTitle": "What's included",
-    "ticketsTitle": "Tickets"
+    "ticketsTitle": "Tickets",
+    "order": {
+      "eyebrow": "Reserve your spot",
+      "title": "Buy your ticket",
+      "qty": "Quantity",
+      "total": "Total",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "notes": "Notes (optional)",
+      "submit": "Buy ticket",
+      "submitting": "Processing...",
+      "payNote": "Buying takes you to Mercado Pago's secure page to pay online.",
+      "errorBody": "We couldn't process your purchase. Try again or message us on WhatsApp.",
+      "successTitle": "Reservation received!",
+      "successBody": "We'll confirm availability and email you the payment details.",
+      "successCode": "Ref. {code}",
+      "paymentApprovedTitle": "Payment confirmed!",
+      "paymentApprovedBody": "Your ticket {code} is confirmed. We've emailed you the details — see you there.",
+      "paymentPendingTitle": "Payment in process",
+      "paymentPendingBody": "We're confirming your payment for ticket {code}. We'll email you as soon as it clears.",
+      "paymentFailureTitle": "Payment didn't go through",
+      "paymentFailureBody": "Your ticket's payment wasn't processed. You can try again below or message us on WhatsApp."
+    }
   },
   "pickup": {
     "eyebrow": "Pickup",

@@ -12,6 +12,9 @@ export type AnalyticsEvent =
   | "submit_pickup_order"
   | "begin_checkout_pickup"
   | "pickup_payment_approved"
+  | "submit_ticket_order"
+  | "begin_checkout_ticket"
+  | "ticket_payment_approved"
   | "language_switch"
   | "click_preferred_source";
 

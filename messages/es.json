@@ -93,7 +93,30 @@
     "priceFree": "Entrada libre",
     "location": "Ubicación",
     "includesTitle": "Qué incluye",
-    "ticketsTitle": "Boletos"
+    "ticketsTitle": "Boletos",
+    "order": {
+      "eyebrow": "Reserva tu lugar",
+      "title": "Compra tu boleto",
+      "qty": "Cantidad",
+      "total": "Total",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "notes": "Notas (opcional)",
+      "submit": "Comprar boleto",
+      "submitting": "Procesando...",
+      "payNote": "Al comprar pasarás a la página segura de Mercado Pago para pagar en línea.",
+      "errorBody": "No pudimos procesar tu compra. Intenta de nuevo o escríbenos por WhatsApp.",
+      "successTitle": "¡Reservación recibida!",
+      "successBody": "Te confirmaremos disponibilidad y te enviamos los detalles de pago por email.",
+      "successCode": "Ref. {code}",
+      "paymentApprovedTitle": "¡Pago confirmado!",
+      "paymentApprovedBody": "Tu boleto {code} quedó confirmado. Te enviamos los detalles por correo — nos vemos ahí.",
+      "paymentPendingTitle": "Pago en proceso",
+      "paymentPendingBody": "Estamos confirmando tu pago para el boleto {code}. Te avisaremos por correo en cuanto se acredite.",
+      "paymentFailureTitle": "El pago no se completó",
+      "paymentFailureBody": "No se procesó el pago de tu boleto. Puedes intentar de nuevo aquí abajo o escribirnos por WhatsApp."
+    }
   },
   "pickup": {
     "eyebrow": "Pickup",

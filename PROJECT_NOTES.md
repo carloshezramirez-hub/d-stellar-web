@@ -253,6 +253,57 @@ the file in place — no code change needed since the path is fixed.
   events/[slug] "send inquiry" CTA both point at the `#private-events` anchor
   instead.
 
+## Payments & order confirmation emails
+
+Two independent purchase flows share the same payment/email infrastructure —
+**pickup orders** (`/pickup`) and **event tickets** (`/events/[slug]`, only
+for events with a `tickets` array, currently just `5-latidos`). Both follow
+the same pattern: submit → if Mercado Pago is configured, create a Checkout
+Pro preference and redirect to pay online; a webhook confirms the payment and
+only then sends the "paid & confirmed" emails. Without Mercado Pago
+configured (e.g. local dev with no credentials), both fall back to sending
+"we received your order/reservation, we'll follow up" emails immediately —
+so the app works end-to-end without payment credentials.
+
+- `lib/payments/mercadopago.ts` — `createPickupPreference` /
+  `createTicketPreference` build the Checkout Pro preference (items, buyer,
+  `back_urls`, `notification_url`); `getPayment` fetches a payment by ID,
+  shared by both webhooks. Pickup trusts the client-submitted per-item price
+  (matches the menu it just rendered); **tickets do not** — `app/api/tickets/route.ts`
+  looks up the real ticket price from `data/events.ts` server-side by
+  `eventSlug`/`ticketIndex`, never from the request body, so a tampered
+  client request can't buy a ticket below its real price.
+- `app/api/pickup/route.ts` + `app/api/pickup/webhook/route.ts` and
+  `app/api/tickets/route.ts` + `app/api/tickets/webhook/route.ts` — separate
+  routes/webhooks per flow (Mercado Pago calls back whichever
+  `notification_url` was set on that specific preference, so there's no
+  cross-talk between the two).
+- `lib/notifications/email-layout.ts` — shared `row`/`wrapEmail` HTML used by
+  both `lib/notifications/templates.ts` (pickup) and
+  `lib/notifications/ticket-templates.ts` (tickets).
+- `lib/event-date.ts` — `formatEventDate()`, shared by the event detail page
+  and the ticket email templates so the date/timezone logic (CDMX,
+  `timeKnown` handling) only lives in one place — this exact logic caused a
+  wrong-timezone bug once (see the `c8e820a` commit), don't reimplement it
+  inline again.
+- `lib/notifications/reservation-code.ts` — `generateOrderCode(prefix)`,
+  `"DS-######"` for pickup, `"TIX-######"` for tickets.
+- Env vars are shared: `GMAIL_USER`/`GMAIL_APP_PASSWORD`/`NOTIFICATION_EMAIL`
+  and `MP_ACCESS_TOKEN`/`MP_WEBHOOK_SECRET` (see `.env.example`) apply to
+  both flows — no new variables were added for tickets.
+- Ticket purchases don't enforce the event's `capacity` against how many
+  tickets have already sold (no inventory tracking exists yet) — fine for
+  `5-latidos`'s 10-person cap today since it's a single manually-run event,
+  but revisit if a higher-demand ticketed event gets added.
+- To preview either confirmation email without spending real money or
+  configuring Mercado Pago locally, copy the relevant email-building
+  functions (`row`/`wrapEmail` + `buildPickupOwnerEmail`/`buildPickupCustomerEmail`
+  or `buildTicketOwnerEmail`/`buildTicketCustomerEmail`) into a throwaway
+  `.mjs` script at the repo root (needs to resolve `node_modules`), source
+  `.env.local` for Gmail credentials, and call `sendMail` directly with a
+  realistic sample order — delete the script after. This is how the emails
+  were verified end-to-end on 2026-09-17.
+
 ## Updating content
 
 **Monthly cookie rotation** — edit `data/menu.ts` → `cookies` section (well,

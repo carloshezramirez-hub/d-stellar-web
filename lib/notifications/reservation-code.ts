@@ -1,3 +1,3 @@
-export function generatePickupCode() {
-  return `DS-${Math.floor(100000 + Math.random() * 900000)}`;
+export function generateOrderCode(prefix: string) {
+  return `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`;
 }

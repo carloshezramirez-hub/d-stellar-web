@@ -9,9 +9,15 @@ import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { events, getEvent, eventStartingPrice } from "@/data/events";
+import { formatEventDate } from "@/lib/event-date";
 import { BUSINESS, SITE_URL } from "@/data/site";
+import { TicketOrderForm } from "@/components/sections/ticket-order-form";
+import { TicketPaymentBanner } from "@/components/sections/ticket-payment-banner";
 
-type Props = { params: Promise<{ locale: string; slug: string }> };
+type Props = {
+  params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<{ status?: string; code?: string }>;
+};
 type Locale = "es" | "en";
 
 export function generateStaticParams() {
@@ -47,8 +53,9 @@ function googleCalendarUrl(event: NonNullable<ReturnType<typeof getEvent>> & { d
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-export default async function EventDetailPage({ params }: Props) {
+export default async function EventDetailPage({ params, searchParams }: Props) {
   const { locale, slug } = await params;
+  const { status, code } = await searchParams;
   setRequestLocale(locale);
   const event = getEvent(slug);
   if (!event) notFound();
@@ -56,22 +63,9 @@ export default async function EventDetailPage({ params }: Props) {
   const loc = locale as Locale;
   const t = await getTranslations("events");
   const cta = await getTranslations("cta");
+  const paymentStatus = status === "approved" || status === "pending" || status === "failure" ? status : null;
 
-  const formattedDate = event.dateISO
-    ? new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-MX", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        // `timeKnown === false` means the day is real but the hour isn't —
-        // don't fabricate a time, just drop it from the format.
-        ...(event.timeKnown !== false && { hour: "numeric", minute: "2-digit" }),
-        // Always show d-stellar's local time (CDMX), regardless of the
-        // server's or the viewer's own timezone — dateISO already carries
-        // the -06:00 offset, but Intl defaults to the runtime's zone
-        // without this.
-        timeZone: "America/Mexico_City",
-      }).format(new Date(event.dateISO))
-    : event.monthLabel?.[loc];
+  const formattedDate = formatEventDate(event, loc);
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -104,6 +98,12 @@ export default async function EventDetailPage({ params }: Props) {
 
         <h1 className="mt-8 font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-5xl">{event.title}</h1>
         <p className="mt-3 text-lg text-stellar-white/75">{event.summary[loc]}</p>
+
+        {paymentStatus && (
+          <div className="mt-8">
+            <TicketPaymentBanner status={paymentStatus} code={code} />
+          </div>
+        )}
 
         <div className="mt-8 grid gap-4 border-2 border-line p-6 sm:grid-cols-2 md:grid-cols-4">
           <div>
@@ -165,6 +165,7 @@ export default async function EventDetailPage({ params }: Props) {
                 </div>
               ))}
             </div>
+            {event.status === "upcoming" && <TicketOrderForm event={event} />}
           </div>
         ) : (
           event.includes && (
