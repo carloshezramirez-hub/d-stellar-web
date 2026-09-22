@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/cron/prospect-events", "schedule": "0 15 * * 1" },
+    { "path": "/api/cron/send-approved-events", "schedule": "0 16 * * *" }
+  ]
+}
