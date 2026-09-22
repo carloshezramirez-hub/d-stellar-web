@@ -248,7 +248,11 @@
       "date": "Preferred date",
       "guests": "Number of guests",
       "message": "Tell us what you have in mind",
-      "submit": "Send inquiry"
+      "submit": "Send inquiry",
+      "submitting": "Sending...",
+      "successTitle": "Request received!",
+      "successBody": "We'll confirm availability and pricing by email shortly.",
+      "errorBody": "We couldn't send your request. Try again or message us on WhatsApp."
     }
   },
   "about": {

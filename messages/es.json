@@ -248,7 +248,11 @@
       "date": "Fecha tentativa",
       "guests": "Número de invitados",
       "message": "Cuéntanos qué tienes en mente",
-      "submit": "Enviar solicitud"
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando...",
+      "successTitle": "¡Solicitud recibida!",
+      "successBody": "Te confirmamos disponibilidad y costo por correo en breve.",
+      "errorBody": "No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos por WhatsApp."
     }
   },
   "about": {
