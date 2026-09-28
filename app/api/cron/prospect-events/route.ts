@@ -9,8 +9,9 @@ import { buildEventProspectDossier } from "@/lib/ai/private-event-dossier";
 import { generateEventOutreachPlan, CONFIDENCE_GATE } from "@/lib/ai/private-event-research-agent";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
-const MAX_NEW_PER_RUN = 15;
+const MAX_NEW_PER_RUN = 5;
 
 export async function GET(request: Request) {
   const authError = checkCronAuth(request);

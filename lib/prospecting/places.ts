@@ -65,7 +65,7 @@ export async function textSearchNearby(category: string): Promise<PlaceResult[]>
     },
     body: JSON.stringify({
       textQuery: category,
-      locationRestriction: {
+      locationBias: {
         circle: {
           center: { latitude: BUSINESS.geo.latitude, longitude: BUSINESS.geo.longitude },
           radius: SEARCH_RADIUS_M,
