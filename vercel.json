@@ -1,6 +1,8 @@
 {
   "crons": [
     { "path": "/api/cron/prospect-events", "schedule": "0 15 * * 1" },
-    { "path": "/api/cron/send-approved-events", "schedule": "0 16 * * *" }
+    { "path": "/api/cron/send-approved-events", "schedule": "0 16 * * *" },
+    { "path": "/api/cron/social-metrics-tiktok", "schedule": "0 13 * * *" },
+    { "path": "/api/cron/social-metrics-meta", "schedule": "0 13 * * *" }
   ]
 }
