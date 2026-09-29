@@ -144,6 +144,18 @@ export async function fetchInstagramMediaInsights(media: IgMedia): Promise<IgIns
   return out;
 }
 
+export interface IgAccountStats {
+  followersCount: number;
+  mediaCount: number;
+}
+
+export async function fetchInstagramAccountStats(): Promise<IgAccountStats> {
+  const json = await graphFetch<{ followers_count: number; media_count: number }>(
+    `${GRAPH_BASE}/${metaEnv.igAccountId}?fields=followers_count,media_count&access_token=${metaEnv.accessToken}`,
+  );
+  return { followersCount: json.followers_count, mediaCount: json.media_count };
+}
+
 // ---------- Facebook ----------
 
 let cachedPageToken: string | null = null;
@@ -155,6 +167,18 @@ async function getPageAccessToken(): Promise<string> {
   );
   cachedPageToken = json.access_token;
   return cachedPageToken;
+}
+
+export interface FbPageStats {
+  followersCount: number;
+}
+
+export async function fetchFacebookPageStats(): Promise<FbPageStats> {
+  const pageToken = await getPageAccessToken();
+  const json = await graphFetch<{ fan_count: number }>(
+    `${GRAPH_BASE}/${metaEnv.pageId}?fields=fan_count&access_token=${pageToken}`,
+  );
+  return { followersCount: json.fan_count };
 }
 
 export interface FbPost {

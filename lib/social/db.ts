@@ -60,6 +60,8 @@ export interface SocialAccountSnapshot {
   account_id: string;
   captured_at: string;
   followers: number | null;
+  total_likes: number | null;
+  video_count: number | null;
 }
 
 /** Encuentra o crea la cuenta rastreada para una plataforma+handle. */
@@ -105,4 +107,36 @@ export async function insertMetricsSnapshot(
   const db = getSocialDb();
   const { error } = await db.from("social_metrics_snapshots").insert({ post_id: postId, ...metrics });
   if (error) throw error;
+}
+
+/** Agrega una nueva foto de cuenta (seguidores/likes totales/# de posts) — mismo patrón que insertMetricsSnapshot. */
+export async function insertAccountSnapshot(
+  accountId: string,
+  snapshot: Partial<Omit<SocialAccountSnapshot, "id" | "account_id" | "captured_at">>,
+): Promise<void> {
+  const db = getSocialDb();
+  const { error } = await db.from("social_account_snapshots").insert({ account_id: accountId, ...snapshot });
+  if (error) throw error;
+}
+
+/** Cuenta real de posts ingeridos para una cuenta — usado para el resumen de cuenta de FB, ya que Graph API no expone un "total de posts" a nivel de página como sí lo hace con media_count de IG. */
+export async function countPostsForAccount(accountId: string): Promise<number> {
+  const db = getSocialDb();
+  const { count, error } = await db
+    .from("social_posts")
+    .select("id", { count: "exact", head: true })
+    .eq("account_id", accountId);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/** Suma de likes de la última foto de métricas de cada post de una cuenta — usado para el "likes totales" de IG/FB, que Graph API no expone como un solo campo (a diferencia de TikTok). */
+export async function sumLatestLikesForAccount(accountId: string): Promise<number> {
+  const db = getSocialDb();
+  const { data, error } = await db
+    .from("social_posts_latest_metrics")
+    .select("likes")
+    .eq("account_id", accountId);
+  if (error) throw error;
+  return (data ?? []).reduce((sum, row) => sum + (row.likes ?? 0), 0);
 }

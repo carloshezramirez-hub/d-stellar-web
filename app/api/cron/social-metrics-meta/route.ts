@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { checkCronAuth } from "@/lib/cron-auth";
-import { insertMetricsSnapshot, upsertSocialAccount, upsertSocialPost } from "@/lib/social/db";
+import { countPostsForAccount, insertAccountSnapshot, insertMetricsSnapshot, sumLatestLikesForAccount, upsertSocialAccount, upsertSocialPost } from "@/lib/social/db";
 import { isMetaConfigured, metaEnv } from "@/lib/social/env";
 import {
+  fetchFacebookPageStats,
   fetchFacebookPostEngagement,
   fetchFacebookPosts,
   fetchFacebookVideoInsights,
+  fetchInstagramAccountStats,
   fetchInstagramMedia,
   fetchInstagramMediaInsights,
   mapWithConcurrency,
@@ -107,6 +109,33 @@ async function runIngestion(request: Request) {
       console.error(`social-metrics-meta: fallo en FB post ${fbPost.id}:`, err);
     }
   });
+
+  // Foto de cuenta (seguidores/likes totales/# posts) — mismo patrón que el cron de TikTok,
+  // para que las tarjetas de resumen se vean iguales en las 3 plataformas.
+  try {
+    const igStats = await fetchInstagramAccountStats();
+    const igLikes = await sumLatestLikesForAccount(igAccount.id);
+    await insertAccountSnapshot(igAccount.id, {
+      followers: igStats.followersCount,
+      total_likes: igLikes,
+      video_count: igStats.mediaCount,
+    });
+  } catch (err) {
+    console.error("social-metrics-meta: fallo en snapshot de cuenta IG:", err);
+  }
+
+  try {
+    const fbStats = await fetchFacebookPageStats();
+    const fbLikes = await sumLatestLikesForAccount(fbAccount.id);
+    const fbPostCount = await countPostsForAccount(fbAccount.id);
+    await insertAccountSnapshot(fbAccount.id, {
+      followers: fbStats.followersCount,
+      total_likes: fbLikes,
+      video_count: fbPostCount,
+    });
+  } catch (err) {
+    console.error("social-metrics-meta: fallo en snapshot de cuenta FB:", err);
+  }
 
   return NextResponse.json({
     ok: true,
