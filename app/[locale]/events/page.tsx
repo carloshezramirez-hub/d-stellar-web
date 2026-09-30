@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function formatDate(event: EventRecord, locale: string) {
   const loc = locale === "en" ? "en" : "es";
+  if (event.datesSummary) return event.datesSummary[loc];
   if (!event.dateISO) return event.monthLabel?.[loc] ?? "";
   return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-MX", {
     weekday: "long",

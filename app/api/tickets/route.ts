@@ -7,7 +7,7 @@ import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData }
 import { isMercadoPagoConfigured } from "@/lib/payments/env";
 import { createTicketPreference } from "@/lib/payments/mercadopago";
 import { getEvent } from "@/data/events";
-import { formatEventDate } from "@/lib/event-date";
+import { resolveOrderDateLabel } from "@/lib/event-date";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -44,11 +44,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_ticket" }, { status: 400 });
   }
 
+  // Multi-session events (sessionDates set) require a date the buyer
+  // actually picked — never trust it blindly, it must be one of the
+  // event's real sessions.
+  if (event.sessionDates?.length && !event.sessionDates.includes(buyer.sessionDateISO ?? "")) {
+    return NextResponse.json({ error: "invalid_session_date" }, { status: 400 });
+  }
+
   const code = generateOrderCode("TIX");
   const orderData: TicketOrderData = {
     eventTitle: event.title,
     ticketName: ticket.name[safeLocale],
-    dateLabel: formatEventDate(event, safeLocale),
+    dateLabel: resolveOrderDateLabel(event, buyer.sessionDateISO, safeLocale),
     qty,
     unitPriceMXN: ticket.priceMXN,
     name: buyer.name,
@@ -63,7 +70,14 @@ export async function POST(request: Request) {
   // so local dev keeps working without credentials.
   if (isMercadoPagoConfigured()) {
     try {
-      const { initPoint } = await createTicketPreference(orderData, event.slug, ticketIndex, code, safeLocale);
+      const { initPoint } = await createTicketPreference(
+        orderData,
+        event.slug,
+        ticketIndex,
+        code,
+        safeLocale,
+        buyer.sessionDateISO,
+      );
       return NextResponse.json({ ok: true, code, checkoutUrl: initPoint });
     } catch (err) {
       console.error("[api/tickets] mercadopago", err);

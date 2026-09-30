@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { trackEvent } from "@/lib/analytics";
+import { formatSessionDate } from "@/lib/event-date";
 import type { EventRecord } from "@/data/events";
 
 type Locale = "es" | "en";
@@ -13,8 +14,10 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
   const t = useTranslations("events.order");
   const locale = useLocale() as Locale;
   const tickets = event.tickets ?? [];
+  const sessionDates = event.sessionDates ?? [];
   const [ticketIndex, setTicketIndex] = useState(0);
   const [qty, setQty] = useState(1);
+  const [sessionDateISO, setSessionDateISO] = useState(sessionDates[0] ?? "");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [confirmationCode, setConfirmationCode] = useState<string | null>(null);
 
@@ -40,6 +43,7 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
           email: form.get("email"),
           phone: form.get("phone"),
           notes: form.get("notes") || undefined,
+          sessionDateISO: sessionDateISO || undefined,
           locale,
           website: form.get("website"),
         }),
@@ -104,6 +108,24 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
           </button>
         ))}
       </div>
+
+      {sessionDates.length > 0 && (
+        <label className="flex flex-col gap-2 text-sm text-stellar-white/80">
+          {t("chooseDate")}
+          <select
+            required
+            value={sessionDateISO}
+            onChange={(e) => setSessionDateISO(e.target.value)}
+            className="border-2 border-line bg-stellar-black px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
+          >
+            {sessionDates.map((iso) => (
+              <option key={iso} value={iso}>
+                {formatSessionDate(iso, locale, event.timeKnown)}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <div className="flex items-center justify-between border-y-2 border-line py-4">
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/70">{t("qty")}</p>

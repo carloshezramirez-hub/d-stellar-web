@@ -257,7 +257,8 @@ the file in place — no code change needed since the path is fixed.
 
 Two independent purchase flows share the same payment/email infrastructure —
 **pickup orders** (`/pickup`) and **event tickets** (`/events/[slug]`, only
-for events with a `tickets` array, currently just `5-latidos`). Both follow
+for events with a `tickets` array — `5-latidos` and `el-camino-de-regreso`).
+Both follow
 the same pattern: submit → if Mercado Pago is configured, create a Checkout
 Pro preference and redirect to pay online; a webhook confirms the payment and
 only then sends the "paid & confirmed" emails. Without Mercado Pago
@@ -285,16 +286,28 @@ so the app works end-to-end without payment credentials.
   and the ticket email templates so the date/timezone logic (CDMX,
   `timeKnown` handling) only lives in one place — this exact logic caused a
   wrong-timezone bug once (see the `c8e820a` commit), don't reimplement it
-  inline again.
+  inline again. `formatSessionDate()`/`resolveOrderDateLabel()` extend this
+  for **multi-session events** (`EventRecord.sessionDates`, e.g.
+  `el-camino-de-regreso`'s 10 Fri/Sat nights in October): the buyer picks a
+  date in `TicketOrderForm`, it's validated server-side against
+  `event.sessionDates` in `app/api/tickets/route.ts`, threaded through
+  Mercado Pago's `metadata.sessionDateISO`, and re-resolved in the webhook —
+  `dateLabel` in the confirmation emails always reflects the date the buyer
+  actually chose, not just the event's first session. `EventRecord.datesSummary`
+  overrides the single formatted-date display on the list/detail pages for
+  these events (a single `dateISO` would misleadingly imply one date).
 - `lib/notifications/reservation-code.ts` — `generateOrderCode(prefix)`,
   `"DS-######"` for pickup, `"TIX-######"` for tickets.
 - Env vars are shared: `GMAIL_USER`/`GMAIL_APP_PASSWORD`/`NOTIFICATION_EMAIL`
   and `MP_ACCESS_TOKEN`/`MP_WEBHOOK_SECRET` (see `.env.example`) apply to
   both flows — no new variables were added for tickets.
 - Ticket purchases don't enforce the event's `capacity` against how many
-  tickets have already sold (no inventory tracking exists yet) — fine for
-  `5-latidos`'s 10-person cap today since it's a single manually-run event,
-  but revisit if a higher-demand ticketed event gets added.
+  tickets have already sold (no inventory tracking exists yet), and for
+  multi-session events it's per-slug, not per-session — `el-camino-de-regreso`
+  could in theory oversell a single night past 10 people since nothing
+  tracks tickets-sold-per-`sessionDateISO`. Fine while these run manually
+  (Carlos checks orders by hand), but real inventory tracking is worth
+  building if ticket volume grows.
 - To preview either confirmation email without spending real money or
   configuring Mercado Pago locally, copy the relevant email-building
   functions (`row`/`wrapEmail` + `buildPickupOwnerEmail`/`buildPickupCustomerEmail`

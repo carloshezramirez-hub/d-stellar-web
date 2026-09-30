@@ -29,6 +29,7 @@ const logoBase64 = readFileSync("public/brand/logos/dstellar-wordmark-white.png"
 const items = [
   { file: "public/images/events/la-mas-draga-viewing-party.svg", label: "VIEWING PARTY", sub: "Placeholder — replace with real event photography" },
   { file: "public/images/events/pride-block-party.svg", label: "PRIDE BLOCK PARTY", sub: "Placeholder — replace with real event photography" },
+  { file: "public/images/events/el-camino-de-regreso.svg", label: "EL CAMINO DE REGRESO", sub: "Placeholder — replace with real event photography" },
 ];
 
 for (const item of items) {

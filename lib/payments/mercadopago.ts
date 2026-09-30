@@ -70,6 +70,7 @@ export async function createTicketPreference(
   ticketIndex: number,
   code: string,
   locale: Locale,
+  sessionDateISO?: string,
 ) {
   const localePath = locale === "en" ? "/en" : "";
   const eventUrl = `${SITE_URL}${localePath}/events/${eventSlug}`;
@@ -93,6 +94,7 @@ export async function createTicketPreference(
         code,
         eventSlug,
         ticketIndex: String(ticketIndex),
+        sessionDateISO: sessionDateISO ?? "",
         qty: String(orderData.qty),
         name: orderData.name,
         email: orderData.email,

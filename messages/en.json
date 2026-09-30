@@ -97,6 +97,7 @@
     "order": {
       "eyebrow": "Reserve your spot",
       "title": "Buy your ticket",
+      "chooseDate": "Choose your date",
       "qty": "Quantity",
       "total": "Total",
       "name": "Name",

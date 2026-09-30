@@ -65,7 +65,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const cta = await getTranslations("cta");
   const paymentStatus = status === "approved" || status === "pending" || status === "failure" ? status : null;
 
-  const formattedDate = formatEventDate(event, loc);
+  const formattedDate = event.datesSummary ? event.datesSummary[loc] : formatEventDate(event, loc);
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -184,7 +184,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
         )}
 
         <div className="mt-10 flex flex-wrap gap-4">
-          {event.status === "upcoming" && event.dateISO && (
+          {event.status === "upcoming" && event.dateISO && !event.sessionDates && (
             <CtaAnchor
               href={googleCalendarUrl({ ...event, dateISO: event.dateISO })}
               target="_blank"

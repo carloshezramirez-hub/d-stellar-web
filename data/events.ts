@@ -20,6 +20,18 @@ export type EventRecord = {
   // Human-readable fallback for events where not even the day is
   // confirmed (dateISO omitted). Ignored when dateISO is present.
   monthLabel?: { es: string; en: string };
+  // For a recurring/multi-night run (e.g. every Fri/Sat in a month): the
+  // full list of session start times, ISO 8601 with timezone. `dateISO`
+  // should still point at the first session (used for JSON-LD/"add to
+  // calendar"). When present, the ticket form requires the buyer to pick
+  // one of these, and it flows through to the confirmation email instead
+  // of the single dateISO.
+  sessionDates?: string[];
+  // Overrides the formatted-date display on the list/detail pages —
+  // needed once there's more than one session (a single formatted
+  // dateISO would misleadingly imply only one date). Ignored when
+  // sessionDates isn't set.
+  datesSummary?: { es: string; en: string };
   doorsNote?: { es: string; en: string };
   summary: { es: string; en: string };
   description: { es: string[]; en: string[] };
@@ -49,6 +61,105 @@ export function eventStartingPrice(event: EventRecord): number | undefined {
 // PLACEHOLDER CONTENT — replace dates, capacity and price with the real
 // details before publishing. See PROJECT_NOTES.md → "Crear un nuevo evento".
 export const events: EventRecord[] = [
+  {
+    slug: "el-camino-de-regreso",
+    title: "El camino de regreso",
+    dateISO: "2026-10-02T19:00:00-06:00",
+    endISO: "2026-10-02T20:30:00-06:00",
+    sessionDates: [
+      "2026-10-02T19:00:00-06:00",
+      "2026-10-03T19:00:00-06:00",
+      "2026-10-09T19:00:00-06:00",
+      "2026-10-10T19:00:00-06:00",
+      "2026-10-16T19:00:00-06:00",
+      "2026-10-17T19:00:00-06:00",
+      "2026-10-23T19:00:00-06:00",
+      "2026-10-24T19:00:00-06:00",
+      "2026-10-30T19:00:00-06:00",
+      "2026-10-31T19:00:00-06:00",
+    ],
+    datesSummary: {
+      es: "Viernes y sábados de octubre · 7:00 p.m.",
+      en: "Fridays and Saturdays in October · 7:00 p.m.",
+    },
+    summary: {
+      es: "Una ofrenda sensorial contada en cinco sabores — cata a ciegas del menú de octubre que despierta recuerdos de quienes ya no están.",
+      en: "A sensory offering told in five flavors — a blind tasting of the October menu that awakens memories of those who are no longer with us.",
+    },
+    description: {
+      es: [
+        "El camino de regreso es una ofrenda sensorial contada en cinco sabores. Una cata a ciegas donde los aromas, las texturas y la narración despiertan recuerdos de quienes ya no están: las mesas que compartimos, los gestos que heredamos y el amor que sigue presente en nuestra manera de vivir.",
+        "Hay recuerdos que todavía saben volver: el pan que alguien partía con las manos, una cocina encendida por la mañana, la voz que preguntaba si ya habías comido. A veces, lo que más extrañamos cabe en un gesto pequeño — y en esta experiencia, esos gestos se convierten en una ofrenda que puedes saborear.",
+        "Cinco preparaciones acompañadas de una narración te invitan a recorrer la mesa compartida, los aromas de casa, las manos que nos cuidaron y todo lo que alguien dejó en nuestra forma de vivir. Cada tiempo abre un espacio para descubrir un sabor y, quizá, reconocer algo de tu propia historia.",
+        "Puedes venir con alguien o regalarte este momento a solas. Lo que recuerdes te pertenece — no tendrás que compartir un nombre, explicar una ausencia ni contar nada que prefieras conservar para ti.",
+        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Elige tu fecha al reservar — hay funciones cada viernes y sábado de octubre, cupo máximo 10 personas por noche.",
+      ],
+      en: [
+        "El camino de regreso (\"The way back\") is a sensory offering told in five flavors — a blind tasting where aroma, texture and story awaken memories of those who are no longer with us: the tables we shared, the gestures we inherited, and the love that still lives in how we live.",
+        "Some memories still know how to come back: the bread someone used to break by hand, a kitchen lit up in the morning, the voice that asked if you'd already eaten. Sometimes what we miss most fits inside a small gesture — and in this experience, those gestures become an offering you can taste.",
+        "Five courses, guided by a narration, walk you through the shared table, the smells of home, the hands that cared for us, and everything someone left in the way we live now. Each course opens space to discover a flavor — and maybe recognize something of your own story.",
+        "Come with someone, or give yourself this moment alone. Whatever you remember belongs to you — you won't have to share a name, explain an absence, or tell anyone anything you'd rather keep for yourself.",
+        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes. Pick your date when you reserve — sessions run every Friday and Saturday in October, max. 10 people per night.",
+      ],
+    },
+    tickets: [
+      {
+        name: { es: "Experiencia Individual", en: "Solo Experience" },
+        priceMXN: 450,
+        includes: {
+          es: [
+            "Acceso para 1 persona",
+            "Cata guiada de los 5 sabores de octubre",
+            "Bebida durante la experiencia",
+            "Experiencia con antifaz y ambientación musical",
+            "Conversación y revelación de cada sabor",
+            "3-Pack de cookies a elección para llevar",
+          ],
+          en: [
+            "Access for 1 person",
+            "Guided tasting of all 5 October flavors",
+            "A drink served during the experience",
+            "Blindfolded experience with music",
+            "Conversation and reveal after each flavor",
+            "3-Pack of cookies, your choice, to take home",
+          ],
+        },
+      },
+      {
+        name: { es: "Experiencia Dúo", en: "Duo Experience" },
+        priceMXN: 800,
+        includes: {
+          es: [
+            "Acceso para 2 personas",
+            "Cata guiada de los 5 sabores para ambas personas",
+            "2 bebidas",
+            "Experiencia con antifaz y ambientación musical",
+            "Conversación y revelación de cada sabor",
+            "1 5-Pack de cookies a elección para llevar",
+          ],
+          en: [
+            "Access for 2 people",
+            "Guided tasting of all 5 flavors for both people",
+            "2 drinks",
+            "Blindfolded experience with music",
+            "Conversation and reveal after each flavor",
+            "One 5-Pack of cookies, your choice, to take home",
+          ],
+        },
+        note: {
+          es: "Ven con quien quieras — no es solo para parejas.",
+          en: "Come with anyone — it's not just for couples.",
+        },
+      },
+    ],
+    capacity: 10,
+    coverImage: "/images/events/el-camino-de-regreso.svg",
+    imageAlt: {
+      es: "Ambientación de d-stellar preparada para la experiencia sensorial a ciegas El camino de regreso",
+      en: "d-stellar's space set up for the blind sensory experience El camino de regreso",
+    },
+    status: "upcoming",
+  },
   {
     slug: "5-latidos",
     title: "5 Latidos",

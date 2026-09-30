@@ -6,7 +6,7 @@ import { sendMail } from "@/lib/notifications/mailer";
 import { emailEnv } from "@/lib/notifications/env";
 import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
 import { getEvent } from "@/data/events";
-import { formatEventDate } from "@/lib/event-date";
+import { resolveOrderDateLabel } from "@/lib/event-date";
 
 type NotificationBody = { type?: string; data?: { id?: string }; id?: string };
 
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
   const orderData: TicketOrderData = {
     eventTitle: event.title,
     ticketName: ticket.name[safeLocale],
-    dateLabel: formatEventDate(event, safeLocale),
+    dateLabel: resolveOrderDateLabel(event, metadata.sessionDateISO || undefined, safeLocale),
     qty: Number(metadata.qty) || 1,
     unitPriceMXN: ticket.priceMXN,
     name: metadata.name ?? "",
