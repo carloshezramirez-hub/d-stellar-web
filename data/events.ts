@@ -132,7 +132,7 @@ export const events: EventRecord[] = [
       es: "Las cinco cookies de septiembre de d-stellar, listas para la cata a ciegas 5 Latidos",
       en: "d-stellar's five September cookies, ready for the 5 Latidos blind tasting",
     },
-    status: "upcoming",
+    status: "past",
   },
   {
     slug: "la-mas-draga-viewing-party",
