@@ -43,6 +43,10 @@ export type EventRecord = {
   // instead of the single `priceMXN` + `includes` pair.
   tickets?: EventTicket[];
   coverImage: string;
+  // Extra hero images shown as additional carousel slides alongside
+  // coverImage (e.g. seasonal menu artwork tied to the experience). Omit
+  // for a single static cover image.
+  galleryImages?: string[];
   imageAlt: { es: string; en: string };
   status: "upcoming" | "past";
   // Optional link to a real social post about the event (e.g. Instagram).
@@ -153,10 +157,11 @@ export const events: EventRecord[] = [
       },
     ],
     capacity: 10,
-    coverImage: "/images/events/el-camino-de-regreso.svg",
+    coverImage: "/images/promos/calabaza-cookie.webp",
+    galleryImages: ["/images/promos/calabaza-latte.webp"],
     imageAlt: {
-      es: "Ambientación de d-stellar preparada para la experiencia sensorial a ciegas El camino de regreso",
-      en: "d-stellar's space set up for the blind sensory experience El camino de regreso",
+      es: "Cookie de calabaza en tacha y latte de calabaza del menú de octubre de d-stellar, protagonistas de El camino de regreso",
+      en: "Pumpkin-in-syrup cookie and pumpkin latte from d-stellar's October menu, featured in El camino de regreso",
     },
     status: "upcoming",
   },

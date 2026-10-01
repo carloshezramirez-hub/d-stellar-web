@@ -13,6 +13,7 @@ import { formatEventDate } from "@/lib/event-date";
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { TicketOrderForm } from "@/components/sections/ticket-order-form";
 import { TicketPaymentBanner } from "@/components/sections/ticket-payment-banner";
+import { HeroCarousel } from "@/components/sections/hero-carousel";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -87,13 +88,22 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
         </Link>
 
         <div className="relative mt-6 aspect-[16/9] overflow-hidden border-2 border-line bg-stellar-black-soft">
-          {/* eslint-disable-next-line @next/next/no-img-element -- brand placeholder SVG, swap for a real photo via next/image */}
-          <img
-            src={event.coverImage}
-            alt={event.imageAlt[loc]}
-            className="size-full object-cover"
-            loading="eager"
-          />
+          {event.galleryImages?.length ? (
+            <HeroCarousel
+              slides={[event.coverImage, ...event.galleryImages].map((src) => (
+                // eslint-disable-next-line @next/next/no-img-element -- fixed-size hero slide, next/image not needed
+                <img key={src} src={src} alt={event.imageAlt[loc]} className="size-full object-cover" loading="eager" />
+              ))}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- brand placeholder SVG, swap for a real photo via next/image
+            <img
+              src={event.coverImage}
+              alt={event.imageAlt[loc]}
+              className="size-full object-cover"
+              loading="eager"
+            />
+          )}
         </div>
 
         <h1 className="mt-8 font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-5xl">{event.title}</h1>

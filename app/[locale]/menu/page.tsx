@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight } from "lucide-react";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
@@ -78,6 +79,36 @@ export default async function MenuPage({ params }: Props) {
           );
         })}
       </nav>
+
+      <div className="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2">
+        {([
+          { image: "/images/promos/calabaza-cookie.webp", sectionSlug: "gourmet-cookies", itemSlug: "como-me-ensenaste" },
+          { image: "/images/promos/calabaza-latte.webp", sectionSlug: "bebidas-autor", itemSlug: "cuentame-otra-vez" },
+        ] as const).map(({ image, sectionSlug, itemSlug }) => {
+          const section = menu.find((s) => s.slug === sectionSlug)!;
+          const item = section.items.find((i) => i.slug === itemSlug)!;
+          const accent = ACCENT_STYLES[section.accent];
+          return (
+            <a
+              key={itemSlug}
+              href={`#${sectionSlug}`}
+              className="group relative block aspect-[4/5] overflow-hidden border-2 border-line"
+            >
+              <Image
+                src={image}
+                alt={item.name}
+                fill
+                sizes="(min-width: 768px) 380px, 90vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 bg-stellar-black/80 px-4 py-3">
+                <span className="font-demi text-base font-bold text-stellar-white">{item.name}</span>
+                <span className={`${accent.bg} ${accent.text} px-2 py-0.5 font-tag text-xs`}>${item.priceMXN}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
 
       <div className="mx-auto mt-16 max-w-4xl space-y-16">
         {menu.map((section) => {

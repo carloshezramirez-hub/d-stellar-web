@@ -44,17 +44,17 @@ export function HeroCarousel({ slides }: { slides: ReactNode[] }) {
 
   return (
     <div
-      className="relative"
+      className="relative h-full"
       onMouseEnter={() => (pausedRef.current = true)}
       onMouseLeave={() => (pausedRef.current = false)}
       onTouchStart={() => (pausedRef.current = true)}
     >
       <div
         ref={trackRef}
-        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {slides.map((slide, i) => (
-          <div key={i} className="w-full shrink-0 snap-center">
+          <div key={i} className="h-full w-full shrink-0 snap-center">
             {slide}
           </div>
         ))}

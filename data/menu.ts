@@ -20,12 +20,14 @@ export type MenuSection = {
   items: MenuItem[];
 };
 
-// Verified against the September menu board (photo supplied by the client,
-// 2026-09-01). To update the monthly cookie rotation: edit the `cookies`
-// section (names, descriptions, prices) and `MENU_MONTH_LABEL` below —
-// everything else tends to hold steady month to month. See
-// PROJECT_NOTES.md → "Cómo actualizar el menú".
-export const MENU_MONTH_LABEL = { es: "Menú de septiembre", en: "September menu" };
+// Verified against the October/November menu board (photo supplied by the
+// client, 2026-10-01) — Día de Muertos theme, valid through November 15. To
+// update the monthly rotation: edit `gourmet-cookies`, `bebidas-autor` and
+// `sin-cafeina` below (these three sections rotate with the theme) plus
+// `MENU_MONTH_LABEL` — `cafeina`, `tonics`, `focaccias` and `cookie-packs`
+// tend to hold steady month to month. See PROJECT_NOTES.md → "Cómo
+// actualizar el menú".
+export const MENU_MONTH_LABEL = { es: "Menú de octubre y noviembre", en: "October & November menu" };
 
 export const menu: MenuSection[] = [
   {
@@ -38,53 +40,74 @@ export const menu: MenuSection[] = [
     },
     items: [
       {
-        slug: "primer-latido",
-        name: "Primer Latido",
+        slug: "te-guarde-una",
+        name: "Te Guardé Una",
         description: {
-          es: "Cookie inspirada en el elotamal veracruzano, con guajolote, chile rojo y hoja santa.",
-          en: "Cookie inspired by Veracruz-style elotamal, with turkey, red chile and hoja santa.",
-        },
-        priceMXN: 90,
-        tags: ["signature"],
-      },
-      {
-        slug: "dulce-ceniza",
-        name: "Dulce Ceniza",
-        description: {
-          es: "Cookie de amaranto, cajeta quemada y jamaica ácida.",
-          en: "Amaranth cookie with burnt cajeta and tart hibiscus.",
-        },
-        priceMXN: 90,
-      },
-      {
-        slug: "granada-nocturna",
-        name: "Granada Nocturna",
-        description: {
-          es: "Cookie inspirada en el chile en nogada, con poblano, nogada y granada fresca.",
-          en: "Cookie inspired by chile en nogada, with poblano chile, walnut cream and fresh pomegranate.",
+          es: "Cookie de mantequilla con huesitos de crema de azahar y un toque de azúcar.",
+          en: "Butter cookie with orange-blossom cream \"huesitos\" and a touch of sugar.",
         },
         priceMXN: 90,
         tags: ["seasonal"],
       },
       {
-        slug: "milpa-negra",
-        name: "Milpa Negra",
+        slug: "como-me-ensenaste",
+        name: "Como Me Enseñaste",
         description: {
-          es: "Cookie vegana de frijol negro, cocoa, piloncillo, praliné de pepita y tortilla crujiente.",
-          en: "Vegan black bean cookie with cocoa, piloncillo, pumpkin-seed praline and crunchy tortilla.",
+          es: "Cookie vegana especiada con dulce de calabaza en tacha.",
+          en: "Spiced vegan cookie with candied pumpkin (calabaza en tacha).",
         },
         priceMXN: 90,
-        tags: ["vegan"],
+        tags: ["vegan", "seasonal"],
       },
       {
-        slug: "alba-rosada",
-        name: "Alba Rosada",
+        slug: "te-deje-flores",
+        name: "Te Dejé Flores",
         description: {
-          es: "Cookie de mantequilla avellanada con mole rosa de Taxco y plátano macho.",
-          en: "Brown-butter cookie with Taxco pink mole and plantain.",
+          es: "Cookie de mandarina y cardamomo con curd de mandarina, un gajito y pétalos de cempasúchil.",
+          en: "Mandarin and cardamom cookie with mandarin curd, a mandarin segment and marigold petals.",
+        },
+        priceMXN: 90,
+        tags: ["seasonal"],
+      },
+      {
+        slug: "asi-te-recuerdo",
+        name: "Así Te Recuerdo",
+        description: {
+          es: "Cookie de café con mousse de café de olla y una fina cobertura de chocolate.",
+          en: "Coffee cookie with café de olla mousse and a thin chocolate coating.",
+        },
+        priceMXN: 90,
+        tags: ["seasonal"],
+      },
+      {
+        slug: "te-llevo-conmigo",
+        name: "Te Llevo Conmigo",
+        description: {
+          es: "Cookie de vainilla con cajeta de muerto de camote morado y guayaba, y un toque ácido de jamaica.",
+          en: "Vanilla cookie with purple sweet potato and guava \"cajeta de muerto\", and a tart hint of hibiscus.",
+        },
+        priceMXN: 90,
+        tags: ["signature", "seasonal"],
+      },
+      {
+        slug: "clasica-chispas-de-chocolate",
+        name: "Clásica Chispas de Chocolate",
+        description: {
+          es: "Cookie de masa de mantequilla con chunks de chocolate semi amargo.",
+          en: "Butter-dough cookie with semisweet chocolate chunks.",
         },
         priceMXN: 90,
         tags: ["signature"],
+      },
+      {
+        slug: "clasica-de-calabaza",
+        name: "Clásica de Calabaza",
+        description: {
+          es: "Cookie vegana clásica de calabaza, de temporada.",
+          en: "Classic vegan pumpkin cookie, seasonal.",
+        },
+        priceMXN: 90,
+        tags: ["vegan", "seasonal"],
       },
     ],
   },
@@ -98,33 +121,39 @@ export const menu: MenuSection[] = [
     },
     items: [
       {
-        slug: "semilla-en-agua",
-        name: "Semilla en Agua",
-        description: { es: "Bebida tibia de cacao, maíz tostado y chile mulato.", en: "Warm cacao drink with toasted corn and mulato chile." },
+        slug: "quedate-un-ratito",
+        name: "Quédate un Ratito",
+        description: { es: "Chocolate cremoso con piloncillo, canela y especias.", en: "Creamy chocolate with piloncillo, cinnamon and spices." },
         priceMXN: 80,
+        tags: ["seasonal"],
       },
       {
-        slug: "otra-orilla",
-        name: "Otra Orilla",
-        description: { es: "Soda fría de tamarindo, caña y sal. Con cold foam.", en: "Cold tamarind, cane and salt soda, topped with cold foam." },
+        slug: "cuentame-otra-vez",
+        name: "Cuéntame Otra Vez",
+        description: { es: "Latte de calabaza en tacha con especias y leche a elección. Espresso opcional.", en: "Pumpkin-in-syrup latte with spices and milk of choice. Espresso optional." },
         priceMXN: 80,
+        tags: ["seasonal"],
       },
       {
-        slug: "eco-carmin",
-        name: "Eco Carmín",
-        description: { es: "Cebadina fría de jamaica, cebada tostada y piloncillo; efervescente al servir.", en: "Cold hibiscus cebadina with toasted barley and piloncillo, poured effervescent." },
+        slug: "aqui-te-espero",
+        name: "Aquí Te Espero",
+        description: {
+          es: "Cempasúchil y miel. Frío con agua mineral y espuma cremosa; caliente con leche a elección.",
+          en: "Marigold (cempasúchil) and honey. Served cold with sparkling water and creamy foam, or hot with milk of choice.",
+        },
         priceMXN: 80,
+        tags: ["seasonal"],
       },
       {
-        slug: "verde-nacar",
-        name: "Verde Nácar",
-        description: { es: "Leche de pepita tostada, piloncillo y sal.", en: "Toasted pumpkin-seed milk with piloncillo and salt." },
-        priceMXN: 80,
+        slug: "cerquita-de-mi",
+        name: "Cerquita de Mí",
+        description: { es: "Café de olla con espresso, piloncillo y canela.", en: "Café de olla with espresso, piloncillo and cinnamon." },
+        priceMXN: 40,
       },
       {
-        slug: "horchata",
-        name: "Horchata",
-        description: { es: "Horchata fría de arroz, ligeramente tostada y con una pizca de sal.", en: "Cold rice horchata, lightly toasted with a pinch of salt." },
+        slug: "a-donde-vaya",
+        name: "A Donde Vaya",
+        description: { es: "Limonada de guayaba y jamaica con burbujas.", en: "Guava and hibiscus limeade with bubbles." },
         priceMXN: 80,
       },
     ],
@@ -138,7 +167,7 @@ export const menu: MenuSection[] = [
       { slug: "americano", name: "Americano", description: { es: "Espresso alargado con agua caliente.", en: "Espresso lengthened with hot water." }, priceMXN: 35 },
       { slug: "capuccino", name: "Capuccino", description: { es: "Espresso, leche vaporizada y espuma densa.", en: "Espresso, steamed milk and dense foam." }, priceMXN: 50 },
       { slug: "latte", name: "Latte", description: { es: "Espresso con leche vaporizada.", en: "Espresso with steamed milk." }, priceMXN: 50 },
-      { slug: "cacao-kosher", name: "Cacao Kosher", description: { es: "Cacao de origen, certificado kosher.", en: "Origin cacao, kosher-certified." }, priceMXN: 50 },
+      { slug: "cacao-kosher", name: "Cacao", description: { es: "Cacao de origen, certificado kosher.", en: "Origin cacao, kosher-certified." }, priceMXN: 50 },
       { slug: "mocha", name: "Mocha", description: { es: "Espresso, cacao y leche vaporizada.", en: "Espresso, cacao and steamed milk." }, priceMXN: 70 },
       { slug: "white-mocha", name: "White Mocha", description: { es: "Espresso, chocolate blanco y leche vaporizada.", en: "Espresso, white chocolate and steamed milk." }, priceMXN: 70 },
       { slug: "chai-latte", name: "Chai Latte", description: { es: "Té chai especiado con leche vaporizada.", en: "Spiced chai tea with steamed milk." }, priceMXN: 70 },
@@ -153,7 +182,6 @@ export const menu: MenuSection[] = [
     intro: { es: "Toda la ceremonia, sin la cafeína.", en: "All the ritual, none of the caffeine." },
     items: [
       { slug: "chasen-hojicha-latte", name: "Chasen Hojicha Latte", description: { es: "Té hojicha tostado, batido a mano.", en: "Roasted hojicha tea, hand-whisked." }, priceMXN: 70, tags: ["caffeine-free"] },
-      { slug: "taro-latte", name: "Taro Latte", description: { es: "Taro cremoso con leche vaporizada.", en: "Creamy taro with steamed milk." }, priceMXN: 70, tags: ["caffeine-free"] },
       { slug: "leche-de-lavanda", name: "Leche de Lavanda", description: { es: "Leche vaporizada infusionada con lavanda.", en: "Steamed milk infused with lavender." }, priceMXN: 70, tags: ["caffeine-free"] },
       { slug: "leche-para-cookies", name: "Leche para Cookies", description: { es: "Leche a tu elección, fría, hecha para acompañar.", en: "Milk of your choice, cold, made for dunking." }, priceMXN: 35, tags: ["caffeine-free"] },
     ],

@@ -74,7 +74,7 @@
   "menu": {
     "eyebrow": "Menú",
     "title": "El menú",
-    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes — esta es la propuesta de septiembre.",
+    "intro": "Estas categorías se quedan. Los sabores dentro de cada una rotan mes a mes.",
     "note": "Avísanos si tienes alguna alergia o restricción. Precios en pesos mexicanos."
   },
   "events": {
@@ -313,5 +313,12 @@
     "title": "Esta página se perdió entre las estrellas.",
     "body": "No encontramos lo que buscabas. Prueba desde el inicio o revisa el menú.",
     "cta": "Volver al inicio"
+  },
+  "menuPromo": {
+    "eyebrow": "Nuevo menú",
+    "title": "Día de Muertos ya está aquí",
+    "body": "Cinco cookies, cinco bebidas de autor y nuevas historias — vigente hasta el 15 de noviembre.",
+    "cta": "Ver el menú completo",
+    "dismiss": "Cerrar"
   }
 }

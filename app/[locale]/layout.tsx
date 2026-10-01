@@ -8,6 +8,7 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileActionBar } from "@/components/layout/mobile-action-bar";
+import { MenuPromoPopup } from "@/components/sections/menu-promo-popup";
 import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
 import { localBusinessSchema, websiteSchema } from "@/lib/schema";
@@ -113,6 +114,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <main className="pb-16 md:pb-0">{children}</main>
           <Footer />
           <MobileActionBar />
+          <MenuPromoPopup />
         </NextIntlClientProvider>
         <Analytics />
       </body>

@@ -74,7 +74,7 @@
   "menu": {
     "eyebrow": "Menu",
     "title": "The menu",
-    "intro": "These categories stay put. The flavors inside each one rotate month to month — this is September's lineup.",
+    "intro": "These categories stay put. The flavors inside each one rotate month to month.",
     "note": "Let us know about any allergies or dietary needs. Prices in Mexican pesos."
   },
   "events": {
@@ -313,5 +313,12 @@
     "title": "This page got lost among the stars.",
     "body": "We couldn't find what you were looking for. Try the homepage or check the menu.",
     "cta": "Back home"
+  },
+  "menuPromo": {
+    "eyebrow": "New menu",
+    "title": "Día de Muertos is here",
+    "body": "Five cookies, five signature drinks and new stories — through November 15.",
+    "cta": "See the full menu",
+    "dismiss": "Close"
   }
 }

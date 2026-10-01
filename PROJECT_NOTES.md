@@ -319,10 +319,46 @@ so the app works end-to-end without payment credentials.
 
 ## Updating content
 
-**Monthly cookie rotation** — edit `data/menu.ts` → `cookies` section (well,
-`gourmet-cookies`): replace the five items' `name`/`description`/`priceMXN`,
-update `MENU_MONTH_LABEL`. The homepage marquee reads the same section
-automatically.
+**Monthly menu rotation (updated 2026-10-01)** — three sections rotate with
+the theme, not just cookies: `gourmet-cookies`, `bebidas-autor` (the signature
+drinks are themed/paired with the month's cookies too) and `sin-cafeina`
+(items can be added/dropped, not just reworded). `cafeina`, `tonics`,
+`focaccias` and `cookie-packs` tend to hold steady. Update
+`MENU_MONTH_LABEL` too — the homepage marquee and `/menu` header both read it
+automatically. The October/November 2026 rotation added 2 standing "Clásica"
+cookies (chocolate-chunk, vegan pumpkin) alongside the 5 themed Día de
+Muertos cookies — these aren't photographed on the monthly board but are
+always in the case, per the owner (2026-10-01); ask him by name/price before
+inventing copy for any future "clásica" the same way, same no-fabrication
+rule as everywhere else in this file.
+
+**Seasonal promo images + menu popup (added 2026-10-01)** — when the client
+sends standalone marketing graphics for specific menu items (e.g.
+`public/images/promos/calabaza-cookie.webp` /
+`calabaza-latte.webp`, the Día de Muertos "Calabaza Cookie"/"Calabaza Latte"
+art), they're wired into three places:
+1. `/menu` — a 2-up spotlight grid right under the section nav
+   (`app/[locale]/menu/page.tsx`), each card linking the item's name/slug/price
+   straight out of `data/menu.ts` (not hardcoded) so it can't drift from the
+   real menu data.
+2. `components/sections/menu-promo-popup.tsx` — a Radix `Dialog` mounted
+   site-wide in `app/[locale]/layout.tsx`, auto-opens once per visitor
+   ~1.2s after load. Dismissal is remembered in `localStorage` under a key
+   that includes `MENU_MONTH_LABEL.es`, so it resurfaces on its own the next
+   time the monthly label changes — no manual reset needed. Copy lives in
+   `messages/{es,en}.json` → `menuPromo`.
+3. `data/events.ts` → `EventRecord.galleryImages` (optional `string[]`):
+   when set, the event detail page's hero renders a `HeroCarousel` (dot
+   nav) of `[coverImage, ...galleryImages]` instead of one static image —
+   used to give `el-camino-de-regreso` (the blind tasting of this exact
+   October/November menu) a real hero instead of the SVG placeholder.
+   `HeroCarousel` itself picked up `h-full` on its internal wrapper divs to
+   support being dropped into a fixed-aspect-ratio container like this one
+   (harmless for its original homepage use, which sizes itself via content).
+
+These three wiring points assume whatever new promo image file lands next
+in `public/images/promos/` — swap the paths in those three spots for the
+next campaign's assets.
 
 **Historias del menú** — d-stellar writes an in-house narrative for every
 monthly collection (why the theme, what each cookie means) and hands it over
