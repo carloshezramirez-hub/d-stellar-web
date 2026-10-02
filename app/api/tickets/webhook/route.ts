@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { WebhookSignatureValidator } from "mercadopago";
 import { mercadoPagoEnv } from "@/lib/payments/env";
 import { getPayment } from "@/lib/payments/mercadopago";
+import { getMetadataValue } from "@/lib/payments/metadata";
 import { sendMail } from "@/lib/notifications/mailer";
 import { emailEnv } from "@/lib/notifications/env";
 import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
@@ -57,27 +58,30 @@ export async function POST(request: Request) {
   }
 
   const metadata = (payment.metadata ?? {}) as Record<string, string>;
-  const code = metadata.code || payment.external_reference || paymentId;
-  const safeLocale = metadata.locale === "en" ? "en" : "es";
+  const get = (key: string) => getMetadataValue(metadata, key);
+  const code = get("code") || payment.external_reference || paymentId;
+  const safeLocale = get("locale") === "en" ? "en" : "es";
+  const eventSlug = get("eventSlug");
+  const email = get("email");
 
-  const event = metadata.eventSlug ? getEvent(metadata.eventSlug) : undefined;
-  const ticket = event?.tickets?.[Number(metadata.ticketIndex)];
+  const event = eventSlug ? getEvent(eventSlug) : undefined;
+  const ticket = event?.tickets?.[Number(get("ticketIndex"))];
 
-  if (!event || !ticket || !metadata.email) {
-    console.error("[api/tickets/webhook] missing order metadata for payment", paymentId);
+  if (!event || !ticket || !email) {
+    console.error("[api/tickets/webhook] missing order metadata for payment", paymentId, metadata);
     return NextResponse.json({ ok: true, warning: "missing_metadata" });
   }
 
   const orderData: TicketOrderData = {
     eventTitle: event.title,
     ticketName: ticket.name[safeLocale],
-    dateLabel: resolveOrderDateLabel(event, metadata.sessionDateISO || undefined, safeLocale),
-    qty: Number(metadata.qty) || 1,
+    dateLabel: resolveOrderDateLabel(event, get("sessionDateISO") || undefined, safeLocale),
+    qty: Number(get("qty")) || 1,
     unitPriceMXN: ticket.priceMXN,
-    name: metadata.name ?? "",
-    email: metadata.email,
-    phone: metadata.phone ?? "",
-    notes: metadata.notes || undefined,
+    name: get("name") ?? "",
+    email,
+    phone: get("phone") ?? "",
+    notes: get("notes") || undefined,
   };
 
   const paymentInfo = { amountMXN: payment.transaction_amount ?? 0, paymentId };
