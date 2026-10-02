@@ -25,6 +25,7 @@ export async function GET(request: Request) {
   let unrecognized = 0;
   const insertedCodes: string[] = [];
   const errors: string[] = [];
+  const unrecognizedSample: unknown[] = [];
 
   for (const payment of payments) {
     if (!payment.id) continue;
@@ -39,6 +40,18 @@ export async function GET(request: Request) {
 
     if (!newOrder) {
       unrecognized += 1;
+      if (unrecognizedSample.length < 10) {
+        unrecognizedSample.push({
+          id: paymentId,
+          description: payment.description,
+          payment_type_id: payment.payment_type_id,
+          payment_method_id: payment.payment_method_id,
+          operation_type: payment.operation_type,
+          transaction_amount: payment.transaction_amount,
+          date_approved: payment.date_approved,
+          metadata,
+        });
+      }
       continue;
     }
 
@@ -57,5 +70,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, scanned: payments.length, inserted, skipped, unrecognized, insertedCodes, errors });
+  return NextResponse.json({ ok: true, scanned: payments.length, inserted, skipped, unrecognized, insertedCodes, errors, unrecognizedSample });
 }
