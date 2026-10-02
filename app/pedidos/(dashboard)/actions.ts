@@ -3,11 +3,13 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { ORDERS_SESSION_COOKIE, isValidOrdersSessionCookie } from "@/lib/orders-auth";
-import { getOrderById, updateEmailStatus, getOrdersDb } from "@/lib/orders-db";
+import { getOrderById, insertOrderIfNew, updateEmailStatus, getOrdersDb } from "@/lib/orders-db";
 import { sendPaymentMail } from "@/lib/notifications/resend-mailer";
 import { buildTicketCustomerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
 import { buildPickupCustomerEmail } from "@/lib/notifications/templates";
 import type { PickupOrderFormValues } from "@/lib/pickup-schema";
+import { searchAllApprovedPayments } from "@/lib/payments/mercadopago";
+import { buildTicketWebOrder, buildPickupWebOrder, isTicketPayment, isPickupPayment } from "@/lib/orders-from-payment";
 
 async function requireSession() {
   const cookieStore = await cookies();
@@ -84,4 +86,67 @@ export async function resendOrderEmail(orderId: string, overrideEmail?: string):
     revalidatePath("/pedidos");
     return { ok: false, error: "send_failed" };
   }
+}
+
+export type SyncResult = {
+  ok: boolean;
+  error?: string;
+  scanned?: number;
+  inserted?: number;
+  skipped?: number;
+  unrecognized?: number;
+};
+
+/**
+ * Trae TODOS los pagos aprobados de Mercado Pago (sin límite de fecha) y
+ * rellena web_orders con los que falten — para pedidos de antes de que esta
+ * tabla existiera, o cualquier pago que el webhook en vivo no haya
+ * procesado por la razón que sea. No reenvía ningún correo: solo escribe el
+ * registro histórico. Idempotente (payment_id único), así que correrlo
+ * varias veces no duplica nada.
+ */
+export async function syncHistoricalOrders(): Promise<SyncResult> {
+  if (!(await requireSession())) return { ok: false, error: "unauthorized" };
+
+  let payments;
+  try {
+    payments = await searchAllApprovedPayments();
+  } catch (err) {
+    console.error("[pedidos/syncHistoricalOrders] mercado pago search failed", err);
+    return { ok: false, error: "mp_search_failed" };
+  }
+
+  let inserted = 0;
+  let skipped = 0;
+  let unrecognized = 0;
+
+  for (const payment of payments) {
+    if (!payment.id) continue;
+    const paymentId = String(payment.id);
+    const metadata = (payment.metadata ?? {}) as Record<string, unknown>;
+
+    const newOrder = isTicketPayment(metadata)
+      ? buildTicketWebOrder(payment, paymentId)
+      : isPickupPayment(metadata)
+        ? buildPickupWebOrder(payment, paymentId)
+        : null;
+
+    if (!newOrder) {
+      unrecognized += 1;
+      continue;
+    }
+
+    const createdAt = payment.date_approved || payment.date_created;
+
+    try {
+      const { isNew } = await insertOrderIfNew(createdAt ? { ...newOrder, created_at: createdAt } : newOrder);
+      if (isNew) inserted += 1;
+      else skipped += 1;
+    } catch (err) {
+      console.error("[pedidos/syncHistoricalOrders] insert failed for payment", paymentId, err);
+    }
+  }
+
+  revalidatePath("/pedidos");
+  return { ok: true, scanned: payments.length, inserted, skipped, unrecognized };
 }

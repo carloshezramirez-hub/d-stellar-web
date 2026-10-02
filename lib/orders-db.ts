@@ -53,7 +53,10 @@ export type NewWebOrder = Omit<
   | "email_owner_status"
   | "email_customer_resend_id"
   | "email_owner_resend_id"
->;
+> & {
+  /** Override opcional — solo lo usa el backfill histórico para que el pedido muestre su fecha real de pago en vez de la fecha del backfill. */
+  created_at?: string;
+};
 
 /**
  * Inserta el pedido en cuanto Mercado Pago confirma el pago, antes de

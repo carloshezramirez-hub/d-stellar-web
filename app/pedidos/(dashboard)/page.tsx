@@ -1,6 +1,7 @@
 import { listOrders, type EmailDeliveryStatus } from "@/lib/orders-db";
 import { LogoutButton } from "@/components/pedidos/logout-button";
 import { ResendButton } from "@/components/pedidos/resend-button";
+import { SyncButton } from "@/components/pedidos/sync-button";
 
 function formatMoney(amount: number, currency: string) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency }).format(amount);
@@ -49,14 +50,17 @@ export default async function PedidosPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-start justify-between gap-4">
         <div>
           <h1 className="font-bold text-2xl">d-stellar · Pedidos</h1>
           <p className="mt-1 text-sm text-stellar-white/60">
             Historial de todas las compras web (boletos + pickup) — se registra al momento del pago, pase lo que pase con el correo.
           </p>
         </div>
-        <LogoutButton />
+        <div className="flex items-start gap-4">
+          <SyncButton />
+          <LogoutButton />
+        </div>
       </div>
 
       {needsAttention.length > 0 && (

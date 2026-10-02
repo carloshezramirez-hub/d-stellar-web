@@ -123,3 +123,23 @@ export async function getPayment(paymentId: string) {
   const payment = new Payment(getClient());
   return payment.get({ id: paymentId });
 }
+
+/** Todos los pagos aprobados de la cuenta, paginando hasta traerlos todos — usado por el backfill histórico de /pedidos (no por los webhooks en vivo, que ya traen su propio pago por id). */
+export async function searchAllApprovedPayments() {
+  const payment = new Payment(getClient());
+  const limit = 50;
+  let offset = 0;
+  const results: NonNullable<Awaited<ReturnType<typeof payment.search>>["results"]> = [];
+
+  for (;;) {
+    const page = await payment.search({
+      options: { status: "approved", sort: "date_approved", criteria: "desc", limit, offset },
+    });
+    results.push(...(page.results ?? []));
+    const total = page.paging?.total ?? results.length;
+    offset += limit;
+    if (offset >= total || !page.results?.length) break;
+  }
+
+  return results;
+}

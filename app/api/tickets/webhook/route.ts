@@ -6,7 +6,8 @@ import { getMetadataValue } from "@/lib/payments/metadata";
 import { sendPaymentMail } from "@/lib/notifications/resend-mailer";
 import { emailEnv } from "@/lib/notifications/env";
 import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
-import { insertOrderIfNew, updateEmailStatus, type NewWebOrder } from "@/lib/orders-db";
+import { insertOrderIfNew, updateEmailStatus } from "@/lib/orders-db";
+import { buildTicketWebOrder } from "@/lib/orders-from-payment";
 import { getEvent } from "@/data/events";
 import { resolveOrderDateLabel } from "@/lib/event-date";
 
@@ -58,42 +59,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, status: payment.status });
   }
 
+  const newOrder = buildTicketWebOrder(payment, paymentId);
+  const { order, isNew } = await insertOrderIfNew(newOrder);
+
+  if (!isNew) {
+    // Mercado Pago ya reintentó este webhook y el pedido ya se procesó —
+    // no reenviar los correos (antes esto causaba envíos duplicados).
+    return NextResponse.json({ ok: true, code: newOrder.code, duplicate: true });
+  }
+
   const metadata = (payment.metadata ?? {}) as Record<string, string>;
   const get = (key: string) => getMetadataValue(metadata, key);
-  const code = get("code") || payment.external_reference || paymentId;
   const safeLocale = get("locale") === "en" ? "en" : "es";
   const eventSlug = get("eventSlug");
   const email = get("email");
-
   const event = eventSlug ? getEvent(eventSlug) : undefined;
   const ticket = event?.tickets?.[Number(get("ticketIndex"))];
 
-  // Pedido pagado pero con metadata incompleta (caso raro) — igual se deja
-  // un registro mínimo en web_orders para que quede en el historial, en vez
-  // de perderse en silencio como antes.
   if (!event || !ticket || !email) {
     console.error("[api/tickets/webhook] missing order metadata for payment", paymentId, metadata);
-    try {
-      await insertOrderIfNew({
-        kind: "ticket",
-        code,
-        payment_id: paymentId,
-        amount_mxn: payment.transaction_amount ?? 0,
-        currency: "MXN",
-        concept: "Boleto · metadata incompleta (revisar manualmente)",
-        items: metadata,
-        event_slug: eventSlug || null,
-        session_date_iso: get("sessionDateISO") || null,
-        customer_name: get("name") || null,
-        customer_email: email || "sin-email@d-stellar.co",
-        customer_phone: get("phone") || null,
-        locale: safeLocale,
-        notes: get("notes") || null,
-        raw_metadata: metadata,
-      });
-    } catch (err) {
-      console.error("[api/tickets/webhook] failed to persist degraded order", err);
-    }
     return NextResponse.json({ ok: true, warning: "missing_metadata" });
   }
 
@@ -110,46 +94,8 @@ export async function POST(request: Request) {
   };
 
   const paymentInfo = { amountMXN: payment.transaction_amount ?? 0, paymentId };
-
-  const newOrder: NewWebOrder = {
-    kind: "ticket",
-    code,
-    payment_id: paymentId,
-    amount_mxn: paymentInfo.amountMXN,
-    currency: "MXN",
-    concept: `${orderData.eventTitle} · ${orderData.qty}x ${orderData.ticketName}`,
-    // Guarda todo lo necesario para reconstruir el TicketOrderData exacto al
-    // reenviar el correo desde /pedidos, sin depender de que data/events.ts
-    // siga teniendo el mismo evento/boleto más adelante.
-    items: {
-      eventTitle: orderData.eventTitle,
-      ticketName: orderData.ticketName,
-      dateLabel: orderData.dateLabel,
-      qty: orderData.qty,
-      unitPriceMXN: orderData.unitPriceMXN,
-      eventSlug,
-      ticketIndex: Number(get("ticketIndex")),
-    },
-    event_slug: eventSlug || null,
-    session_date_iso: get("sessionDateISO") || null,
-    customer_name: orderData.name || null,
-    customer_email: orderData.email,
-    customer_phone: orderData.phone || null,
-    locale: safeLocale,
-    notes: orderData.notes || null,
-    raw_metadata: metadata,
-  };
-
-  const { order, isNew } = await insertOrderIfNew(newOrder);
-
-  if (!isNew) {
-    // Mercado Pago ya reintentó este webhook y el pedido ya se procesó —
-    // no reenviar los correos (antes esto causaba envíos duplicados).
-    return NextResponse.json({ ok: true, code, duplicate: true });
-  }
-
-  const ownerEmail = buildTicketOwnerEmail(orderData, code, paymentInfo);
-  const customerEmail = buildTicketCustomerEmail(orderData, code, safeLocale, paymentInfo);
+  const ownerEmail = buildTicketOwnerEmail(orderData, newOrder.code, paymentInfo);
+  const customerEmail = buildTicketCustomerEmail(orderData, newOrder.code, safeLocale, paymentInfo);
 
   const [ownerResult, customerResult] = await Promise.allSettled([
     sendPaymentMail({
@@ -183,5 +129,5 @@ export async function POST(request: Request) {
     console.error("[api/tickets/webhook] failed to update email status", err);
   }
 
-  return NextResponse.json({ ok: true, code });
+  return NextResponse.json({ ok: true, code: newOrder.code });
 }
