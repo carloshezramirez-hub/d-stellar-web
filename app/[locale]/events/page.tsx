@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CalendarDays, Users } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { TrackedEventLink } from "@/components/ui/tracked-event-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -86,7 +86,8 @@ export default async function EventsPage({ params }: Props) {
                 const startingPrice = eventStartingPrice(event);
                 return (
                 <li key={event.slug}>
-                  <Link
+                  <TrackedEventLink
+                    slug={event.slug}
                     href={{ pathname: "/events/[slug]", params: { slug: event.slug } }}
                     className="group flex flex-col gap-4 border-2 border-line p-6 transition-colors hover:border-stellar-pink sm:flex-row sm:items-center sm:justify-between"
                   >
@@ -121,7 +122,7 @@ export default async function EventsPage({ params }: Props) {
                         </p>
                       )}
                     </div>
-                  </Link>
+                  </TrackedEventLink>
                 </li>
                 );
               })}
@@ -135,7 +136,8 @@ export default async function EventsPage({ params }: Props) {
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {past.map((event) => (
                 <li key={event.slug}>
-                  <Link
+                  <TrackedEventLink
+                    slug={event.slug}
                     href={{ pathname: "/events/[slug]", params: { slug: event.slug } }}
                     className="group flex flex-col gap-3 border border-line/60 p-4 opacity-80 transition-opacity hover:opacity-100"
                   >
@@ -152,7 +154,7 @@ export default async function EventsPage({ params }: Props) {
                       <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
                       <p className="text-sm text-stellar-white/60">{formatDate(event, locale)}</p>
                     </div>
-                  </Link>
+                  </TrackedEventLink>
                 </li>
               ))}
             </ul>

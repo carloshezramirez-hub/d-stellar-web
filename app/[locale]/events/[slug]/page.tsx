@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CalendarDays, MapPin, Users, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
+import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -209,9 +210,9 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
               Instagram
             </CtaAnchor>
           )}
-          <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline">
+          <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline">
             {cta("openInMaps")}
-          </CtaAnchor>
+          </TrackedCtaAnchor>
           <CtaLink href={{ pathname: "/events", hash: "private-events" }} variant="ghost">
             {cta("sendInquiry")}
           </CtaLink>

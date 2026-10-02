@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight, Check } from "lucide-react";
-import { CtaAnchor } from "@/components/ui/cta-link";
+import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -55,9 +55,9 @@ export default async function VisitPage({ params }: Props) {
         </h1>
         <p className="mt-5 max-w-xl text-stellar-white/75">{t("intro")}</p>
         <div className="mt-7">
-          <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+          <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
             {cta("openInMaps")} <ArrowUpRight size={14} />
-          </CtaAnchor>
+          </TrackedCtaAnchor>
         </div>
       </div>
 

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight, Star } from "lucide-react";
-import { CtaLink, CtaAnchor } from "@/components/ui/cta-link";
+import { CtaLink } from "@/components/ui/cta-link";
+import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { StarField } from "@/components/ui/star-field";
 import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
 import { HeroCarousel } from "@/components/sections/hero-carousel";
@@ -59,9 +60,9 @@ export default async function HomePage({ params }: Props) {
                   <p className="star-rule mt-4 font-tag text-xs uppercase text-stellar-green">{t("heroTag")}</p>
 
                   <div className="mt-8 flex flex-wrap items-center gap-4">
-                    <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+                    <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
                       {cta("directions")} <ArrowUpRight size={14} />
-                    </CtaAnchor>
+                    </TrackedCtaAnchor>
                     <CtaLink href="/pickup" variant="outline">
                       {cta("orderPickup")}
                     </CtaLink>
@@ -196,9 +197,9 @@ export default async function HomePage({ params }: Props) {
             <p className="mt-10 max-w-md text-sm text-stellar-white/60">{tPress("reviewsEmpty")}</p>
           )}
 
-          <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline" className="mt-8">
+          <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="outline" className="mt-8">
             {tPress("reviewsCta")} <ArrowUpRight size={14} />
-          </CtaAnchor>
+          </TrackedCtaAnchor>
         </div>
       </section>
 
@@ -308,9 +309,9 @@ export default async function HomePage({ params }: Props) {
               {t("visitTeaserBody")}
             </p>
           </div>
-          <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+          <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
             {cta("openInMaps")} <ArrowUpRight size={14} />
-          </CtaAnchor>
+          </TrackedCtaAnchor>
         </div>
       </section>
     </>

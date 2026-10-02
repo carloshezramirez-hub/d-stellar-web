@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight } from "lucide-react";
-import { CtaAnchor, CtaLink } from "@/components/ui/cta-link";
+import { CtaLink } from "@/components/ui/cta-link";
+import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { menuSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -151,9 +152,9 @@ export default async function MenuPage({ params }: Props) {
       <p className="mx-auto mt-16 max-w-4xl text-center text-xs text-stellar-white/50">{t("note")}</p>
 
       <div className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-4">
-        <CtaAnchor href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
+        <TrackedCtaAnchor event="click_directions" href={BUSINESS.mapsUrl} target="_blank" rel="noreferrer" variant="solid">
           {cta("directions")} <ArrowUpRight size={14} />
-        </CtaAnchor>
+        </TrackedCtaAnchor>
         <CtaLink href="/pickup" variant="outline">
           {cta("orderPickup")}
         </CtaLink>
