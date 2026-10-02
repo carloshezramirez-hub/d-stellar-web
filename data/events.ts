@@ -68,23 +68,25 @@ export const events: EventRecord[] = [
   {
     slug: "el-camino-de-regreso",
     title: "El camino de regreso",
-    dateISO: "2026-10-02T19:00:00-06:00",
-    endISO: "2026-10-02T20:30:00-06:00",
+    dateISO: "2026-10-09T19:00:00-06:00",
+    endISO: "2026-10-09T20:30:00-06:00",
+    // Narrowed from every Fri/Sat in October to these 7 confirmed dates —
+    // see the official flyer added 2026-10-02 (public/images/events/
+    // el-camino-de-regreso-flyer.webp). Zoe Valdez's existing Oct 9
+    // reservation (TIX-691049) still falls on one of these, so no
+    // outreach needed for that booking.
     sessionDates: [
-      "2026-10-02T19:00:00-06:00",
-      "2026-10-03T19:00:00-06:00",
       "2026-10-09T19:00:00-06:00",
-      "2026-10-10T19:00:00-06:00",
-      "2026-10-16T19:00:00-06:00",
       "2026-10-17T19:00:00-06:00",
       "2026-10-23T19:00:00-06:00",
-      "2026-10-24T19:00:00-06:00",
-      "2026-10-30T19:00:00-06:00",
       "2026-10-31T19:00:00-06:00",
+      "2026-11-01T19:00:00-06:00",
+      "2026-11-06T19:00:00-06:00",
+      "2026-11-14T19:00:00-06:00",
     ],
     datesSummary: {
-      es: "Viernes y sábados de octubre · 7:00 p.m.",
-      en: "Fridays and Saturdays in October · 7:00 p.m.",
+      es: "9, 17, 23 y 31 de octubre · 1, 6 y 14 de noviembre · 7:00 p.m.",
+      en: "Oct 9, 17, 23 & 31 · Nov 1, 6 & 14 · 7:00 p.m.",
     },
     summary: {
       es: "Una ofrenda sensorial contada en cinco sabores — cata a ciegas del menú de octubre que despierta recuerdos de quienes ya no están.",
@@ -96,14 +98,14 @@ export const events: EventRecord[] = [
         "Hay recuerdos que todavía saben volver: el pan que alguien partía con las manos, una cocina encendida por la mañana, la voz que preguntaba si ya habías comido. A veces, lo que más extrañamos cabe en un gesto pequeño — y en esta experiencia, esos gestos se convierten en una ofrenda que puedes saborear.",
         "Cinco preparaciones acompañadas de una narración te invitan a recorrer la mesa compartida, los aromas de casa, las manos que nos cuidaron y todo lo que alguien dejó en nuestra forma de vivir. Cada tiempo abre un espacio para descubrir un sabor y, quizá, reconocer algo de tu propia historia.",
         "Puedes venir con alguien o regalarte este momento a solas. Lo que recuerdes te pertenece — no tendrás que compartir un nombre, explicar una ausencia ni contar nada que prefieras conservar para ti.",
-        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Elige tu fecha al reservar — hay funciones cada viernes y sábado de octubre, cupo máximo 10 personas por noche.",
+        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Elige tu fecha al reservar — hay funciones el 9, 17, 23 y 31 de octubre, y el 1, 6 y 14 de noviembre, cupo máximo 10 personas por noche.",
       ],
       en: [
         "El camino de regreso (\"The way back\") is a sensory offering told in five flavors — a blind tasting where aroma, texture and story awaken memories of those who are no longer with us: the tables we shared, the gestures we inherited, and the love that still lives in how we live.",
         "Some memories still know how to come back: the bread someone used to break by hand, a kitchen lit up in the morning, the voice that asked if you'd already eaten. Sometimes what we miss most fits inside a small gesture — and in this experience, those gestures become an offering you can taste.",
         "Five courses, guided by a narration, walk you through the shared table, the smells of home, the hands that cared for us, and everything someone left in the way we live now. Each course opens space to discover a flavor — and maybe recognize something of your own story.",
         "Come with someone, or give yourself this moment alone. Whatever you remember belongs to you — you won't have to share a name, explain an absence, or tell anyone anything you'd rather keep for yourself.",
-        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes. Pick your date when you reserve — sessions run every Friday and Saturday in October, max. 10 people per night.",
+        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes. Pick your date when you reserve — sessions run Oct 9, 17, 23 & 31 and Nov 1, 6 & 14, max. 10 people per night.",
       ],
     },
     tickets: [
@@ -157,11 +159,11 @@ export const events: EventRecord[] = [
       },
     ],
     capacity: 10,
-    coverImage: "/images/promos/calabaza-cookie.webp",
-    galleryImages: ["/images/promos/calabaza-latte.webp"],
+    coverImage: "/images/events/el-camino-de-regreso-flyer.webp",
+    galleryImages: ["/images/promos/calabaza-cookie.webp", "/images/promos/calabaza-latte.webp"],
     imageAlt: {
-      es: "Cookie de calabaza en tacha y latte de calabaza del menú de octubre de d-stellar, protagonistas de El camino de regreso",
-      en: "Pumpkin-in-syrup cookie and pumpkin latte from d-stellar's October menu, featured in El camino de regreso",
+      es: "Flyer oficial de El camino de regreso, cata a ciegas de Día de Muertos en d-stellar",
+      en: "Official flyer for El camino de regreso, d-stellar's Día de Muertos blind tasting",
     },
     status: "upcoming",
   },
