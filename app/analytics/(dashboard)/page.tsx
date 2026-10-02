@@ -154,6 +154,10 @@ function PostCard({
           <PostMetric label="Compartidos" value={formatNumber(post.shares)} />
           <PostMetric label="Guardados" value={formatNumber(post.saves)} />
           <PostMetric label="Tiempo de reproducción" value={formatSeconds(post.avgWatchTimeSeconds)} />
+          <PostMetric
+            label="% video completo"
+            value={post.completionRate !== null ? `${(post.completionRate * 100).toFixed(0)}%` : null}
+          />
         </div>
 
         {insights.length > 0 && (
@@ -232,7 +236,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
           </p>
           <ul className="grid gap-1 text-sm">
             <li>Instagram + Facebook: {hasMeta ? "conectado ✓" : "pendiente de credenciales"}</li>
-            <li>TikTok: {hasTikTok ? "conectado ✓ (solo cuenta, aún sin video por video)" : "pendiente del @handle"}</li>
+            <li>TikTok: {hasTikTok ? "conectado ✓" : "pendiente del @handle"}</li>
           </ul>
         </div>
       ) : (

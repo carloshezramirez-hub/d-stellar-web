@@ -171,46 +171,76 @@ export interface PostInsight {
   text: string;
 }
 
-/** "Quick facts" por post: compara sus métricas contra el promedio de sus posts pares (misma plataforma, mismo periodo) y devuelve hasta 2 hallazgos en lenguaje llano — lo bueno y lo que se puede mejorar. */
-export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostInsight[] {
-  const samePlatform = peers.filter((p) => p.platform === post.platform && p.id !== post.id);
-  if (samePlatform.length < 3) return [];
+/** Orden de qué tan accionable/confiable es cada métrica — desempata entre desviaciones de magnitud similar a favor de la que de verdad dice algo (engagement > alcance > qué tanto se ve el video > guardados > comentarios, que con pocos datos es ruidoso). */
+const METRIC_PRIORITY = ["engagement", "reach", "completion", "watchTime", "saves", "comments"] as const;
 
+interface Deviation {
+  metric: (typeof METRIC_PRIORITY)[number];
+  text: string;
+  pct: number;
+}
+
+/** Ordena por prioridad de métrica (no por magnitud): comentarios/guardados son conteos chicos y su % se dispara con ruido, así que engagement/alcance/qué-tanto-se-ve siempre ganan como encabezado cuando también se movieron. */
+function sortByPriority(deviations: Deviation[]): Deviation[] {
+  return [...deviations].sort((a, b) => METRIC_PRIORITY.indexOf(a.metric) - METRIC_PRIORITY.indexOf(b.metric));
+}
+
+/** Compara `post` contra el promedio de `peers` (misma plataforma) y devuelve una desviación por métrica disponible, sin filtrar por umbral todavía. */
+function buildPeerDeviations(post: FeedPost, peers: FeedPost[]): Deviation[] {
   const avg = (getter: (p: FeedPost) => number | null): number | null => {
-    const values = samePlatform.map(getter).filter((v): v is number => v !== null && v > 0);
+    const values = peers.map(getter).filter((v): v is number => v !== null && v > 0);
     if (values.length === 0) return null;
     return values.reduce((a, b) => a + b, 0) / values.length;
   };
 
-  const deviations: { text: string; pct: number }[] = [];
+  const deviations: Deviation[] = [];
+  const pctOf = (value: number, base: number) => ((value - base) / base) * 100;
 
   const reachAvg = avg((p) => p.reach);
   if (reachAvg !== null && post.reach !== null) {
-    const pct = ((post.reach - reachAvg) / reachAvg) * 100;
+    const pct = pctOf(post.reach, reachAvg);
     deviations.push({
-      text: pct >= 0 ? `Alcance ${pct.toFixed(0)}% arriba de tu promedio` : `Alcance ${Math.abs(pct).toFixed(0)}% abajo de tu promedio`,
+      metric: "reach",
       pct,
+      text: pct >= 0 ? `Alcance ${pct.toFixed(0)}% arriba de tu promedio` : `Alcance ${Math.abs(pct).toFixed(0)}% abajo de tu promedio`,
     });
   }
 
   const rate = engagementRate(post);
   const rateAvg = avg((p) => engagementRate(p));
   if (rate !== null && rateAvg !== null) {
-    const pct = ((rate - rateAvg) / rateAvg) * 100;
+    const pct = pctOf(rate, rateAvg);
     deviations.push({
-      text: pct >= 0 ? `Engagement ${pct.toFixed(0)}% más fuerte de lo usual` : `Engagement ${Math.abs(pct).toFixed(0)}% más débil de lo usual`,
+      metric: "engagement",
       pct,
+      text: pct >= 0 ? `Engagement ${pct.toFixed(0)}% más fuerte de lo usual` : `Engagement ${Math.abs(pct).toFixed(0)}% más débil de lo usual`,
     });
+  }
+
+  if (post.completionRate !== null) {
+    const completionAvg = avg((p) => p.completionRate);
+    if (completionAvg !== null) {
+      const pct = pctOf(post.completionRate, completionAvg);
+      deviations.push({
+        metric: "completion",
+        pct,
+        text:
+          pct >= 0
+            ? `Más gente vio el video completo que de costumbre`
+            : `Menos gente llegó al final del video que de costumbre`,
+      });
+    }
   }
 
   if (post.saves !== null && post.reach) {
     const savesRate = post.saves / post.reach;
     const savesRateAvg = avg((p) => (p.saves != null && p.reach ? p.saves / p.reach : null));
     if (savesRateAvg !== null && savesRateAvg > 0) {
-      const pct = ((savesRate - savesRateAvg) / savesRateAvg) * 100;
+      const pct = pctOf(savesRate, savesRateAvg);
       deviations.push({
-        text: pct >= 0 ? `Se guardó más de lo usual — buen contenido de referencia` : `Se guardó menos de lo usual`,
+        metric: "saves",
         pct,
+        text: pct >= 0 ? `Se guardó más de lo usual — buen contenido de referencia` : `Se guardó menos de lo usual`,
       });
     }
   }
@@ -218,10 +248,11 @@ export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostIns
   if (post.avgWatchTimeSeconds !== null) {
     const watchAvg = avg((p) => p.avgWatchTimeSeconds);
     if (watchAvg !== null) {
-      const pct = ((post.avgWatchTimeSeconds - watchAvg) / watchAvg) * 100;
+      const pct = pctOf(post.avgWatchTimeSeconds, watchAvg);
       deviations.push({
-        text: pct >= 0 ? `La gente se quedó viendo más tiempo que en tus otros videos` : `La gente soltó el video más rápido que en tus otros videos`,
+        metric: "watchTime",
         pct,
+        text: pct >= 0 ? `La gente se quedó viendo más tiempo que en tus otros videos` : `La gente soltó el video más rápido que en tus otros videos`,
       });
     }
   }
@@ -229,25 +260,90 @@ export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostIns
   if (post.comments !== null) {
     const commentsAvg = avg((p) => p.comments);
     if (commentsAvg !== null && commentsAvg > 0) {
-      const pct = ((post.comments - commentsAvg) / commentsAvg) * 100;
+      const pct = pctOf(post.comments, commentsAvg);
       deviations.push({
-        text: pct >= 0 ? `Generó más conversación (comentarios) de lo usual` : `Generó poca conversación comparado con tus otros posts`,
+        metric: "comments",
         pct,
+        text: pct >= 0 ? `Generó más conversación (comentarios) de lo usual` : `Generó poca conversación comparado con tus otros posts`,
       });
     }
   }
 
-  if (deviations.length === 0) return [];
+  return deviations;
+}
 
-  deviations.sort((a, b) => b.pct - a.pct);
-  const strongest = deviations[0];
-  const weakest = deviations[deviations.length - 1];
+/** El post inmediatamente anterior (misma plataforma, por fecha) dentro del set dado. */
+function findPreviousPost(post: FeedPost, samePlatform: FeedPost[]): FeedPost | null {
+  if (!post.postedAt) return null;
+  const earlier = samePlatform
+    .filter((p) => p.postedAt && p.postedAt < post.postedAt!)
+    .sort((a, b) => (a.postedAt! < b.postedAt! ? 1 : -1));
+  return earlier[0] ?? null;
+}
 
+/** Detecta si este post y los 2 anteriores (misma plataforma) vienen todos por debajo del promedio de engagement del set — señal de que vale la pena cambiar de formato, no solo un tropiezo aislado. */
+function detectDownwardStreak(post: FeedPost, samePlatform: FeedPost[]): boolean {
+  const chronological = [...samePlatform, post]
+    .filter((p) => p.postedAt)
+    .sort((a, b) => (a.postedAt! < b.postedAt! ? -1 : 1));
+  const idx = chronological.findIndex((p) => p.id === post.id);
+  if (idx < 2) return false;
+
+  const rates = chronological.map((p) => engagementRate(p)).filter((r): r is number => r !== null);
+  if (rates.length < 4) return false;
+  const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+  if (avgRate <= 0) return false;
+
+  const lastThree = chronological.slice(idx - 2, idx + 1);
+  return lastThree.every((p) => {
+    const r = engagementRate(p);
+    return r !== null && r <= avgRate * 0.7;
+  });
+}
+
+/** "Quick facts" por post: compara sus métricas contra el promedio de sus posts pares (misma plataforma, mismo periodo), contra su publicación inmediata anterior, y detecta rachas — devuelve hasta 3 hallazgos priorizados (el más accionable primero). */
+export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostInsight[] {
+  const samePlatform = peers.filter((p) => p.platform === post.platform && p.id !== post.id);
   const insights: PostInsight[] = [];
   const THRESHOLD = 15; // % de desviación mínima para que valga la pena mencionarlo
 
-  if (strongest.pct >= THRESHOLD) insights.push({ kind: "good", text: strongest.text });
-  if (weakest.pct <= -THRESHOLD && weakest.text !== strongest.text) insights.push({ kind: "bad", text: weakest.text });
+  if (detectDownwardStreak(post, samePlatform)) {
+    insights.push({
+      kind: "bad",
+      text: "Van 3 publicaciones seguidas por debajo de tu promedio — quizá sea buen momento para cambiar de formato",
+    });
+  }
 
-  return insights;
+  let engagementVsPeersPct: number | null = null;
+  if (samePlatform.length >= 3) {
+    const deviations = sortByPriority(buildPeerDeviations(post, samePlatform));
+    engagementVsPeersPct = deviations.find((d) => d.metric === "engagement")?.pct ?? null;
+    const strongest = deviations.find((d) => d.pct >= THRESHOLD);
+    const weakest = deviations.find((d) => d.pct <= -THRESHOLD);
+
+    if (strongest) insights.push({ kind: "good", text: strongest.text });
+    if (weakest && weakest.text !== strongest?.text) insights.push({ kind: "bad", text: weakest.text });
+  }
+
+  const previous = findPreviousPost(post, samePlatform);
+  if (previous && insights.length < 3) {
+    const rate = engagementRate(post);
+    const prevRate = engagementRate(previous);
+    if (rate !== null && prevRate !== null && prevRate > 0) {
+      const pct = ((rate - prevRate) / prevRate) * 100;
+      // Si ya dijimos prácticamente lo mismo comparando contra el promedio, no lo repitamos con otras palabras.
+      const redundant = engagementVsPeersPct !== null && Math.sign(pct) === Math.sign(engagementVsPeersPct) && Math.abs(pct - engagementVsPeersPct) < 20;
+      if (Math.abs(pct) >= 25 && !redundant) {
+        insights.push({
+          kind: pct >= 0 ? "good" : "bad",
+          text:
+            pct >= 0
+              ? `Engagement ${pct.toFixed(0)}% mejor que tu publicación anterior`
+              : `Engagement ${Math.abs(pct).toFixed(0)}% peor que tu publicación anterior`,
+        });
+      }
+    }
+  }
+
+  return insights.slice(0, 3);
 }

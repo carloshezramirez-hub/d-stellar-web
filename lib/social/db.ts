@@ -53,6 +53,7 @@ export interface SocialMetricsSnapshot {
   engagement_rate: number | null;
   avg_watch_time_seconds: number | null;
   total_watch_time_seconds: number | null;
+  completion_rate: number | null;
 }
 
 export interface SocialAccountSnapshot {
