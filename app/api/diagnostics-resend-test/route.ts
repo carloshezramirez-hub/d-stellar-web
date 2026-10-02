@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 import { sendPaymentMail } from "@/lib/notifications/resend-mailer";
 
 // TEMPORAL — solo para validar que RESEND_PAYMENTS_FROM_EMAIL entrega
@@ -8,6 +9,12 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   if (url.searchParams.get("key") !== process.env.DIAGNOSTIC_TEST_SECRET) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+
+  if (url.searchParams.get("mode") === "domains") {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const list = await resend.domains.list();
+    return NextResponse.json(list);
   }
 
   try {
