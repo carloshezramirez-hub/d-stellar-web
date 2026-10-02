@@ -100,3 +100,46 @@ create index if not exists social_posts_account_idx on social_posts (account_id)
 create index if not exists social_metrics_snapshots_post_idx on social_metrics_snapshots (post_id);
 create index if not exists social_metrics_snapshots_captured_idx on social_metrics_snapshots (captured_at);
 create index if not exists social_account_snapshots_account_idx on social_account_snapshots (account_id);
+
+-- Historial maestro de compras hechas desde la web (boletos de evento y
+-- pedidos de pickup) vía Mercado Pago. Se escribe ANTES de intentar enviar
+-- cualquier correo de confirmación, para que exista un registro aunque el
+-- correo rebote, se vaya a spam, o falle por completo. payment_id es la
+-- llave de idempotencia: un mismo pago de Mercado Pago nunca genera dos
+-- filas, aunque el webhook reintente (lo hace con frecuencia).
+create table if not exists web_orders (
+  id uuid primary key default gen_random_uuid(),
+
+  kind text not null check (kind in ('ticket', 'pickup')),
+  code text not null,
+  payment_id text not null unique,
+  amount_mxn numeric not null,
+  currency text not null default 'MXN',
+
+  concept text not null, -- resumen humano: "El camino de regreso · 1x Experiencia Dúo" / "Pickup · 2 productos"
+  items jsonb, -- detalle crudo: boleto (evento/ticket/qty) o pickup (lista de productos)
+  event_slug text,
+  session_date_iso text,
+
+  customer_name text,
+  customer_email text not null,
+  customer_phone text,
+  locale text not null default 'es',
+  notes text,
+
+  email_customer_status text not null default 'pending' check (email_customer_status in ('pending', 'sent', 'bounced', 'complained', 'failed')),
+  email_owner_status text not null default 'pending' check (email_owner_status in ('pending', 'sent', 'bounced', 'complained', 'failed')),
+  email_customer_resend_id text,
+  email_owner_resend_id text,
+
+  raw_metadata jsonb, -- metadata cruda de Mercado Pago, para debug/auditoría
+
+  created_at timestamptz not null default now()
+);
+
+create index if not exists web_orders_kind_idx on web_orders (kind);
+create index if not exists web_orders_code_idx on web_orders (code);
+create index if not exists web_orders_email_customer_status_idx on web_orders (email_customer_status);
+create index if not exists web_orders_created_at_idx on web_orders (created_at desc);
+
+alter table web_orders enable row level security;
