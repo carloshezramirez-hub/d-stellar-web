@@ -17,6 +17,13 @@ export async function GET(request: Request) {
     return NextResponse.json(list);
   }
 
+  const checkId = url.searchParams.get("checkId");
+  if (checkId) {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const status = await resend.emails.get(checkId);
+    return NextResponse.json(status);
+  }
+
   try {
     const result = await sendPaymentMail({
       to: "carloshezramirez@gmail.com",
