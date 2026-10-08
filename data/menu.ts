@@ -96,7 +96,7 @@ export const menu: MenuSection[] = [
           es: "Cookie de masa de mantequilla con chunks de chocolate semi amargo.",
           en: "Butter-dough cookie with semisweet chocolate chunks.",
         },
-        priceMXN: 90,
+        priceMXN: 40,
         tags: ["signature"],
       },
       {
@@ -106,7 +106,7 @@ export const menu: MenuSection[] = [
           es: "Cookie vegana clásica de calabaza, de temporada.",
           en: "Classic vegan pumpkin cookie, seasonal.",
         },
-        priceMXN: 90,
+        priceMXN: 40,
         tags: ["vegan", "seasonal"],
       },
     ],
