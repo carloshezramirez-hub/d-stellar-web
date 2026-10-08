@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileActionBar } from "@/components/layout/mobile-action-bar";
 import { MenuPromoPopup } from "@/components/sections/menu-promo-popup";
+import { SeasonalDecor } from "@/components/ui/seasonal-decor";
 import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
 import { localBusinessSchema, websiteSchema } from "@/lib/schema";
@@ -115,6 +116,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Footer />
           <MobileActionBar />
           <MenuPromoPopup />
+          <SeasonalDecor />
         </NextIntlClientProvider>
         <Analytics />
       </body>

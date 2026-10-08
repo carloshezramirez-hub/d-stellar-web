@@ -108,6 +108,37 @@
   }
 }
 
+/* Decoración de temporada (Día de Muertos / Halloween) — ver components/ui/seasonal-decor.tsx */
+@keyframes spiderSway {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes candleFlicker {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1);
+    opacity: 1;
+  }
+  25% {
+    transform: scaleY(1.08) scaleX(0.95);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scaleY(0.95) scaleX(1.05);
+    opacity: 1;
+  }
+  75% {
+    transform: scaleY(1.05) scaleX(0.97);
+    opacity: 0.88;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
