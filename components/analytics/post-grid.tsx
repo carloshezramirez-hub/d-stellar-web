@@ -85,9 +85,14 @@ function PostDetail({ post, peers }: { post: FeedPost; peers: FeedPost[] }) {
         <span className="text-xs text-stellar-white/40">@{post.handle}</span>
       </div>
 
-      {post.thumbnailUrl && (
+      {post.thumbnailUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={post.thumbnailUrl} alt="" className="mb-4 max-h-80 w-full rounded-lg object-cover" />
+      ) : (
+        <div className="mb-4 flex h-48 w-full items-center justify-center rounded-lg border border-line bg-stellar-black-soft">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logos/dstellar-wordmark-white.png" alt="d-stellar" className="w-1/2 opacity-40" />
+        </div>
       )}
 
       {post.caption && <p className="mb-5 text-sm whitespace-pre-line text-stellar-white/80">{post.caption}</p>}
@@ -162,8 +167,9 @@ const PostTile = forwardRef<HTMLButtonElement, PostTileProps>(function PostTile(
           className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-stellar-black-soft text-[10px] uppercase text-stellar-white/30">
-          Sin imagen
+        <div className="absolute inset-0 flex items-center justify-center bg-stellar-black-soft">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logos/dstellar-wordmark-white.png" alt="" className="w-2/5 opacity-35" />
         </div>
       )}
 

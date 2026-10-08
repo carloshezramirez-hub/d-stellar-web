@@ -60,10 +60,10 @@ function WelcomeBanner({ allSummary, windowDays }: { allSummary: KpiSummary | un
   return (
     <div className="mb-6 flex flex-col gap-1 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <p className="font-demi text-lg font-bold sm:text-xl">
+        <p className="font-demi text-2xl font-bold sm:text-4xl">
           {timeOfDayGreeting()}, equipo de d-stellar 👋
         </p>
-        <p className="mt-1 text-sm text-stellar-white/60">{highlight}</p>
+        <p className="mt-2 text-sm text-stellar-white/60">{highlight}</p>
       </div>
       <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line px-3 py-1 text-[10px] font-bold tracking-widest text-stellar-white/40 uppercase">
         🔒 Panel privado · solo equipo
@@ -106,9 +106,14 @@ function Spotlight({ post }: { post: FeedPost }) {
         🔥 Destacado del periodo
       </p>
       <div className="grid gap-6 lg:grid-cols-[220px_1fr_280px]">
-        {post.thumbnailUrl && (
+        {post.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={post.thumbnailUrl} alt="" className="aspect-square w-full rounded-lg object-cover lg:w-[220px]" />
+        ) : (
+          <div className="flex aspect-square w-full items-center justify-center rounded-lg border border-line bg-stellar-black-soft lg:w-[220px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/logos/dstellar-wordmark-white.png" alt="d-stellar" className="w-2/3 opacity-50" />
+          </div>
         )}
         <div className="min-w-0">
           <span className="mb-2 inline-block rounded border border-line px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-stellar-white/60">
@@ -172,6 +177,8 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
 
       <WelcomeBanner allSummary={kpiSummaries.find((s) => s.platform === "all")} windowDays={windowDays} />
 
+      {spotlightPost && <Spotlight post={spotlightPost} />}
+
       {stats.length > 0 && (
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
           {stats.map((s) => (
@@ -212,7 +219,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
         </div>
       ) : (
         <>
-          <div className="mb-8 grid gap-4">
+          <div className="mb-8 grid gap-4 sm:grid-cols-2">
             {kpiSummaries.map((summary) => (
               <KpiCards key={summary.platform} summary={summary} windowDays={windowDays} />
             ))}
@@ -222,8 +229,6 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
             <InteractionsChart data={dailySeries} />
             <ReachChart data={dailySeries} />
           </div>
-
-          {spotlightPost && <Spotlight post={spotlightPost} />}
 
           {posts.length === 0 ? (
             <p className="rounded border border-line p-6 text-sm text-stellar-white/60">

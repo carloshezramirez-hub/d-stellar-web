@@ -110,10 +110,18 @@ export interface DailyPoint {
   reach: number;
 }
 
-/** Serie diaria (sumando todas las plataformas) para la gráfica de tendencia, dentro de la ventana seleccionada. */
+/** Serie diaria (sumando todas las plataformas) para la gráfica de tendencia, dentro de la ventana seleccionada. Incluye TODOS los días del rango (incluso sin publicaciones, en 0) para que el eje X no salte fechas. */
 export function buildDailySeries(posts: FeedPost[], windowDays: number): DailyPoint[] {
   const cutoff = Date.now() - windowDays * DAY_MS;
   const byDay = new Map<string, DailyPoint>();
+
+  // Sembrar cada día del rango en 0 antes de sumar publicaciones reales.
+  const cutoffDayStart = new Date(cutoff);
+  cutoffDayStart.setUTCHours(0, 0, 0, 0);
+  for (let t = cutoffDayStart.getTime(); t <= Date.now(); t += DAY_MS) {
+    const day = new Date(t).toISOString().slice(0, 10);
+    byDay.set(day, { date: day, interactions: 0, reach: 0 });
+  }
 
   for (const p of posts) {
     if (!p.postedAt) continue;

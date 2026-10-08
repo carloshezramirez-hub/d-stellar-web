@@ -56,16 +56,13 @@ function Stat({
   change?: { current: number; previous: number };
 }) {
   return (
-    <div className="flex items-center gap-3 px-1 py-2 sm:flex-1 sm:flex-col sm:items-start sm:gap-1 sm:border-l sm:border-line sm:px-5 sm:py-0 sm:first:border-l-0 sm:first:pl-0">
-      <span className="text-lg opacity-70 sm:hidden">{icon}</span>
-      <div className="flex w-full items-baseline justify-between gap-2 sm:block">
-        <p className="font-demi text-2xl font-bold tracking-tight sm:text-3xl">{value}</p>
-        {change && <ChangeBadge current={change.current} previous={change.previous} />}
+    <div className="rounded-md border border-line/60 bg-white/[0.02] p-3">
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="font-demi text-xl font-bold tracking-tight sm:text-2xl">{value}</p>
+        <span className="text-sm opacity-60">{icon}</span>
       </div>
-      <p className="text-xs text-stellar-white/50">
-        <span className="mr-1 hidden sm:inline">{icon}</span>
-        {label}
-      </p>
+      <p className="mt-1 truncate text-[11px] text-stellar-white/50">{label}</p>
+      {change && <div className="mt-1">{<ChangeBadge current={change.current} previous={change.previous} />}</div>}
     </div>
   );
 }
@@ -95,7 +92,7 @@ export function KpiCards({ summary, windowDays }: { summary: KpiSummary; windowD
           {PLATFORM_LABEL[summary.platform] ?? summary.platform} · últimos {windowDays} días
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:gap-0">
+      <div className="grid grid-cols-2 gap-2">
         <Stat icon={STAT_ICON.posts} value={formatNumber(current.posts)} label="publicaciones" change={{ current: current.posts, previous: previous.posts }} />
         <Stat icon={STAT_ICON.reach} value={formatNumber(current.reach)} label="alcance total" change={{ current: current.reach, previous: previous.reach }} />
         <Stat icon={STAT_ICON.interactions} value={formatNumber(current.interactions)} label="interacciones" change={{ current: current.interactions, previous: previous.interactions }} />
