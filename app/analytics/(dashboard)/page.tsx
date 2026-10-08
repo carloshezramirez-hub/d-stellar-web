@@ -12,8 +12,10 @@ import {
   DATE_RANGE_OPTIONS,
   DEFAULT_RANGE,
   filterPostsInWindow,
+  percentChange,
   pickHighlights,
   resolveRangeDays,
+  type KpiSummary,
 } from "@/lib/social/kpis";
 import { getLatestAccountStats, getPostsFeed, type FeedPost } from "@/lib/social/queries";
 
@@ -26,6 +28,48 @@ const PLATFORM_LABEL: Record<string, string> = {
 function formatNumber(n: number | null) {
   if (n === null || n === undefined) return "—";
   return new Intl.NumberFormat("es-MX").format(n);
+}
+
+function timeOfDayGreeting() {
+  // Hora de Ciudad de México (misma zona del negocio), no la del servidor.
+  const hour = Number(
+    new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: "America/Mexico_City" }).format(
+      new Date(),
+    ),
+  );
+  if (hour < 12) return "Buenos días";
+  if (hour < 19) return "Buenas tardes";
+  return "Buenas noches";
+}
+
+function WelcomeBanner({ allSummary, windowDays }: { allSummary: KpiSummary | undefined; windowDays: number }) {
+  const highlight =
+    allSummary && allSummary.current.posts > 0
+      ? (() => {
+          const reachChange = percentChange(allSummary.current.reach, allSummary.previous.reach);
+          const trend =
+            reachChange === null
+              ? ""
+              : reachChange >= 0
+                ? ` — alcance ▲ ${reachChange.toFixed(0)}% vs. el periodo anterior`
+                : ` — alcance ▼ ${Math.abs(reachChange).toFixed(0)}% vs. el periodo anterior`;
+          return `Últimos ${windowDays} días: ${formatNumber(allSummary.current.posts)} publicaciones, ${formatNumber(allSummary.current.reach)} de alcance${trend}.`;
+        })()
+      : "Todavía no hay suficientes publicaciones en este periodo para un resumen.";
+
+  return (
+    <div className="mb-6 flex flex-col gap-1 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p className="font-demi text-lg font-bold sm:text-xl">
+          {timeOfDayGreeting()}, equipo de d-stellar 👋
+        </p>
+        <p className="mt-1 text-sm text-stellar-white/60">{highlight}</p>
+      </div>
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line px-3 py-1 text-[10px] font-bold tracking-widest text-stellar-white/40 uppercase">
+        🔒 Panel privado · solo equipo
+      </span>
+    </div>
+  );
 }
 
 function DateRangeFilter({ current }: { current: string }) {
@@ -121,13 +165,12 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
         <StarField />
       </div>
 
-      <header className="mb-8 flex items-center justify-between border-b border-line pb-6">
-        <div>
-          <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
-          <p className="text-xs text-stellar-white/40">feedback de contenido, en vivo</p>
-        </div>
+      <header className="mb-2 flex items-center justify-between">
+        <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
         <LogoutButton />
       </header>
+
+      <WelcomeBanner allSummary={kpiSummaries.find((s) => s.platform === "all")} windowDays={windowDays} />
 
       {stats.length > 0 && (
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
