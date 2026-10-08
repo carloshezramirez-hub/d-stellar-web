@@ -34,41 +34,6 @@ function spokePoint(angleDeg: number, length: number, frac = 1) {
   };
 }
 
-// Pétalo de cempasúchil, simplificado como roseta radial de elipses.
-function Marigold({
-  cx,
-  cy,
-  size,
-  petal,
-  center,
-  rotate = 0,
-}: {
-  cx: number;
-  cy: number;
-  size: number;
-  petal: string;
-  center: string;
-  rotate?: number;
-}) {
-  const petals = 9;
-  return (
-    <g transform={`translate(${cx} ${cy}) rotate(${rotate})`}>
-      {Array.from({ length: petals }).map((_, i) => (
-        <ellipse
-          key={i}
-          cx={0}
-          cy={-size * 0.55}
-          rx={size * 0.3}
-          ry={size * 0.5}
-          fill={petal}
-          transform={`rotate(${(360 / petals) * i})`}
-        />
-      ))}
-      <circle r={size * 0.3} fill={center} />
-    </g>
-  );
-}
-
 function webRingPath(frac: number, sag: number) {
   const pts = WEB_SPOKES.map(({ angle, length }) => spokePoint(angle, length, frac));
   let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
@@ -94,13 +59,23 @@ const WEB_RINGS = [
   { frac: 0.86, sag: 11, opacity: 0.5 },
 ];
 
+// La araña cuelga de un punto real sobre un rayo de la red (donde cruza el
+// segundo anillo), dentro del mismo <svg> y viewBox que la telaraña — así
+// queda siempre alineada con ella en cualquier breakpoint, en vez de usar
+// coordenadas CSS sueltas que se desfasan si la red cambia de forma.
+const SPIDER_SPOKE = WEB_SPOKES[3]; // angle: 150
+const SPIDER_ATTACH = spokePoint(SPIDER_SPOKE.angle, SPIDER_SPOKE.length, 0.42);
+const SPIDER_THREAD = 30;
+const SPIDER_BODY = { x: SPIDER_ATTACH.x, y: SPIDER_ATTACH.y + SPIDER_THREAD };
+
 export function SeasonalDecor() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-10 overflow-hidden">
-      {/* Telaraña — esquina superior derecha */}
+      {/* Telaraña + araña — esquina superior derecha, un solo sistema de
+          coordenadas para que la araña siempre cuelgue de la red real */}
       <svg
         viewBox="0 0 220 220"
-        className="absolute -top-6 -right-6 w-36 opacity-40 sm:w-52 sm:opacity-50"
+        className="absolute top-36 -right-6 w-36 opacity-40 sm:top-44 sm:w-52 sm:opacity-50 md:top-48"
         fill="none"
         stroke="var(--color-stellar-white)"
       >
@@ -115,42 +90,40 @@ export function SeasonalDecor() {
             <path key={ring.frac} d={webRingPath(ring.frac, ring.sag)} strokeOpacity={ring.opacity} />
           ))}
         </g>
-      </svg>
 
-      {/* Araña colgando de la telaraña */}
-      <div
-        className="absolute top-16 right-14 origin-top motion-safe:animate-[spiderSway_5s_ease-in-out_infinite] sm:top-24 sm:right-20"
-        style={{ animationDelay: "-1.2s" }}
-      >
-        <div className="mx-auto h-6 w-px bg-stellar-white/50 sm:h-10" />
-        <svg viewBox="0 0 32 24" className="w-4 opacity-80 sm:w-6" fill="var(--color-stellar-white)">
-          <g stroke="var(--color-stellar-white)" strokeWidth="1" strokeOpacity="0.7">
+        <g
+          className="motion-safe:animate-[spiderSway_5s_ease-in-out_infinite]"
+          style={{ transformOrigin: `${SPIDER_ATTACH.x}px ${SPIDER_ATTACH.y}px`, animationDelay: "-1.2s" }}
+        >
+          <line
+            x1={SPIDER_ATTACH.x}
+            y1={SPIDER_ATTACH.y}
+            x2={SPIDER_BODY.x}
+            y2={SPIDER_BODY.y - 7}
+            strokeWidth="1"
+            strokeOpacity="0.6"
+          />
+          <g
+            transform={`translate(${SPIDER_BODY.x - 11} ${SPIDER_BODY.y - 9})`}
+            stroke="var(--color-stellar-white)"
+            strokeWidth="1"
+            strokeOpacity="0.75"
+          >
             <line x1="10" y1="12" x2="2" y2="4" />
             <line x1="10" y1="14" x2="1" y2="14" />
             <line x1="10" y1="16" x2="2" y2="22" />
             <line x1="22" y1="12" x2="30" y2="4" />
             <line x1="22" y1="14" x2="31" y2="14" />
             <line x1="22" y1="16" x2="30" y2="22" />
+            <circle cx="16" cy="15" r="6.5" fill="var(--color-stellar-white)" stroke="none" />
+            <circle cx="16" cy="7" r="4" fill="var(--color-stellar-white)" stroke="none" />
           </g>
-          <circle cx="16" cy="15" r="6.5" />
-          <circle cx="16" cy="7" r="4" />
-        </svg>
-      </div>
+        </g>
+      </svg>
 
-      {/* Vela + cempasúchil — esquina inferior izquierda, en memoria de
-          "El Camino de Regreso" (el altar marca el camino con pétalos de
-          cempasúchil para guiar de vuelta a casa) */}
+      {/* Vela — esquina inferior izquierda, en memoria de "El Camino de
+          Regreso" */}
       <div className="absolute bottom-24 left-3 sm:left-5 md:bottom-6">
-        {/* Pétalos de cempasúchil, a los pies de la vela */}
-        <svg
-          viewBox="0 0 90 30"
-          className="pointer-events-none absolute -bottom-2 left-1/2 w-20 -translate-x-1/2 opacity-90 sm:w-24"
-        >
-          <Marigold cx={16} cy={20} size={11} petal="#f2a33c" center="#b5591f" rotate={-8} />
-          <Marigold cx={45} cy={24} size={8} petal="#f6c15a" center="#c96a24" rotate={14} />
-          <Marigold cx={70} cy={19} size={10} petal="#ef9530" center="#a84e1a" rotate={6} />
-        </svg>
-
         <div
           className="absolute bottom-6 left-1/2 size-12 -translate-x-1/2 rounded-full motion-safe:animate-[candleGlow_2.3s_ease-in-out_infinite] sm:size-14"
           style={{ background: "radial-gradient(circle, var(--color-stellar-pink), transparent 70%)" }}
