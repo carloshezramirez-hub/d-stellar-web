@@ -2,6 +2,9 @@ import Link from "next/link";
 import { KpiCards } from "@/components/analytics/kpi-cards";
 import { LogoutButton } from "@/components/analytics/logout-button";
 import { InteractionsChart, ReachChart } from "@/components/analytics/performance-chart";
+import { PostGrid } from "@/components/analytics/post-grid";
+import { RetentionFunnel } from "@/components/analytics/retention-funnel";
+import { StarField } from "@/components/ui/star-field";
 import { isMetaConfigured, isTikTokConfigured } from "@/lib/social/env";
 import {
   buildDailySeries,
@@ -9,7 +12,6 @@ import {
   DATE_RANGE_OPTIONS,
   DEFAULT_RANGE,
   filterPostsInWindow,
-  generatePostInsights,
   pickHighlights,
   resolveRangeDays,
 } from "@/lib/social/kpis";
@@ -21,46 +23,9 @@ const PLATFORM_LABEL: Record<string, string> = {
   tiktok: "TikTok",
 };
 
-const PLATFORM_BADGE_CLASS: Record<string, string> = {
-  instagram: "border-stellar-pink text-stellar-pink",
-  facebook: "border-stellar-blue text-stellar-blue",
-  tiktok: "border-stellar-white text-stellar-white",
-};
-
 function formatNumber(n: number | null) {
   if (n === null || n === undefined) return "—";
   return new Intl.NumberFormat("es-MX").format(n);
-}
-
-function formatSeconds(s: number | null) {
-  if (s === null || s === undefined) return null;
-  const total = Math.round(s);
-  const min = Math.floor(total / 60);
-  const sec = total % 60;
-  return min > 0 ? `${min}m ${sec}s` : `${sec}s`;
-}
-
-function formatDayHeading(dateKey: string) {
-  const date = new Date(`${dateKey}T00:00:00Z`);
-  const label = date.toLocaleDateString("es-MX", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-  return label.charAt(0).toUpperCase() + label.slice(1);
-}
-
-function groupPostsByDay(posts: FeedPost[]): [string, FeedPost[]][] {
-  const groups = new Map<string, FeedPost[]>();
-  for (const post of posts) {
-    if (!post.postedAt) continue;
-    const dayKey = post.postedAt.slice(0, 10);
-    if (!groups.has(dayKey)) groups.set(dayKey, []);
-    groups.get(dayKey)!.push(post);
-  }
-  return Array.from(groups.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
 }
 
 function DateRangeFilter({ current }: { current: string }) {
@@ -70,10 +35,10 @@ function DateRangeFilter({ current }: { current: string }) {
         <Link
           key={opt.value}
           href={opt.value === DEFAULT_RANGE ? "/analytics" : `/analytics?range=${opt.value}`}
-          className={`rounded border px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${
+          className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all ${
             opt.value === current
               ? "border-stellar-pink bg-stellar-pink text-stellar-black"
-              : "border-line text-stellar-white/60 hover:border-stellar-white/40"
+              : "border-line text-stellar-white/60 hover:border-stellar-white/40 hover:scale-105"
           }`}
         >
           {opt.label}
@@ -83,101 +48,50 @@ function DateRangeFilter({ current }: { current: string }) {
   );
 }
 
-function PostMetric({ label, value }: { label: string; value: string | null }) {
-  if (value === null) return null;
-  return (
-    <div>
-      <p className="text-[10px] uppercase tracking-widest text-stellar-white/40">{label}</p>
-      <p className="font-demi text-sm font-bold">{value}</p>
-    </div>
-  );
-}
-
-function PostCard({
-  post,
-  peers,
-  isTop,
-  isLow,
-}: {
-  post: FeedPost;
-  peers: FeedPost[];
-  isTop: boolean;
-  isLow: boolean;
-}) {
+function Spotlight({ post }: { post: FeedPost }) {
   const isVideo = post.mediaType === "REELS" || post.avgWatchTimeSeconds !== null || post.platform === "tiktok";
-  const insights = generatePostInsights(post, peers);
 
   return (
-    <a
-      href={post.permalink ?? undefined}
-      target="_blank"
-      rel="noreferrer"
-      className="flex gap-4 rounded border border-line p-4 transition-colors hover:border-stellar-white/40"
-    >
-      {post.thumbnailUrl ? (
-        // Miniaturas de Instagram/Facebook son URLs firmadas y cambian en cada fetch — no vale la pena pasarlas por next/image.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={post.thumbnailUrl} alt="" className="h-20 w-20 shrink-0 rounded object-cover" loading="lazy" />
-      ) : (
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded border border-line text-[10px] uppercase text-stellar-white/30">
-          Sin imagen
-        </div>
-      )}
-
-      <div className="min-w-0 flex-1">
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span
-            className={`rounded border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${PLATFORM_BADGE_CLASS[post.platform] ?? "border-line text-stellar-white/60"}`}
-          >
-            {PLATFORM_LABEL[post.platform] ?? post.platform}
-          </span>
-          <span className="text-[10px] text-stellar-white/40">@{post.handle}</span>
-          {isTop && (
-            <span className="rounded border border-stellar-green px-2 py-0.5 text-[10px] font-bold text-stellar-green">
-              🔥 mejor de este periodo
-            </span>
-          )}
-          {isLow && (
-            <span className="rounded border border-stellar-red px-2 py-0.5 text-[10px] font-bold text-stellar-red">
-              ⚠️ necesita ajustes
-            </span>
-          )}
-        </div>
-
-        {post.caption && <p className="mb-3 line-clamp-2 text-sm text-stellar-white/80">{post.caption}</p>}
-
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
-          <PostMetric label={isVideo ? "Reproducciones" : "Alcance"} value={formatNumber(isVideo ? post.views : post.reach)} />
-          {isVideo && <PostMetric label="Alcance" value={formatNumber(post.reach)} />}
-          <PostMetric label="Me gusta" value={formatNumber(post.likes)} />
-          <PostMetric label="Comentarios" value={formatNumber(post.comments)} />
-          <PostMetric label="Compartidos" value={formatNumber(post.shares)} />
-          <PostMetric label="Guardados" value={formatNumber(post.saves)} />
-          <PostMetric label="Tiempo de reproducción" value={formatSeconds(post.avgWatchTimeSeconds)} />
-          <PostMetric
-            label="% video completo"
-            value={post.completionRate !== null ? `${(post.completionRate * 100).toFixed(0)}%` : null}
-          />
-          <PostMetric
-            label="% que se fue antes"
-            value={post.skipRate !== null ? `${(post.skipRate * 100).toFixed(0)}%` : null}
-          />
-        </div>
-
-        {insights.length > 0 && (
-          <div className="mt-3 grid gap-1 border-t border-line pt-3">
-            {insights.map((insight) => (
-              <p
-                key={insight.text}
-                className={`text-xs ${insight.kind === "good" ? "text-stellar-green" : "text-stellar-red"}`}
-              >
-                {insight.kind === "good" ? "✅" : "⚠️"} {insight.text}
-              </p>
-            ))}
-          </div>
+    <div className="relative mb-10 overflow-hidden rounded-xl border border-stellar-pink/30 bg-gradient-to-br from-stellar-pink/[0.07] via-transparent to-stellar-purple/[0.07] p-6 sm:p-8">
+      <div
+        className="pointer-events-none absolute -top-16 -right-16 size-64 rounded-full opacity-20 blur-3xl motion-safe:animate-drift"
+        style={{ background: "radial-gradient(circle, var(--color-stellar-pink), transparent 70%)" }}
+        aria-hidden="true"
+      />
+      <p className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-stellar-green uppercase">
+        🔥 Destacado del periodo
+      </p>
+      <div className="grid gap-6 lg:grid-cols-[220px_1fr_280px]">
+        {post.thumbnailUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={post.thumbnailUrl} alt="" className="aspect-square w-full rounded-lg object-cover lg:w-[220px]" />
         )}
+        <div className="min-w-0">
+          <span className="mb-2 inline-block rounded border border-line px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-stellar-white/60">
+            {PLATFORM_LABEL[post.platform] ?? post.platform} · @{post.handle}
+          </span>
+          {post.caption && <p className="mb-4 line-clamp-4 text-sm text-stellar-white/80">{post.caption}</p>}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div>
+              <p className="font-demi text-2xl font-bold">{formatNumber(isVideo ? post.views : post.reach)}</p>
+              <p className="text-xs text-stellar-white/50">{isVideo ? "reproducciones" : "alcance"}</p>
+            </div>
+            <div>
+              <p className="font-demi text-2xl font-bold">{formatNumber(post.likes)}</p>
+              <p className="text-xs text-stellar-white/50">me gusta</p>
+            </div>
+            <div>
+              <p className="font-demi text-2xl font-bold">{formatNumber(post.shares)}</p>
+              <p className="text-xs text-stellar-white/50">compartidos</p>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-line pt-4 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Retención</p>
+          <RetentionFunnel post={post} />
+        </div>
       </div>
-    </a>
+    </div>
   );
 }
 
@@ -196,22 +110,32 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
   const windowDays = resolveRangeDays(range, allPosts);
   const posts = filterPostsInWindow(allPosts, windowDays);
 
-  const dayGroups = groupPostsByDay(posts);
   const kpiSummaries = buildKpiSummaries(allPosts, windowDays);
   const dailySeries = buildDailySeries(allPosts, windowDays);
   const { topId, lowId } = pickHighlights(posts);
+  const spotlightPost = posts.find((p) => p.id === topId) ?? null;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
+    <main className="relative mx-auto max-w-6xl overflow-hidden px-4 py-10">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <StarField />
+      </div>
+
       <header className="mb-8 flex items-center justify-between border-b border-line pb-6">
-        <h1 className="font-bold text-2xl">d-stellar · Analítica social</h1>
+        <div>
+          <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
+          <p className="text-xs text-stellar-white/40">feedback de contenido, en vivo</p>
+        </div>
         <LogoutButton />
       </header>
 
       {stats.length > 0 && (
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
           {stats.map((s) => (
-            <div key={`${s.platform}-${s.handle}`} className="rounded border border-line p-6">
+            <div
+              key={`${s.platform}-${s.handle}`}
+              className="rounded-lg border border-line p-6 transition-colors hover:border-stellar-white/30"
+            >
               <p className="text-xs uppercase tracking-widest text-stellar-white/50">
                 {PLATFORM_LABEL[s.platform] ?? s.platform} · @{s.handle}
               </p>
@@ -256,31 +180,14 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
             <ReachChart data={dailySeries} />
           </div>
 
+          {spotlightPost && <Spotlight post={spotlightPost} />}
+
           {posts.length === 0 ? (
             <p className="rounded border border-line p-6 text-sm text-stellar-white/60">
               No hay publicaciones dentro de este rango de fechas.
             </p>
           ) : (
-            <div className="grid gap-8">
-              {dayGroups.map(([dayKey, dayPosts]) => (
-                <section key={dayKey}>
-                  <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-stellar-white/50">
-                    {formatDayHeading(dayKey)}
-                  </h2>
-                  <div className="grid gap-3">
-                    {dayPosts.map((post) => (
-                      <PostCard
-                        key={post.id}
-                        post={post}
-                        peers={posts}
-                        isTop={post.id === topId}
-                        isLow={post.id === lowId}
-                      />
-                    ))}
-                  </div>
-                </section>
-              ))}
-            </div>
+            <PostGrid posts={posts} topId={topId} lowId={lowId} />
           )}
         </>
       )}
