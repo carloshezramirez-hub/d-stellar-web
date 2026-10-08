@@ -172,7 +172,7 @@ export interface PostInsight {
 }
 
 /** Orden de qué tan accionable/confiable es cada métrica — desempata entre desviaciones de magnitud similar a favor de la que de verdad dice algo (engagement > alcance > qué tanto se ve el video > guardados > comentarios, que con pocos datos es ruidoso). */
-const METRIC_PRIORITY = ["engagement", "reach", "completion", "watchTime", "saves", "comments"] as const;
+const METRIC_PRIORITY = ["engagement", "reach", "completion", "skipRate", "watchTime", "saves", "comments"] as const;
 
 interface Deviation {
   metric: (typeof METRIC_PRIORITY)[number];
@@ -228,6 +228,24 @@ function buildPeerDeviations(post: FeedPost, peers: FeedPost[]): Deviation[] {
           pct >= 0
             ? `Más gente vio el video completo que de costumbre`
             : `Menos gente llegó al final del video que de costumbre`,
+      });
+    }
+  }
+
+  // Skip rate (solo Reels de Instagram): a diferencia de las demás métricas, un valor MÁS ALTO que
+  // el promedio es la mala noticia (más gente deslizó fuera antes de terminar), así que el signo del
+  // texto va invertido respecto al signo de `pct`.
+  if (post.skipRate !== null) {
+    const skipAvg = avg((p) => p.skipRate);
+    if (skipAvg !== null) {
+      const pct = pctOf(post.skipRate, skipAvg);
+      deviations.push({
+        metric: "skipRate",
+        pct: -pct,
+        text:
+          pct <= 0
+            ? `Menos gente se fue a medias que de costumbre — el inicio/ritmo está funcionando`
+            : `Más gente deslizó fuera antes de terminar que de costumbre — revisa el gancho inicial`,
       });
     }
   }

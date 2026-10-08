@@ -158,6 +158,10 @@ function PostCard({
             label="% video completo"
             value={post.completionRate !== null ? `${(post.completionRate * 100).toFixed(0)}%` : null}
           />
+          <PostMetric
+            label="% que se fue antes"
+            value={post.skipRate !== null ? `${(post.skipRate * 100).toFixed(0)}%` : null}
+          />
         </div>
 
         {insights.length > 0 && (

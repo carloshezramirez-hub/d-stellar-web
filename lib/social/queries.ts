@@ -61,6 +61,7 @@ export interface FeedPost {
   avgWatchTimeSeconds: number | null;
   totalWatchTimeSeconds: number | null;
   completionRate: number | null;
+  skipRate: number | null;
 }
 
 /** Publicaciones ordenadas de más reciente a más vieja, con su última foto de métricas — para la vista día-por-día del dashboard. Ver la vista `social_posts_latest_metrics` en Supabase. */
@@ -69,7 +70,7 @@ export async function getPostsFeed(limit = 200): Promise<FeedPost[]> {
   const { data, error } = await db
     .from("social_posts_latest_metrics")
     .select(
-      "id, platform, handle, platform_post_id, permalink, caption, media_type, posted_at, thumbnail_url, views, likes, comments, shares, saves, reach, avg_watch_time_seconds, total_watch_time_seconds, completion_rate",
+      "id, platform, handle, platform_post_id, permalink, caption, media_type, posted_at, thumbnail_url, views, likes, comments, shares, saves, reach, avg_watch_time_seconds, total_watch_time_seconds, completion_rate, skip_rate",
     )
     .order("posted_at", { ascending: false })
     .limit(limit);
@@ -94,5 +95,6 @@ export async function getPostsFeed(limit = 200): Promise<FeedPost[]> {
     avgWatchTimeSeconds: row.avg_watch_time_seconds,
     totalWatchTimeSeconds: row.total_watch_time_seconds,
     completionRate: row.completion_rate,
+    skipRate: row.skip_rate,
   }));
 }

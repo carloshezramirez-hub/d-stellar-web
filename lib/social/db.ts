@@ -54,6 +54,9 @@ export interface SocialMetricsSnapshot {
   avg_watch_time_seconds: number | null;
   total_watch_time_seconds: number | null;
   completion_rate: number | null;
+  // Instagram Reels únicamente — % de viewers que deslizó fuera del reel antes de terminarlo.
+  // Fuente: Supermetrics (no existe en Graph API), poblado solo en snapshots manuales.
+  skip_rate: number | null;
 }
 
 export interface SocialAccountSnapshot {
