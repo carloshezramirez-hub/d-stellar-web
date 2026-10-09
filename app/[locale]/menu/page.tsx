@@ -125,22 +125,29 @@ export default async function MenuPage({ params }: Props) {
 
               <ul className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2">
                 {section.items.map((item) => (
-                  <li key={item.slug} className="border-b border-line pb-4">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <span className="font-demi text-lg font-bold text-stellar-white">{item.name}</span>
-                      <span className="flex items-baseline gap-1.5 font-tag text-sm">
-                        {item.compareAtPriceMXN && (
-                          <span className="text-stellar-white/40 line-through">${item.compareAtPriceMXN}</span>
-                        )}
-                        <span className="text-stellar-white/70">${item.priceMXN}</span>
-                      </span>
+                  <li key={item.slug} className="flex gap-3 border-b border-line pb-4">
+                    {item.image && (
+                      <div className="relative aspect-square w-16 shrink-0 overflow-hidden border border-line">
+                        <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="font-demi text-lg font-bold text-stellar-white">{item.name}</span>
+                        <span className="flex items-baseline gap-1.5 font-tag text-sm">
+                          {item.compareAtPriceMXN && (
+                            <span className="text-stellar-white/40 line-through">${item.compareAtPriceMXN}</span>
+                          )}
+                          <span className="text-stellar-white/70">${item.priceMXN}</span>
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-stellar-white/65">{item.description[loc]}</p>
+                      {item.tags?.length ? (
+                        <p className="mt-2 font-tag text-[10px] uppercase tracking-widest text-stellar-pink/80">
+                          {item.tags.join(" · ")}
+                        </p>
+                      ) : null}
                     </div>
-                    <p className="mt-1 text-sm text-stellar-white/65">{item.description[loc]}</p>
-                    {item.tags?.length ? (
-                      <p className="mt-2 font-tag text-[10px] uppercase tracking-widest text-stellar-pink/80">
-                        {item.tags.join(" · ")}
-                      </p>
-                    ) : null}
                   </li>
                 ))}
               </ul>

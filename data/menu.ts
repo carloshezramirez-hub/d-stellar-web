@@ -10,6 +10,9 @@ export type MenuItem = {
   // flavor pickers to render. Only cookie-packs use this.
   packSize?: number;
   tags?: Array<"vegan" | "caffeine-free" | "seasonal" | "signature">;
+  // Product photo for this item, shown as a thumbnail in the menu list.
+  // Only set for items with a supplied photo — not every item needs one.
+  image?: string;
 };
 
 export type MenuSection = {
@@ -48,6 +51,7 @@ export const menu: MenuSection[] = [
         },
         priceMXN: 90,
         tags: ["seasonal"],
+        image: "/images/menu/te-guarde-una.webp",
       },
       {
         slug: "como-me-ensenaste",
@@ -58,6 +62,7 @@ export const menu: MenuSection[] = [
         },
         priceMXN: 90,
         tags: ["vegan", "seasonal"],
+        image: "/images/menu/como-me-ensenaste.webp",
       },
       {
         slug: "te-deje-flores",
@@ -68,6 +73,7 @@ export const menu: MenuSection[] = [
         },
         priceMXN: 90,
         tags: ["seasonal"],
+        image: "/images/menu/te-deje-flores.webp",
       },
       {
         slug: "asi-te-recuerdo",
@@ -78,6 +84,7 @@ export const menu: MenuSection[] = [
         },
         priceMXN: 90,
         tags: ["seasonal"],
+        image: "/images/menu/asi-te-recuerdo.webp",
       },
       {
         slug: "te-llevo-conmigo",
@@ -88,6 +95,7 @@ export const menu: MenuSection[] = [
         },
         priceMXN: 90,
         tags: ["signature", "seasonal"],
+        image: "/images/menu/te-llevo-conmigo.webp",
       },
       {
         slug: "clasica-chispas-de-chocolate",
