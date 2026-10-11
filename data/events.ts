@@ -27,6 +27,10 @@ export type EventRecord = {
   // one of these, and it flows through to the confirmation email instead
   // of the single dateISO.
   sessionDates?: string[];
+  // Subset of `sessionDates` that are sold out. They stay listed (shown as
+  // sold out, not selectable in the ticket form) and the tickets API
+  // rejects them — set by hand, there's no inventory tracking.
+  soldOutSessionDates?: string[];
   // Overrides the formatted-date display on the list/detail pages —
   // needed once there's more than one session (a single formatted
   // dateISO would misleadingly imply only one date). Ignored when
@@ -68,15 +72,13 @@ export const events: EventRecord[] = [
   {
     slug: "el-camino-de-regreso",
     title: "El camino de regreso",
-    dateISO: "2026-10-09T19:00:00-06:00",
-    endISO: "2026-10-09T20:30:00-06:00",
-    // Narrowed from every Fri/Sat in October to these 7 confirmed dates —
-    // see the official flyer added 2026-10-02 (public/images/events/
-    // el-camino-de-regreso-flyer.webp). Zoe Valdez's existing Oct 9
-    // reservation (TIX-691049) still falls on one of these, so no
-    // outreach needed for that booking.
+    dateISO: "2026-10-17T19:00:00-06:00",
+    endISO: "2026-10-17T20:30:00-06:00",
+    // Narrowed from every Fri/Sat in October to the 7 confirmed dates on
+    // the official flyer added 2026-10-02 (public/images/events/
+    // el-camino-de-regreso-flyer.webp). The Oct 9 session already
+    // happened and was removed 2026-10-11 — the flyer still shows it.
     sessionDates: [
-      "2026-10-09T19:00:00-06:00",
       "2026-10-17T19:00:00-06:00",
       "2026-10-23T19:00:00-06:00",
       "2026-10-31T19:00:00-06:00",
@@ -84,9 +86,10 @@ export const events: EventRecord[] = [
       "2026-11-06T19:00:00-06:00",
       "2026-11-14T19:00:00-06:00",
     ],
+    soldOutSessionDates: ["2026-10-17T19:00:00-06:00"],
     datesSummary: {
-      es: "9, 17, 23 y 31 de octubre · 1, 6 y 14 de noviembre · 7:00 p.m.",
-      en: "Oct 9, 17, 23 & 31 · Nov 1, 6 & 14 · 7:00 p.m.",
+      es: "17 (agotado), 23 y 31 de octubre · 1, 6 y 14 de noviembre · 7:00 p.m.",
+      en: "Oct 17 (sold out), 23 & 31 · Nov 1, 6 & 14 · 7:00 p.m.",
     },
     summary: {
       es: "Una ofrenda sensorial contada en cinco sabores — cata a ciegas del menú de octubre que despierta recuerdos de quienes ya no están.",
@@ -98,14 +101,14 @@ export const events: EventRecord[] = [
         "Hay recuerdos que todavía saben volver: el pan que alguien partía con las manos, una cocina encendida por la mañana, la voz que preguntaba si ya habías comido. A veces, lo que más extrañamos cabe en un gesto pequeño — y en esta experiencia, esos gestos se convierten en una ofrenda que puedes saborear.",
         "Cinco preparaciones acompañadas de una narración te invitan a recorrer la mesa compartida, los aromas de casa, las manos que nos cuidaron y todo lo que alguien dejó en nuestra forma de vivir. Cada tiempo abre un espacio para descubrir un sabor y, quizá, reconocer algo de tu propia historia.",
         "Puedes venir con alguien o regalarte este momento a solas. Lo que recuerdes te pertenece — no tendrás que compartir un nombre, explicar una ausencia ni contar nada que prefieras conservar para ti.",
-        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Elige tu fecha al reservar — hay funciones el 9, 17, 23 y 31 de octubre, y el 1, 6 y 14 de noviembre, cupo máximo 10 personas por noche.",
+        "Acceso únicamente con boleto previamente adquirido. Duración aproximada: 75–90 minutos. Elige tu fecha al reservar — hay funciones el 23 y 31 de octubre, y el 1, 6 y 14 de noviembre (la del 17 de octubre está agotada), cupo máximo 10 personas por noche.",
       ],
       en: [
         "El camino de regreso (\"The way back\") is a sensory offering told in five flavors — a blind tasting where aroma, texture and story awaken memories of those who are no longer with us: the tables we shared, the gestures we inherited, and the love that still lives in how we live.",
         "Some memories still know how to come back: the bread someone used to break by hand, a kitchen lit up in the morning, the voice that asked if you'd already eaten. Sometimes what we miss most fits inside a small gesture — and in this experience, those gestures become an offering you can taste.",
         "Five courses, guided by a narration, walk you through the shared table, the smells of home, the hands that cared for us, and everything someone left in the way we live now. Each course opens space to discover a flavor — and maybe recognize something of your own story.",
         "Come with someone, or give yourself this moment alone. Whatever you remember belongs to you — you won't have to share a name, explain an absence, or tell anyone anything you'd rather keep for yourself.",
-        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes. Pick your date when you reserve — sessions run Oct 9, 17, 23 & 31 and Nov 1, 6 & 14, max. 10 people per night.",
+        "Access is ticket-only, no walk-ins. The experience runs about 75–90 minutes. Pick your date when you reserve — sessions run Oct 23 & 31 and Nov 1, 6 & 14 (Oct 17 is sold out), max. 10 people per night.",
       ],
     },
     tickets: [

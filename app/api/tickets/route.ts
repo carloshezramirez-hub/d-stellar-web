@@ -50,6 +50,9 @@ export async function POST(request: Request) {
   if (event.sessionDates?.length && !event.sessionDates.includes(buyer.sessionDateISO ?? "")) {
     return NextResponse.json({ error: "invalid_session_date" }, { status: 400 });
   }
+  if (event.soldOutSessionDates?.includes(buyer.sessionDateISO ?? "")) {
+    return NextResponse.json({ error: "session_sold_out" }, { status: 400 });
+  }
 
   const code = generateOrderCode("TIX");
   const orderData: TicketOrderData = {

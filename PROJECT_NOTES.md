@@ -308,6 +308,12 @@ so the app works end-to-end without payment credentials.
   tracks tickets-sold-per-`sessionDateISO`. Fine while these run manually
   (Carlos checks orders by hand), but real inventory tracking is worth
   building if ticket volume grows.
+- Until then, a full night is marked by hand: add its ISO string to
+  `EventRecord.soldOutSessionDates` (must also be in `sessionDates`). The
+  ticket form shows it disabled as "Agotado"/"Sold out" and
+  `app/api/tickets/route.ts` rejects it. Sessions that already happened
+  are simply removed from `sessionDates` (and `dateISO`/`datesSummary`/
+  the description's date sentence updated to match).
 - To preview either confirmation email without spending real money or
   configuring Mercado Pago locally, copy the relevant email-building
   functions (`row`/`wrapEmail` + `buildPickupOwnerEmail`/`buildPickupCustomerEmail`

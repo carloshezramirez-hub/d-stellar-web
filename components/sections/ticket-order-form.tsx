@@ -15,9 +15,10 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
   const locale = useLocale() as Locale;
   const tickets = event.tickets ?? [];
   const sessionDates = event.sessionDates ?? [];
+  const soldOutDates = event.soldOutSessionDates ?? [];
   const [ticketIndex, setTicketIndex] = useState(0);
   const [qty, setQty] = useState(1);
-  const [sessionDateISO, setSessionDateISO] = useState(sessionDates[0] ?? "");
+  const [sessionDateISO, setSessionDateISO] = useState(sessionDates.find((iso) => !soldOutDates.includes(iso)) ?? "");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [confirmationCode, setConfirmationCode] = useState<string | null>(null);
 
@@ -119,8 +120,9 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
             className="border-2 border-line bg-stellar-black px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
           >
             {sessionDates.map((iso) => (
-              <option key={iso} value={iso}>
+              <option key={iso} value={iso} disabled={soldOutDates.includes(iso)}>
                 {formatSessionDate(iso, locale, event.timeKnown)}
+                {soldOutDates.includes(iso) && ` — ${t("soldOut")}`}
               </option>
             ))}
           </select>
