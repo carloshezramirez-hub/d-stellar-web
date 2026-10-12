@@ -4,6 +4,15 @@ export const routing = defineRouting({
   locales: ["es", "en"],
   defaultLocale: "es",
   localePrefix: "as-needed",
+  // Disabled: the default (true) 307-redirects "/" to "/en" for any visitor
+  // whose browser sends an English Accept-Language header — including
+  // crawlers and PageSpeed/Lighthouse runs that default to en-US. That
+  // silently served Googlebot a different canonical page than the one the
+  // sitemap/hreflang declare, which is the likely cause of "/en" posting far
+  // higher Search Console impressions than "/" despite es being the real
+  // default for a CDMX business. Explicit "/en" links still work normally;
+  // only the automatic header-based redirect is turned off.
+  localeDetection: false,
   pathnames: {
     "/": "/",
     "/menu": { es: "/menu", en: "/menu" },
