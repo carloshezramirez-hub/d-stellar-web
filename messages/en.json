@@ -12,7 +12,8 @@
     "privateEvents": "Private events",
     "press": "Press",
     "about": "About",
-    "language": "Español"
+    "language": "Español",
+    "faq": "FAQ"
   },
   "cta": {
     "directions": "Get directions",
@@ -321,5 +322,60 @@
     "body": "Five cookies, five signature drinks and new stories — through November 15.",
     "cta": "See the full menu",
     "dismiss": "Close"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Everything you want to know before visiting",
+    "intro": "Direct answers about location, hours, menu, pickup and the space. If it's not here, message us on WhatsApp.",
+    "items": [
+      {
+        "q": "Where is d-stellar?",
+        "a": "d-stellar is at Av. Nuevo León 217, inside Pabellón Nuevo León, in Hipódromo Condesa, Mexico City. The entrance is a shared hallway — the “d-stellar” sign hangs next to the community flag, at the back."
+      },
+      {
+        "q": "What are d-stellar's hours?",
+        "a": "Monday, Thursday, Saturday and Sunday 11:00 a.m. to 7:00 p.m. Tuesday 2:00 p.m. to 7:00 p.m. Wednesday and Friday 12:00 p.m. to 7:00 p.m."
+      },
+      {
+        "q": "Is d-stellar an LGBTQ+ safe space?",
+        "a": "Yes. d-stellar has been a trans safe space and LGBTQ+-friendly business since it opened in 2024 — diversity and authenticity are part of how the brand was built, not a campaign."
+      },
+      {
+        "q": "Can I bring my pet?",
+        "a": "Yes, d-stellar is pet friendly."
+      },
+      {
+        "q": "Do you have Wi-Fi?",
+        "a": "Yes, Wi-Fi is available for dine-in."
+      },
+      {
+        "q": "Does the menu change?",
+        "a": "Yes — d-stellar rotates its full menu (cookies, signature drinks and the caffeine-free section) every month, with new flavors and combinations."
+      },
+      {
+        "q": "Do you have vegan options?",
+        "a": "Yes, d-stellar's rotating menu includes vegan options every month."
+      },
+      {
+        "q": "How does pickup work?",
+        "a": "Order online from the Pickup page, we confirm your time on WhatsApp, you pay online via Mercado Pago, and you pick up your order ready at Nuevo León 217. d-stellar does not offer delivery."
+      },
+      {
+        "q": "Can I call by phone?",
+        "a": "There's no cell signal in-store for calls — WhatsApp is the real-time contact channel."
+      },
+      {
+        "q": "Is there parking?",
+        "a": "There's paid street parking on Nuevo León and nearby streets."
+      },
+      {
+        "q": "How do I get there by public transit?",
+        "a": "The closest Metrobús stops are Nuevo León (line 2) and Chilpancingo (line 9); Chilpancingo metro station is also nearby. On foot, d-stellar is 10 minutes from Parque México."
+      },
+      {
+        "q": "Does d-stellar host events?",
+        "a": "Yes — d-stellar regularly hosts community events (from viewing parties to book presentations) and also rents the space for private events."
+      }
+    ]
   }
 }

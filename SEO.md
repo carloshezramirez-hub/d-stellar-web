@@ -38,6 +38,24 @@ and the backlink strategy.
   `app/[locale]/layout.tsx` reads an optional `GOOGLE_SITE_VERIFICATION` env
   var and renders the verification meta tag only if it's set — see "Needs
   Carlos" below for the manual step.
+- **FAQ page + FAQPage schema** (2026-10-12): `/faq` (ES/EN), content in
+  `messages/{es,en}.json` → `faq`, schema via `lib/schema.ts` →
+  `faqSchema()`. Linked from header + footer nav, in the sitemap. This is
+  the main on-site lever for AI search engines (ChatGPT/Perplexity/Gemini)
+  to quote direct answers instead of just the homepage summary — every
+  answer is sourced from facts already elsewhere in the codebase (hours,
+  address, pickup flow, vegan rotation, trans-safe-space positioning), no
+  new claims invented.
+- **`public/llms.txt`** (2026-10-12): factual one-page summary for LLM
+  crawlers (GEO), same no-fabrication sourcing as the FAQ.
+- **`LocalBusiness` schema enriched** (2026-10-12): added `founder` (Hernán
+  Castilla, Eduardo Hernández) and `foundingDate` (2024) to
+  `localBusinessSchema()` for better entity recognition by Google's
+  Knowledge Graph and AI answer engines.
+- **Review count refreshed** (2026-10-12): `data/reviews.ts` →
+  `googleReviewStats.count` updated 148 → 156, matching d-stellar's live
+  Google Business Profile at time of writing (verified directly in the
+  Google panel, not estimated).
 
 ## Needs Carlos (can't be done from this repo)
 

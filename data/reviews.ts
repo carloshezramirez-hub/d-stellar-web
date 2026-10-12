@@ -93,5 +93,5 @@ export const googleReviews: ReviewQuote[] = [
 
 // Real, verified against d-stellar's live Google Maps profile — refresh
 // this pair together the next time reviews are pulled, don't let one drift
-// from the other.
-export const googleReviewStats = { average: 5.0, count: 148 };
+// from the other. Count updated 2026-10-12 (was 148).
+export const googleReviewStats = { average: 5.0, count: 156 };

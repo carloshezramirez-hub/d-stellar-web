@@ -44,6 +44,8 @@ export function localBusinessSchema() {
     sameAs: Object.values(BUSINESS.social),
     menu: `${SITE_URL}/menu`,
     hasMap: BUSINESS.mapsUrl,
+    foundingDate: String(BUSINESS.foundedYear),
+    founder: BUSINESS.founders.map((name) => ({ "@type": "Person", name })),
     petsAllowed: true,
     // Real snapshot from d-stellar's own Google Maps profile — keep in
     // sync with data/reviews.ts → googleReviewStats, never a placeholder.
@@ -138,6 +140,21 @@ export function eventSchema(event: EventRecord, locale: string) {
             },
           }
         : {}),
+  };
+}
+
+export function faqSchema(items: Array<{ q: string; a: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
   };
 }
 

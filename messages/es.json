@@ -12,7 +12,8 @@
     "privateEvents": "Eventos privados",
     "press": "Prensa",
     "about": "Nosotros",
-    "language": "English"
+    "language": "English",
+    "faq": "FAQ"
   },
   "cta": {
     "directions": "Cómo llegar",
@@ -321,5 +322,60 @@
     "body": "Cinco cookies, cinco bebidas de autor y nuevas historias — vigente hasta el 15 de noviembre.",
     "cta": "Ver el menú completo",
     "dismiss": "Cerrar"
+  },
+  "faq": {
+    "eyebrow": "Preguntas frecuentes",
+    "title": "Todo lo que quieres saber antes de visitarnos",
+    "intro": "Respuestas directas sobre ubicación, horario, menú, pickup y el espacio. Si algo no está aquí, escríbenos por WhatsApp.",
+    "items": [
+      {
+        "q": "¿Dónde está d-stellar?",
+        "a": "d-stellar está en Av. Nuevo León 217, dentro del Pabellón Nuevo León, en Hipódromo Condesa, Ciudad de México. La entrada es un pasillo compartido — el letrero “d-stellar” cuelga junto a la bandera de la comunidad, al fondo."
+      },
+      {
+        "q": "¿Cuál es el horario de d-stellar?",
+        "a": "Lunes, jueves, sábado y domingo de 11:00 a.m. a 7:00 p.m. Martes de 2:00 p.m. a 7:00 p.m. Miércoles y viernes de 12:00 p.m. a 7:00 p.m."
+      },
+      {
+        "q": "¿d-stellar es un espacio seguro LGBTQ+?",
+        "a": "Sí. d-stellar es un trans safe space y un negocio LGBTQ+ friendly desde su origen en 2024 — la diversidad y la autenticidad son parte de cómo se construyó la marca, no una campaña."
+      },
+      {
+        "q": "¿Puedo llevar a mi mascota?",
+        "a": "Sí, d-stellar es pet friendly."
+      },
+      {
+        "q": "¿Tienen Wi-Fi?",
+        "a": "Sí, hay Wi-Fi disponible para consumo en el local."
+      },
+      {
+        "q": "¿El menú cambia?",
+        "a": "Sí — d-stellar rota el menú completo (cookies, bebidas de autor y la sección sin cafeína) cada mes, con sabores y combinaciones nuevas."
+      },
+      {
+        "q": "¿Tienen opciones veganas?",
+        "a": "Sí, el menú rotativo de d-stellar incluye opciones veganas cada mes."
+      },
+      {
+        "q": "¿Cómo funciona el pickup?",
+        "a": "Pides en línea desde la página de Pickup, te confirmamos por WhatsApp la hora, pagas en línea con Mercado Pago y recoges tu pedido ya listo en Nuevo León 217. d-stellar no hace delivery."
+      },
+      {
+        "q": "¿Puedo llamar por teléfono?",
+        "a": "El local no tiene señal de celular para llamadas — WhatsApp es el canal de contacto en tiempo real."
+      },
+      {
+        "q": "¿Hay estacionamiento?",
+        "a": "Hay estacionamiento en la calle (de paga) en Nuevo León y calles aledañas."
+      },
+      {
+        "q": "¿Cómo llego en transporte público?",
+        "a": "Las paradas de Metrobús más cercanas son Nuevo León (línea 2) y Chilpancingo (línea 9); también está cerca el metro Chilpancingo. Caminando, d-stellar está a 10 minutos del Parque México."
+      },
+      {
+        "q": "¿d-stellar organiza eventos?",
+        "a": "Sí — d-stellar organiza eventos de comunidad de forma regular (desde viewing parties hasta presentaciones de libro) y también renta el local para eventos privados."
+      }
+    ]
   }
 }

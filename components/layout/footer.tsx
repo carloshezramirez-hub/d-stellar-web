@@ -49,6 +49,7 @@ export function Footer() {
           </Link>
           <Link href="/press" className="hover:text-stellar-pink">{nav("press")}</Link>
           <Link href="/about" className="hover:text-stellar-pink">{nav("about")}</Link>
+          <Link href="/faq" className="hover:text-stellar-pink">{nav("faq")}</Link>
         </nav>
 
         <div className="flex flex-col gap-4">
