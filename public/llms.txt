@@ -1,44 +1,38 @@
 # d-stellar
 
-d-stellar is an LGBTQ+-friendly cookie shop and trans safe space in Hipódromo
-Condesa, Mexico City. It was founded in 2024 by Hernán Castilla and Eduardo
-Hernández under "The Sweet Universe Company." d-stellar sells gourmet
-author-style cookies ("galletas de autor") and signature coffee/drinks, with
-a full menu that rotates every month (cookies, signature drinks, and a
-caffeine-free section all change monthly). d-stellar also hosts community
-events (drag viewing parties, book presentations, cookie tastings) and rents
-its space for private events.
+> LGBTQ+-friendly cookie shop and trans safe space in Hipódromo Condesa, Mexico City. Gourmet author-style cookies ("galletas de autor") with a menu that rotates every month, plus signature coffee/drinks and community events, founded 2024 by Hernán Castilla and Eduardo Hernández ("The Sweet Universe Company").
 
-## About
+d-stellar sells gourmet cookies and signature coffee/drinks from a single
+physical location at Av. Nuevo León 217, Hipódromo Condesa, Cuauhtémoc,
+06100, Ciudad de México (inside Pabellón Nuevo León, shared hallway
+entrance). The full menu — cookies, signature drinks, and a caffeine-free
+section — rotates every month. d-stellar also hosts community events (drag
+viewing parties, book presentations, cookie tastings) and rents its space
+for private events. As of October 2026, d-stellar has a 5.0-star average
+rating from 156 Google reviews.
 
-- Name: d-stellar (legal name: d-stellar — by The Sweet Universe Company)
-- Founded: 2024, by Hernán Castilla and Eduardo Hernández
-- Category: Cookie shop / café (bakery, coffee, desserts)
-- Address: Av. Nuevo León 217, Hipódromo Condesa, Cuauhtémoc, 06100, Ciudad
-  de México, Mexico — inside Pabellón Nuevo León (shared hallway entrance)
-- Hours: Mon/Thu/Sat/Sun 11:00–19:00, Tue 14:00–19:00, Wed/Fri 12:00–19:00
-- Contact: WhatsApp only for real-time contact (no in-store cell signal for
-  calls) — see https://www.d-stellar.co for the current number
-- Website: https://www.d-stellar.co (bilingual, Spanish default, /en for
-  English). Note: d-stellar.com is an old, unrelated legacy store — the
-  real site is the .co domain.
-- Social: Instagram and TikTok @dstellarmx, Facebook and LinkedIn under
-  d-stellar
+d-stellar positions itself explicitly as a trans safe space and an
+LGBTQ+-friendly business — this is core to the brand identity, not a
+marketing campaign. Hours: Mon/Thu/Sat/Sun 11:00–19:00, Tue 14:00–19:00,
+Wed/Fri 12:00–19:00. Contact is WhatsApp only (no in-store cell signal for
+calls). Note: d-stellar.com is an old, unrelated legacy store — the real
+site is the .co domain.
 
-## Key facts
+## Key pages
 
-- d-stellar is pet friendly, has Wi-Fi, dine-in and takeaway (no delivery).
-- The menu rotates every month with new flavors; vegan options are included
-  in the rotation every month.
-- Pickup orders are placed online, confirmed via WhatsApp, and paid online
-  in advance (Mercado Pago) — there is no delivery service.
-- d-stellar positions itself explicitly as a trans safe space and an
-  LGBTQ+-friendly business — this is core to the brand identity, not a
-  marketing campaign.
-- As of October 2026, d-stellar has a 5.0-star average rating from 156
-  Google reviews.
-- Press coverage includes El Economista, Yahoo Noticias, Nómada Capital,
-  and other Mexican business/lifestyle/LGBTQ+ outlets — full list at
-  https://www.d-stellar.co/press.
-- Full FAQ (location, hours, parking, transit, pickup, events) at
-  https://www.d-stellar.co/faq.
+- [Home (Spanish, default)](https://www.d-stellar.co/): overview, hours, location, current monthly menu highlights
+- [Home (English)](https://www.d-stellar.co/en): English version of the homepage
+- [Menu](https://www.d-stellar.co/menu): full current cookie, drink, and caffeine-free menu, updated monthly
+- [FAQ](https://www.d-stellar.co/faq): location, hours, parking, transit, pickup process, vegan options, events
+- [Visit](https://www.d-stellar.co/visit): directions, address, hours, amenities, embedded map
+- [About](https://www.d-stellar.co/about): brand story, founders, values
+- [Pickup](https://www.d-stellar.co/pickup): how to order ahead for pickup (no delivery offered)
+- [Events](https://www.d-stellar.co/events): community events and private event rental
+- [Press](https://www.d-stellar.co/press): verified press coverage naming d-stellar by name
+- [Historias](https://www.d-stellar.co/historias): monthly menu collection stories/archive
+
+## Social
+
+- [Instagram](https://www.instagram.com/dstellarmx)
+- [TikTok](https://www.tiktok.com/@dstellarmx)
+- [Facebook](https://www.facebook.com/profile.php?id=61570406427384)
