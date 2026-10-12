@@ -125,6 +125,14 @@ Mexico City small-business/LGBTQ+ stories, not just these same 10.
 
 ### Priority 2 — press (the proven channel)
 
+**2026-10-12 competitor gap found:** d-stellar has real organic coverage (a
+TikTok from @cdmxsecreta) but is absent from the written "mejores galletas
+CDMX" roundup articles that Doukie Cookies and others already own — exactly
+the kind of placement that's the #1 AI-visibility citation factor. Three
+drafted-but-unsent pitches (gourmetdemexico.com.mx, thehappening.com, El
+Universal) are in `PRESS_PITCHES_PENDING.md` — Carlos reviews and sends
+himself.
+
 - **Re-pitch the same 10 outlets** for the next real news peg: a new
   monthly cookie collection launch, an anniversary, a notable event
   (Pride Block Party is an annual peg), or a milestone (review count,
