@@ -59,11 +59,22 @@ and the backlink strategy.
 
 ## Needs Carlos (can't be done from this repo)
 
-1. **Search Console property** — create the `www.d-stellar.co` property at
-   search.google.com/search-console, verify via the HTML tag method, put
-   the verification code in Vercel as `GOOGLE_SITE_VERIFICATION`
-   (Production + Preview, same place `NEXT_PUBLIC_GA_MEASUREMENT_ID` lives),
-   redeploy, then submit `https://www.d-stellar.co/sitemap.xml`.
+1. ~~**Search Console property**~~ — **done 2026-10-12.** Domain property
+   `d-stellar.co` added under the sweetuniversecompany@gmail.com account,
+   auto-verified instantly via DNS (Google already trusted the domain's
+   nameserver provider — no manual TXT/HTML-tag step needed). Sitemap
+   submitted. Indexing requested for the new `/faq` page. Findings from
+   the first real data pull: brand queries (d-stellar, dstellar) convert
+   fine; non-branded discovery queries (`galletas cerca de mi`, `galletas`,
+   `cafe stellar`) get impressions but **zero clicks** — ranking too low
+   to be found by people who don't already know the brand. Also:
+   `/en` and `/en/menu` get dramatically more impressions than their `/es`
+   equivalents (440 vs 294 for home, 211 vs 10 for menu) — Condesa's
+   expat/tourist search volume may be larger than assumed, or there's an
+   indexing imbalance worth investigating further. Follow-up: proper
+   competitor keyword-gap research (needs a tool like Ahrefs/SEMrush —
+   not fabricated from memory) to target the "galletas cerca de mi"-style
+   queries specifically.
 2. **`d-stellar.com` (the old WordPress/WooCommerce site)** — still live,
    never decommissioned, not redirected to `www.d-stellar.co`. Needs a
    domain-level 301 at the Hostinger/DNS layer, or pointing the domain at
