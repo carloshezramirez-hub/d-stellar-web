@@ -208,6 +208,15 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
 
       <DateRangeFilter current={range} />
 
+      <section className="mb-10">
+        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca (web)</h2>
+        <p className="mb-4 text-sm text-stellar-white/50">
+          Vía Google Alerts, gratis — sitios/blogs/noticias que mencionan "d-stellar" o "@dstellarmx". No incluye
+          redes sociales (bloqueos de scraping) ni reach real de terceros (no es público).
+        </p>
+        <MentionsFeed mentions={mentions} />
+      </section>
+
       {posts.length === 0 && allPosts.length === 0 ? (
         <div className="grid gap-4 rounded border border-line p-6 text-stellar-white/70">
           <p>
@@ -241,15 +250,6 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
           )}
         </>
       )}
-
-      <section className="mt-10 border-t border-line pt-8">
-        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca (web)</h2>
-        <p className="mb-4 text-sm text-stellar-white/50">
-          Vía Google Alerts, gratis — sitios/blogs/noticias que mencionan "d-stellar" o "@dstellarmx". No incluye
-          redes sociales (bloqueos de scraping) ni reach real de terceros (no es público).
-        </p>
-        <MentionsFeed mentions={mentions} />
-      </section>
     </main>
   );
 }
