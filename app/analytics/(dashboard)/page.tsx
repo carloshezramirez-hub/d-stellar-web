@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { KpiCards } from "@/components/analytics/kpi-cards";
 import { LogoutButton } from "@/components/analytics/logout-button";
+import { MentionsFeed } from "@/components/analytics/mentions-feed";
 import { InteractionsChart, ReachChart } from "@/components/analytics/performance-chart";
 import { PostGrid } from "@/components/analytics/post-grid";
 import { RetentionFunnel } from "@/components/analytics/retention-funnel";
 import { StarField } from "@/components/ui/star-field";
+import { getRecentMentions } from "@/lib/mentions/db";
 import { isMetaConfigured, isTikTokConfigured } from "@/lib/social/env";
 import {
   buildDailySeries,
@@ -154,7 +156,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
 
   const hasMeta = isMetaConfigured();
   const hasTikTok = isTikTokConfigured();
-  const [stats, allPosts] = await Promise.all([getLatestAccountStats(), getPostsFeed()]);
+  const [stats, allPosts, mentions] = await Promise.all([getLatestAccountStats(), getPostsFeed(), getRecentMentions()]);
 
   const windowDays = resolveRangeDays(range, allPosts);
   const posts = filterPostsInWindow(allPosts, windowDays);
@@ -239,6 +241,15 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
           )}
         </>
       )}
+
+      <section className="mt-10 border-t border-line pt-8">
+        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca (web)</h2>
+        <p className="mb-4 text-sm text-stellar-white/50">
+          Vía Google Alerts, gratis — sitios/blogs/noticias que mencionan "d-stellar" o "@dstellarmx". No incluye
+          redes sociales (bloqueos de scraping) ni reach real de terceros (no es público).
+        </p>
+        <MentionsFeed mentions={mentions} />
+      </section>
     </main>
   );
 }
