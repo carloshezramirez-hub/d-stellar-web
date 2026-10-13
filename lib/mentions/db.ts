@@ -1,8 +1,15 @@
 import { getSocialDb } from "@/lib/social/db";
-import type { AlertMention } from "./google-alerts";
+
+export interface MentionInput {
+  title: string | null;
+  url: string;
+  domain: string | null;
+  snippet: string | null;
+  publishedAt: string | null;
+}
 
 /** Inserta menciones nuevas — `url` es unique, así que una mención ya vista se ignora (no se actualiza, no se duplica). */
-export async function upsertMentions(searchTerm: string, mentions: AlertMention[]): Promise<number> {
+export async function upsertMentions(source: string, searchTerm: string, mentions: MentionInput[]): Promise<number> {
   if (mentions.length === 0) return 0;
   const db = getSocialDb();
 
@@ -10,7 +17,7 @@ export async function upsertMentions(searchTerm: string, mentions: AlertMention[
     .from("brand_mentions")
     .upsert(
       mentions.map((m) => ({
-        source: "google_alert",
+        source,
         search_term: searchTerm,
         title: m.title,
         url: m.url,

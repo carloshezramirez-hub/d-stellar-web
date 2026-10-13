@@ -209,10 +209,11 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
       <DateRangeFilter current={range} />
 
       <section className="mb-10">
-        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca (web)</h2>
+        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca</h2>
         <p className="mb-4 text-sm text-stellar-white/50">
-          Vía Google Alerts, gratis — sitios/blogs/noticias que mencionan "d-stellar" o "@dstellarmx". No incluye
-          redes sociales (bloqueos de scraping) ni reach real de terceros (no es público).
+          Web (Google Alerts) + Instagram (cuando alguien te etiqueta en una foto/video), ambas gratis. No incluye
+          búsqueda de texto en redes (TikTok/Instagram bloquean esa parte del scraping) ni reach real de terceros (no
+          es público).
         </p>
         <MentionsFeed mentions={mentions} />
       </section>

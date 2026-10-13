@@ -156,6 +156,29 @@ export async function fetchInstagramAccountStats(): Promise<IgAccountStats> {
   return { followersCount: json.followers_count, mediaCount: json.media_count };
 }
 
+export interface IgTaggedMedia {
+  id: string;
+  caption?: string;
+  permalink: string;
+  username?: string;
+  timestamp: string;
+}
+
+/**
+ * Medios de OTRAS cuentas donde etiquetaron a la cuenta conectada (edge
+ * nativo /tags de Graph API — no scraping, misma API ya autenticada que el
+ * resto de este archivo). Es la única fuente real y confiable de "quién nos
+ * menciona en Instagram": el scraping de hashtag/search de IG requiere
+ * sesión autenticada por JS y no expone datos server-side (confirmado
+ * 2026-10-13, ver memoria del proyecto).
+ */
+export async function fetchInstagramTaggedMedia(): Promise<IgTaggedMedia[]> {
+  const json = await graphFetch<{ data: IgTaggedMedia[] }>(
+    `${GRAPH_BASE}/${metaEnv.igAccountId}/tags?fields=id,caption,permalink,username,timestamp&access_token=${metaEnv.accessToken}`,
+  );
+  return json.data;
+}
+
 // ---------- Facebook ----------
 
 let cachedPageToken: string | null = null;
