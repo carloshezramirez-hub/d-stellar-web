@@ -25,6 +25,11 @@ export function formatSessionDate(iso: string, locale: Locale, timeKnown?: boole
   }).format(new Date(iso));
 }
 
+/** A session is still bookable if its start time hasn't passed yet. Used to hide/reject past dates from a multi-session event's picker. */
+export function isUpcomingSession(iso: string, now: number = Date.now()): boolean {
+  return new Date(iso).getTime() >= now;
+}
+
 /** Resolves the date label for an order: the buyer-chosen session for multi-date events, or the event's single dateISO otherwise. */
 export function resolveOrderDateLabel(
   event: Pick<EventRecord, "dateISO" | "timeKnown" | "monthLabel" | "sessionDates">,

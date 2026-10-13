@@ -7,7 +7,7 @@ import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData }
 import { isMercadoPagoConfigured } from "@/lib/payments/env";
 import { createTicketPreference } from "@/lib/payments/mercadopago";
 import { getEvent } from "@/data/events";
-import { resolveOrderDateLabel } from "@/lib/event-date";
+import { isUpcomingSession, resolveOrderDateLabel } from "@/lib/event-date";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -52,6 +52,11 @@ export async function POST(request: Request) {
   }
   if (event.soldOutSessionDates?.includes(buyer.sessionDateISO ?? "")) {
     return NextResponse.json({ error: "session_sold_out" }, { status: 400 });
+  }
+  // Defense in depth: a stale cached page could still submit a date that's
+  // since passed — the client already hides these (ticket-order-form.tsx).
+  if (buyer.sessionDateISO && !isUpcomingSession(buyer.sessionDateISO)) {
+    return NextResponse.json({ error: "session_in_past" }, { status: 400 });
   }
 
   const code = generateOrderCode("TIX");
