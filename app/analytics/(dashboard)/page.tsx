@@ -6,7 +6,7 @@ import { InteractionsChart, ReachChart } from "@/components/analytics/performanc
 import { PostGrid } from "@/components/analytics/post-grid";
 import { RetentionFunnel } from "@/components/analytics/retention-funnel";
 import { StarField } from "@/components/ui/star-field";
-import { getRecentMentions } from "@/lib/mentions/db";
+import { filterMentionsInWindow, getRecentMentions } from "@/lib/mentions/db";
 import { isMetaConfigured, isTikTokConfigured } from "@/lib/social/env";
 import {
   buildDailySeries,
@@ -156,10 +156,15 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
 
   const hasMeta = isMetaConfigured();
   const hasTikTok = isTikTokConfigured();
-  const [stats, allPosts, mentions] = await Promise.all([getLatestAccountStats(), getPostsFeed(), getRecentMentions()]);
+  const [stats, allPosts, allMentions] = await Promise.all([
+    getLatestAccountStats(),
+    getPostsFeed(),
+    getRecentMentions(),
+  ]);
 
   const windowDays = resolveRangeDays(range, allPosts);
   const posts = filterPostsInWindow(allPosts, windowDays);
+  const mentions = filterMentionsInWindow(allMentions, windowDays, range).slice(0, 5);
 
   const kpiSummaries = buildKpiSummaries(allPosts, windowDays);
   const dailySeries = buildDailySeries(allPosts, windowDays);
@@ -215,7 +220,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
           búsqueda de texto en redes (TikTok/Instagram bloquean esa parte del scraping) ni reach real de terceros (no
           es público).
         </p>
-        <MentionsFeed mentions={mentions} />
+        <MentionsFeed mentions={mentions} hasAnyMentions={allMentions.length > 0} />
       </section>
 
       {posts.length === 0 && allPosts.length === 0 ? (

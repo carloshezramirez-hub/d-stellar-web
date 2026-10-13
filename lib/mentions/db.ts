@@ -60,3 +60,12 @@ export async function getRecentMentions(limit = 50): Promise<BrandMention[]> {
     publishedAt: row.published_at,
   }));
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Igual criterio que `filterPostsInWindow` (lib/social/kpis.ts): "Todo" no filtra, el resto corta por fecha. Menciones sin fecha se excluyen salvo en "Todo". */
+export function filterMentionsInWindow(mentions: BrandMention[], windowDays: number, range: string): BrandMention[] {
+  if (range === "all") return mentions;
+  const cutoff = Date.now() - windowDays * DAY_MS;
+  return mentions.filter((m) => m.publishedAt && new Date(m.publishedAt).getTime() >= cutoff);
+}

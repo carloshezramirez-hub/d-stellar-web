@@ -5,12 +5,13 @@ function formatDate(iso: string | null) {
   return new Date(iso).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" });
 }
 
-export function MentionsFeed({ mentions }: { mentions: BrandMention[] }) {
+export function MentionsFeed({ mentions, hasAnyMentions }: { mentions: BrandMention[]; hasAnyMentions: boolean }) {
   if (mentions.length === 0) {
     return (
       <div className="rounded border border-line p-6 text-sm text-stellar-white/60">
-        Todavía no hay menciones registradas. Esta sección se llena sola en cuanto Google Alerts detecte algo nuevo
-        (corre diario).
+        {hasAnyMentions
+          ? "No hay menciones dentro de este rango de fechas."
+          : "Todavía no hay menciones registradas. Esta sección se llena sola en cuanto se detecte algo nuevo (corre diario)."}
       </div>
     );
   }
