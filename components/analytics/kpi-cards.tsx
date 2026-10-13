@@ -89,7 +89,8 @@ export function KpiCards({ summary, windowDays }: { summary: KpiSummary; windowD
           {PLATFORM_ICON[summary.platform] ?? "📈"}
         </span>
         <p className="text-xs font-bold tracking-widest uppercase text-stellar-white/50">
-          {PLATFORM_LABEL[summary.platform] ?? summary.platform} · últimos {windowDays} días
+          {PLATFORM_LABEL[summary.platform] ?? summary.platform}
+          {summary.handle ? ` · @${summary.handle}` : ""} · últimos {windowDays} días
         </p>
       </div>
       <div className="grid grid-cols-2 gap-2">

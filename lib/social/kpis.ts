@@ -39,7 +39,8 @@ export interface PeriodTotals {
 }
 
 export interface KpiSummary {
-  platform: string;
+  platform: string; // "all" o la plataforma real
+  handle: string | null; // null solo para el grupo "all"; cada cuenta se agrupa por su propio handle, no solo por plataforma, para no mezclar cuentas distintas (ej. dos cuentas de TikTok)
   current: PeriodTotals;
   previous: PeriodTotals;
   avgEngagementRate: number | null; // interactions / reach, promedio de los posts del periodo actual que tienen reach
@@ -81,13 +82,16 @@ export function buildKpiSummaries(posts: FeedPost[], windowDays = 7): KpiSummary
   const windowStart = new Date(now.getTime() - windowDays * DAY_MS);
   const prevStart = new Date(windowStart.getTime() - windowDays * DAY_MS);
 
-  const platforms = Array.from(new Set(posts.map((p) => p.platform)));
-  const groups: [string, FeedPost[]][] = [
-    ["all", posts],
-    ...platforms.map((pl) => [pl, posts.filter((p) => p.platform === pl)] as [string, FeedPost[]]),
+  const accounts = Array.from(new Map(posts.map((p) => [`${p.platform}|${p.handle}`, { platform: p.platform, handle: p.handle }])).values());
+  const groups: { platform: string; handle: string | null; posts: FeedPost[] }[] = [
+    { platform: "all", handle: null, posts },
+    ...accounts.map((acc) => ({
+      ...acc,
+      posts: posts.filter((p) => p.platform === acc.platform && p.handle === acc.handle),
+    })),
   ];
 
-  return groups.map(([platform, group]) => {
+  return groups.map(({ platform, handle, posts: group }) => {
     const current = sumTotals(inWindow(group, windowStart, now));
     const previous = sumTotals(inWindow(group, prevStart, windowStart));
 
@@ -95,7 +99,7 @@ export function buildKpiSummaries(posts: FeedPost[], windowDays = 7): KpiSummary
     const rates = currentWithReach.map((p) => engagementRate(p) as number);
     const avgEngagementRate = rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : null;
 
-    return { platform, current, previous, avgEngagementRate };
+    return { platform, handle, current, previous, avgEngagementRate };
   });
 }
 
@@ -299,17 +303,17 @@ function buildPeerDeviations(post: FeedPost, peers: FeedPost[]): Deviation[] {
 }
 
 /** El post inmediatamente anterior (misma plataforma, por fecha) dentro del set dado. */
-function findPreviousPost(post: FeedPost, samePlatform: FeedPost[]): FeedPost | null {
+function findPreviousPost(post: FeedPost, accountPeers: FeedPost[]): FeedPost | null {
   if (!post.postedAt) return null;
-  const earlier = samePlatform
+  const earlier = accountPeers
     .filter((p) => p.postedAt && p.postedAt < post.postedAt!)
     .sort((a, b) => (a.postedAt! < b.postedAt! ? 1 : -1));
   return earlier[0] ?? null;
 }
 
 /** Detecta si este post y los 2 anteriores (misma plataforma) vienen todos por debajo del promedio de engagement del set — señal de que vale la pena cambiar de formato, no solo un tropiezo aislado. */
-function detectDownwardStreak(post: FeedPost, samePlatform: FeedPost[]): boolean {
-  const chronological = [...samePlatform, post]
+function detectDownwardStreak(post: FeedPost, accountPeers: FeedPost[]): boolean {
+  const chronological = [...accountPeers, post]
     .filter((p) => p.postedAt)
     .sort((a, b) => (a.postedAt! < b.postedAt! ? -1 : 1));
   const idx = chronological.findIndex((p) => p.id === post.id);
@@ -329,11 +333,11 @@ function detectDownwardStreak(post: FeedPost, samePlatform: FeedPost[]): boolean
 
 /** "Quick facts" por post: compara sus métricas contra el promedio de sus posts pares (misma plataforma, mismo periodo), contra su publicación inmediata anterior, y detecta rachas — devuelve hasta 3 hallazgos priorizados (el más accionable primero). */
 export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostInsight[] {
-  const samePlatform = peers.filter((p) => p.platform === post.platform && p.id !== post.id);
+  const accountPeers = peers.filter((p) => p.platform === post.platform && p.handle === post.handle && p.id !== post.id);
   const insights: PostInsight[] = [];
   const THRESHOLD = 15; // % de desviación mínima para que valga la pena mencionarlo
 
-  if (detectDownwardStreak(post, samePlatform)) {
+  if (detectDownwardStreak(post, accountPeers)) {
     insights.push({
       kind: "bad",
       text: "Van 3 publicaciones seguidas por debajo de tu promedio — quizá sea buen momento para cambiar de formato",
@@ -341,8 +345,8 @@ export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostIns
   }
 
   let engagementVsPeersPct: number | null = null;
-  if (samePlatform.length >= 3) {
-    const deviations = sortByPriority(buildPeerDeviations(post, samePlatform));
+  if (accountPeers.length >= 3) {
+    const deviations = sortByPriority(buildPeerDeviations(post, accountPeers));
     engagementVsPeersPct = deviations.find((d) => d.metric === "engagement")?.pct ?? null;
     const strongest = deviations.find((d) => d.pct >= THRESHOLD);
     const weakest = deviations.find((d) => d.pct <= -THRESHOLD);
@@ -351,7 +355,7 @@ export function generatePostInsights(post: FeedPost, peers: FeedPost[]): PostIns
     if (weakest && weakest.text !== strongest?.text) insights.push({ kind: "bad", text: weakest.text });
   }
 
-  const previous = findPreviousPost(post, samePlatform);
+  const previous = findPreviousPost(post, accountPeers);
   if (previous && insights.length < 3) {
     const rate = engagementRate(post);
     const prevRate = engagementRate(previous);

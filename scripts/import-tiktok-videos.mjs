@@ -7,12 +7,12 @@
 // Uso:
 //   1. En una sesión con el MCP de Supermetrics conectado, pide el
 //      data_query de ds_id=TIKBA, settings={report_type:"videos"},
-//      ds_accounts="dstellarmx", con los fields listados en VIDEO_ROW_KEYS
+//      ds_accounts="<handle>", con los fields listados en VIDEO_ROW_KEYS
 //      abajo (nombres canónicos de campo, con prefijo "videos__").
 //   2. Guarda el resultado como un array JSON de objetos (uno por video) en
 //      un archivo, p.ej. tiktok-videos.json.
 //   3. NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... \
-//        node scripts/import-tiktok-videos.mjs tiktok-videos.json
+//        node scripts/import-tiktok-videos.mjs <handle> tiktok-videos.json
 //
 // Es seguro volver a correrlo: upsert por (account_id, platform_post_id), y
 // cada corrida agrega una foto nueva de métricas (mismo patrón que los crons
@@ -21,11 +21,9 @@
 import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 
-const TIKTOK_HANDLE = "dstellarmx";
-
-const [, , inputPath] = process.argv;
-if (!inputPath) {
-  console.error("Uso: node scripts/import-tiktok-videos.mjs <archivo.json>");
+const [, , tikTokHandle, inputPath] = process.argv;
+if (!tikTokHandle || !inputPath) {
+  console.error("Uso: node scripts/import-tiktok-videos.mjs <handle> <archivo.json>");
   process.exit(1);
 }
 
@@ -48,9 +46,8 @@ const num = (v) => (v === null || v === undefined || v === "" ? null : Number(v)
 
 const { data: account, error: accountError } = await db
   .from("social_accounts")
+  .upsert({ platform: "tiktok", handle: tikTokHandle }, { onConflict: "platform,handle" })
   .select("id")
-  .eq("platform", "tiktok")
-  .eq("handle", TIKTOK_HANDLE)
   .single();
 if (accountError) throw accountError;
 

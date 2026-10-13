@@ -9,11 +9,11 @@ export function isMetaConfigured() {
 }
 
 export const tikTokEnv = {
-  handle: process.env.TIKTOK_HANDLE,
+  handles: [process.env.TIKTOK_HANDLE, process.env.TIKTOK_HANDLE_2].filter((h): h is string => Boolean(h)),
 };
 
 export function isTikTokConfigured() {
-  return Boolean(tikTokEnv.handle);
+  return tikTokEnv.handles.length > 0;
 }
 
 export const analyticsDashboardEnv = {

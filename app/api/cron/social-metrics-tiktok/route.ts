@@ -14,19 +14,28 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "tiktok_not_configured" }, { status: 501 });
   }
 
-  const handle = tikTokEnv.handle!;
   const db = getSocialDb();
 
-  const stats = await fetchTikTokAccountStats(handle);
-  const account = await upsertSocialAccount("tiktok", handle);
+  const results = await Promise.all(
+    tikTokEnv.handles.map(async (handle) => {
+      try {
+        const stats = await fetchTikTokAccountStats(handle);
+        const account = await upsertSocialAccount("tiktok", handle);
 
-  const { error } = await db.from("social_account_snapshots").insert({
-    account_id: account.id,
-    followers: stats.followerCount,
-    total_likes: stats.heartCount,
-    video_count: stats.videoCount,
-  });
-  if (error) throw error;
+        const { error } = await db.from("social_account_snapshots").insert({
+          account_id: account.id,
+          followers: stats.followerCount,
+          total_likes: stats.heartCount,
+          video_count: stats.videoCount,
+        });
+        if (error) throw error;
 
-  return NextResponse.json({ ok: true, handle, stats });
+        return { handle, ok: true, stats };
+      } catch (err) {
+        return { handle, ok: false, error: err instanceof Error ? err.message : String(err) };
+      }
+    }),
+  );
+
+  return NextResponse.json({ ok: results.every((r) => r.ok), results });
 }

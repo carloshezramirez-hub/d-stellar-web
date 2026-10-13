@@ -221,7 +221,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
         <>
           <div className="mb-8 grid gap-4 sm:grid-cols-2">
             {kpiSummaries.map((summary) => (
-              <KpiCards key={summary.platform} summary={summary} windowDays={windowDays} />
+              <KpiCards key={`${summary.platform}-${summary.handle ?? "all"}`} summary={summary} windowDays={windowDays} />
             ))}
           </div>
 
