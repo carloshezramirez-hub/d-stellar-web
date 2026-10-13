@@ -260,7 +260,7 @@ export default async function HomePage({ params }: Props) {
       {/* MENU + EVENTS TEASER — color blocks */}
       <section className="grid border-b border-line md:grid-cols-2">
         <div className="border-b border-line px-5 py-16 md:border-b-0 md:border-r md:px-10 md:py-20">
-          <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("menuTeaserTitle")}</p>
+          <p className="font-tag text-xs uppercase tracking-widest text-stellar-pink">{MENU_MONTH_LABEL[loc]}</p>
           <p className="mt-4 max-w-sm text-lg leading-relaxed text-stellar-white/80">{t("menuTeaserBody")}</p>
           <CtaLink href="/menu" variant="ghost" className="mt-6 px-0">
             {cta("viewMenu")} <ArrowUpRight size={14} />

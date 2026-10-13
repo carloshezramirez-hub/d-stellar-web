@@ -46,7 +46,6 @@
     "introBody": "d-stellar horneamos en tandas cortas, servimos cacao y café con intención, y abrimos las noches para proyecciones, viewing parties y encuentros que hacen comunidad. Es un lugar chico que se siente enorme cuando estás dentro.",
     "statementTitle": "Auténtic★s. Original★s. Inquebrantables.",
     "statementBody": "Una marca transgresora, imparable y amable, donde te puedes expresar con libertad y sin miedo a ser juzgad★. Una comunidad, un universo propio.",
-    "menuTeaserTitle": "La propuesta de septiembre",
     "menuTeaserBody": "Cinco cookies, bebidas de autor y todo lo demás — cambia mes a mes, así que si te gustó algo, vuelve pronto.",
     "eventsTeaserTitle": "Lo que viene",
     "eventsTeaserBody": "Viewing parties, colaboraciones y noches privadas en un espacio de cupo limitado.",
@@ -375,6 +374,10 @@
       {
         "q": "¿d-stellar organiza eventos?",
         "a": "Sí — d-stellar organiza eventos de comunidad de forma regular (desde viewing parties hasta presentaciones de libro) y también renta el local para eventos privados."
+      },
+      {
+        "q": "¿Qué hace diferentes a las galletas de d-stellar en CDMX?",
+        "a": "d-stellar es una cookie shop de galletas de autor en Hipódromo Condesa (Nuevo León 217): el menú completo —cookies, bebidas de autor y sección sin cafeína— rota cada mes con sabores y narrativa nuevos, se hornea en tandas cortas y siempre incluye opciones veganas. También es un trans safe space y negocio LGBTQ+ friendly desde su fundación en 2024, con 5.0★ y 156 reseñas en Google. No es una galletería estilo Nueva York de porción gigante — es un concepto de autor que cambia por completo cada mes."
       }
     ]
   }

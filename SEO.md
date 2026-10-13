@@ -56,6 +56,57 @@ and the backlink strategy.
   `googleReviewStats.count` updated 148 → 156, matching d-stellar's live
   Google Business Profile at time of writing (verified directly in the
   Google panel, not estimated).
+- **Stale homepage menu teaser fixed** (2026-10-13): triggered by auditing
+  why ChatGPT and Gemini both initially omitted d-stellar from "mejores
+  galletas CDMX" answers. The homepage's menu-teaser label was a hardcoded
+  i18n string (`home.menuTeaserTitle` = "La propuesta de septiembre" /
+  "September's lineup") that never got updated past September, while
+  `/menu` itself was already correctly showing October/November — a real
+  content-freshness inconsistency an AI crawler could plausibly have hit.
+  Fixed in `app/[locale]/page.tsx` to read `MENU_MONTH_LABEL` from
+  `data/menu.ts` directly (the same source `/menu` uses) instead of a
+  separately-maintained string, so it can't drift out of sync again. Dead
+  `menuTeaserTitle` keys removed from `messages/{es,en}.json`.
+- **FAQ entry targeting "best cookies in CDMX"-style queries** (2026-10-13):
+  added `faq.items` → "¿Qué hace diferentes a las galletas de d-stellar en
+  CDMX?" / "What makes d-stellar's cookies different in Mexico City?" —
+  answer-first, quotable, sourced only from facts already verified
+  elsewhere (monthly rotation, vegan options, trans-safe-space positioning,
+  5.0★/156 reviews), no claim of being objectively "the best" and no
+  disparagement of competitors. Picked up automatically by the existing
+  `faqSchema()` → `FAQPage` JSON-LD, no new page/route needed.
+
+### AI-visibility audit log (ChatGPT + Gemini, 2026-10-13)
+
+Carlos asked ChatGPT and Gemini "¿cuáles son las mejores galletas en CDMX?"
+Both omitted d-stellar on first answer, then agreed on audit it was a real
+gap, not a quality judgment. Root causes identified and status:
+
+| Cause | Status |
+|---|---|
+| Crawler access (OAI-SearchBot/GPTBot/Google-Extended) | Already fine — `app/robots.ts` is `allow: "/"` for `userAgent: "*"`, nothing in `proxy.ts` blocks bots |
+| Stale/inconsistent content (Sept. teaser vs. Oct/Nov menu) | Fixed above |
+| No answer-first quotable differentiator on-site | Fixed above (FAQ entry) |
+| Structured data (LocalBusiness/FAQPage/Menu schema) | Already done (see above) |
+| `llms.txt` for LLM crawlers | Already done (2026-10-12) |
+| Independent editorial mentions ("mejores galletas CDMX" roundups) | **Needs Carlos** — this is the single highest-leverage lever both audits agree on, and it can't be done from this repo. 3 drafted pitches waiting in `PRESS_PITCHES_PENDING.md` |
+| Google Business Profile completeness/reviews | **Needs Carlos** — manual, external to repo |
+| YouTube presence | **Gap, needs Carlos** — Gemini specifically flagged this; no channel exists yet (checked `data/site.ts` → `social`, nothing there). Even a short vertical video per monthly collection, cross-posted from the existing IG/TikTok content, would give Google/Gemini's AI Overviews something to cite that isn't text |
+| Old `d-stellar.com` WordPress site still live, unredirected | **Needs Carlos** — DNS/Hostinger level, confuses brand-entity consistency for AI engines too, not just Google |
+
+**Test queries to re-run monthly** (same list proposed by both ChatGPT and
+Gemini) — track in this table whether d-stellar appears, at what rough
+position, and which sources get cited:
+
+- ¿Cuáles son las mejores galletas en CDMX?
+- ¿Dónde comprar las mejores cookies gourmet en la Condesa?
+- ¿Qué cookie shops de CDMX tienen sabores originales?
+- ¿Dónde venden galletas artesanales recién horneadas en CDMX?
+- ¿Qué lugares tienen cookies veganas en Ciudad de México?
+- ¿Qué cafeterías o galleterías de la Roma-Condesa recomiendan para comer cookies?
+
+Don't read too much into a single run — AI answers vary by session, model
+version, and whether the query triggers a live web search at all.
 
 ## Needs Carlos (can't be done from this repo)
 

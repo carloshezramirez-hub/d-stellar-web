@@ -46,7 +46,6 @@
     "introBody": "At d-stellar we bake in short batches, serve cacao and coffee with intention, and open our doors at night for screenings, viewing parties, and gatherings that build community. It's a small place that feels huge once you're inside.",
     "statementTitle": "Authentic. Original. Unbreakable.",
     "statementBody": "A brand that's transgressive, unstoppable and kind — where you can express yourself freely, with no fear of judgment. A community. A universe of your own.",
-    "menuTeaserTitle": "September's lineup",
     "menuTeaserBody": "Five cookies, signature drinks, and everything else — it changes every month, so if you loved something, come back soon.",
     "eventsTeaserTitle": "What's coming up",
     "eventsTeaserBody": "Viewing parties, collaborations, and private nights in a limited-capacity space.",
@@ -375,6 +374,10 @@
       {
         "q": "Does d-stellar host events?",
         "a": "Yes — d-stellar regularly hosts community events (from viewing parties to book presentations) and also rents the space for private events."
+      },
+      {
+        "q": "What makes d-stellar's cookies different in Mexico City?",
+        "a": "d-stellar is an author-style cookie shop in Hipódromo Condesa (Nuevo León 217): the full menu — cookies, signature drinks, and a caffeine-free section — rotates every month with new flavors and a new narrative, baked in short batches, always with vegan options. It's also a trans safe space and LGBTQ+-friendly business since it was founded in 2024, with a 5.0-star rating from 156 Google reviews. It's not a giant-portion New York-style cookie shop — it's an author-driven concept that fully reinvents itself every month."
       }
     ]
   }
