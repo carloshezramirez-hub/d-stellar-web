@@ -315,12 +315,15 @@
     "body": "We couldn't find what you were looking for. Try the homepage or check the menu.",
     "cta": "Back home"
   },
-  "menuPromo": {
-    "eyebrow": "New menu",
-    "title": "Día de Muertos is here",
-    "body": "Five cookies, five signature drinks and new stories — through November 15.",
-    "cta": "See the full menu",
+  "pickupPromo": {
+    "eyebrow": "Order online",
+    "title": "Your cookies, ready for pickup today",
+    "body": "Order from the full menu, pay online, and pick up at Nuevo León 217 — no line.",
+    "cta": "Order for pickup",
     "dismiss": "Close"
+  },
+  "whatsappFloat": {
+    "ariaLabel": "Order via WhatsApp"
   },
   "faq": {
     "eyebrow": "FAQ",

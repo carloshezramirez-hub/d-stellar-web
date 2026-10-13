@@ -315,12 +315,15 @@
     "body": "No encontramos lo que buscabas. Prueba desde el inicio o revisa el menú.",
     "cta": "Volver al inicio"
   },
-  "menuPromo": {
-    "eyebrow": "Nuevo menú",
-    "title": "Día de Muertos ya está aquí",
-    "body": "Cinco cookies, cinco bebidas de autor y nuevas historias — vigente hasta el 15 de noviembre.",
-    "cta": "Ver el menú completo",
+  "pickupPromo": {
+    "eyebrow": "Pide en línea",
+    "title": "Tus cookies, listas para recoger hoy",
+    "body": "Ordena del menú completo, paga en línea y recoge en Nuevo León 217 sin hacer fila.",
+    "cta": "Pedir para pickup",
     "dismiss": "Cerrar"
+  },
+  "whatsappFloat": {
+    "ariaLabel": "Pedir por WhatsApp"
   },
   "faq": {
     "eyebrow": "Preguntas frecuentes",

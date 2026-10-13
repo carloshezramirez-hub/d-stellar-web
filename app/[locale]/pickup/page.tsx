@@ -10,6 +10,7 @@ import { PickupOrderForm } from "@/components/sections/pickup-order-form";
 import { PickupPaymentBanner } from "@/components/sections/pickup-payment-banner";
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { MENU_MONTH_LABEL } from "@/data/menu";
+import { whatsappOrderUrl } from "@/lib/whatsapp";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -104,7 +105,7 @@ export default async function PickupPage({ params, searchParams }: Props) {
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("altTitle")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <TrackedCtaAnchor
-            href={BUSINESS.whatsappUrl}
+            href={whatsappOrderUrl(locale === "en" ? "en" : "es")}
             target="_blank"
             rel="noreferrer"
             variant="outline"

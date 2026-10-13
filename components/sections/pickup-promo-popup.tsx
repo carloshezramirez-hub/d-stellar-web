@@ -6,29 +6,30 @@ import Image from "next/image";
 import { X, ArrowUpRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CtaLink } from "@/components/ui/cta-link";
-import { MENU_MONTH_LABEL } from "@/data/menu";
+import { trackEvent } from "@/lib/analytics";
 
-// Keyed by the current month label so the popup resurfaces automatically
-// once MENU_MONTH_LABEL changes for the next rotation, without needing a
-// manual reset.
-const DISMISS_KEY = `dstellar-menu-promo-dismissed-${MENU_MONTH_LABEL.es}`;
+const SHOWN_KEY = "dstellar-pickup-promo-shown";
 const SHOW_DELAY_MS = 1200;
 
-export function MenuPromoPopup() {
-  const t = useTranslations("menuPromo");
+export function PickupPromoPopup() {
+  const t = useTranslations("pickupPromo");
   const [open, setOpen] = useState(false);
 
+  // Once per browser session (tab), not once ever: a sale prompt should
+  // greet every fresh visit, but never re-trigger from client-side route
+  // changes or scrolling within the same visit — sessionStorage is marked
+  // the moment it's shown, not on dismiss, so it can't re-fire either way.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.localStorage.getItem(DISMISS_KEY)) return;
-    const id = window.setTimeout(() => setOpen(true), SHOW_DELAY_MS);
+    if (window.sessionStorage.getItem(SHOWN_KEY)) return;
+    const id = window.setTimeout(() => {
+      window.sessionStorage.setItem(SHOWN_KEY, "1");
+      setOpen(true);
+    }, SHOW_DELAY_MS);
     return () => window.clearTimeout(id);
   }, []);
 
-  const handleOpenChange = (next: boolean) => {
-    setOpen(next);
-    if (!next) window.localStorage.setItem(DISMISS_KEY, "1");
-  };
+  const handleOpenChange = (next: boolean) => setOpen(next);
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
@@ -42,10 +43,10 @@ export function MenuPromoPopup() {
 
           <div className="grid grid-cols-2">
             <div className="relative aspect-[4/5]">
-              <Image src="/images/promos/calabaza-cookie.webp" alt="" fill sizes="220px" className="object-cover" />
+              <Image src="/images/products/cookie-display-lit.webp" alt="" fill sizes="220px" className="object-cover" />
             </div>
             <div className="relative aspect-[4/5]">
-              <Image src="/images/promos/calabaza-latte.webp" alt="" fill sizes="220px" className="object-cover" />
+              <Image src="/images/products/cookie-display-bright.webp" alt="" fill sizes="220px" className="object-cover" />
             </div>
           </div>
 
@@ -58,7 +59,15 @@ export function MenuPromoPopup() {
             </p>
             <Dialog.Description className="mt-3 text-sm text-stellar-white/75">{t("body")}</Dialog.Description>
 
-            <CtaLink href="/menu" variant="solid" className="mt-6 w-full" onClick={() => handleOpenChange(false)}>
+            <CtaLink
+              href="/pickup"
+              variant="solid"
+              className="mt-6 w-full"
+              onClick={() => {
+                trackEvent("click_pickup", { source: "popup" });
+                handleOpenChange(false);
+              }}
+            >
               {t("cta")} <ArrowUpRight size={14} />
             </CtaLink>
           </div>

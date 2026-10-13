@@ -8,7 +8,8 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileActionBar } from "@/components/layout/mobile-action-bar";
-import { MenuPromoPopup } from "@/components/sections/menu-promo-popup";
+import { WhatsappFloatButton } from "@/components/layout/whatsapp-float-button";
+import { PickupPromoPopup } from "@/components/sections/pickup-promo-popup";
 import { SeasonalDecor } from "@/components/ui/seasonal-decor";
 import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
@@ -115,7 +116,8 @@ export default async function LocaleLayout({ children, params }: Props) {
           <main className="pb-16 md:pb-0">{children}</main>
           <Footer />
           <MobileActionBar />
-          <MenuPromoPopup />
+          <WhatsappFloatButton />
+          <PickupPromoPopup />
           <SeasonalDecor />
         </NextIntlClientProvider>
         <Analytics />
