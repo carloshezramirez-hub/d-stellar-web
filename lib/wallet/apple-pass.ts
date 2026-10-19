@@ -5,7 +5,6 @@ import { BUSINESS, SITE_URL } from "@/data/site";
 import { appleWalletEnv } from "./env";
 import { buildStampStrip } from "./strip";
 import { relevantTextOfTheDay } from "./relevant-phrases";
-import { tierForLifetimeStamps } from "./tiers";
 import type { LoyaltyMember } from "./loyalty-db";
 
 function hexToRgb(hex: string): string {
@@ -15,9 +14,9 @@ function hexToRgb(hex: string): string {
 
 // Sin logo.png aparte a propósito — el wordmark vive dentro de la franja
 // (strip.png) porque ahí sí se puede meter una imagen propia. Todo el
-// texto (nombre, sellos, miembro desde, nivel) va como campos nativos de
-// Wallet, no dibujado en la imagen — ver la nota larga en lib/wallet/strip.ts
-// sobre por qué (texto dibujado a mano no renderiza en producción).
+// texto (nombre, sellos, antigüedad) va como campos nativos de Wallet, no
+// dibujado en la imagen — ver la nota larga en lib/wallet/strip.ts sobre
+// por qué (texto dibujado a mano no renderiza en producción).
 const STATIC_ASSET_FILES = ["icon.png", "icon@2x.png", "icon@3x.png"];
 
 async function loadAssets(): Promise<Record<string, Buffer>> {
@@ -40,6 +39,10 @@ async function loadAssets(): Promise<Record<string, Buffer>> {
   };
 }
 
+function tenureDays(createdAt: string): number {
+  return Math.max(0, Math.floor((Date.now() - new Date(createdAt).getTime()) / 86_400_000));
+}
+
 // Copy de placeholder para el beta técnico — la regla "10 sellos = 1
 // sorpresa" ya la confirmó Carlos (se ve como progreso visual en la franja,
 // terminando en la cajita de regalo); el resto del programa sigue
@@ -47,10 +50,9 @@ async function loadAssets(): Promise<Record<string, Buffer>> {
 const COPY = {
   es: {
     description: "Tarjeta de fidelidad d-stellar",
-    stampsLabel: "Sellos",
     nameLabel: "Miembro",
-    memberLabel: "Miembro desde",
-    tierLabel: "Nivel",
+    tenureLabel: "Antigüedad",
+    tenureValue: (days: number) => `${days} ${days === 1 ? "día" : "días"}`,
     backHeader: "d-stellar — Junt★s brillamos más",
     backBody:
       "Muestra el código QR en caja para sumar un sello por compra. Esta es una tarjeta de fidelidad beta — las reglas del programa pueden cambiar.",
@@ -59,10 +61,9 @@ const COPY = {
   },
   en: {
     description: "d-stellar loyalty card",
-    stampsLabel: "Stamps",
     nameLabel: "Member",
-    memberLabel: "Member since",
-    tierLabel: "Level",
+    tenureLabel: "Member for",
+    tenureValue: (days: number) => `${days} ${days === 1 ? "day" : "days"}`,
     backHeader: "d-stellar — We shine brighter together",
     backBody:
       "Show the QR code at checkout to earn a stamp per purchase. This is a beta loyalty card — program rules may change.",
@@ -78,11 +79,6 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
   }
 
   const copy = COPY[member.locale];
-  const joinDate = new Date(member.created_at).toLocaleDateString(member.locale === "en" ? "en-US" : "es-MX", {
-    year: "numeric",
-    month: "short",
-  });
-  const tier = tierForLifetimeStamps(member.lifetime_stamps);
   const assets = await loadAssets();
 
   const pass = new PKPass(
@@ -110,17 +106,14 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
 
   pass.type = "storeCard";
 
-  pass.primaryFields.push({
-    key: "stamps",
-    label: copy.stampsLabel,
-    value: `${member.stamps}/${member.stamps_required}`,
-  });
+  pass.primaryFields.push({ key: "stamps", value: `${member.stamps}/${member.stamps_required}` });
 
-  pass.secondaryFields.push(
-    { key: "name", label: copy.nameLabel, value: member.name },
-    { key: "member", label: copy.memberLabel, value: joinDate },
-  );
-  pass.auxiliaryFields.push({ key: "tier", label: copy.tierLabel, value: tier.label[member.locale] });
+  pass.secondaryFields.push({ key: "name", label: copy.nameLabel, value: member.name });
+  pass.auxiliaryFields.push({
+    key: "tenure",
+    label: copy.tenureLabel,
+    value: copy.tenureValue(tenureDays(member.created_at)),
+  });
 
   pass.backFields.push(
     { key: "about", label: copy.backHeader, value: copy.backBody },
