@@ -110,11 +110,13 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
 
   pass.type = "storeCard";
 
-  // Arriba a la derecha, junto al logo — mismo lugar donde Iberia/Flying
-  // Blue muestran el nivel del viajero.
-  pass.headerFields.push({ key: "tier", label: copy.tierLabel, value: tier.label[member.locale] });
-
-  pass.primaryFields.push({ key: "stamps", value: `${member.stamps}/${member.stamps_required}` });
+  // Dos headerFields arriba, en fila: sellos a la izquierda, nivel a la
+  // derecha (el primero que se agrega queda más a la izquierda) — el logo
+  // va centrado en medio de la franja, sin nada más ahí que pueda chocar.
+  pass.headerFields.push(
+    { key: "stamps", value: `${member.stamps}/${member.stamps_required}` },
+    { key: "tier", label: copy.tierLabel, value: tier.label[member.locale] },
+  );
 
   pass.secondaryFields.push({ key: "name", label: copy.nameLabel, value: member.name });
   pass.auxiliaryFields.push({
