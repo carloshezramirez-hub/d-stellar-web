@@ -5,6 +5,7 @@ import { BUSINESS, SITE_URL } from "@/data/site";
 import { appleWalletEnv } from "./env";
 import { buildStampStrip } from "./strip";
 import { relevantTextOfTheDay } from "./relevant-phrases";
+import { tierForLifetimeStamps } from "./tiers";
 import type { LoyaltyMember } from "./loyalty-db";
 
 function hexToRgb(hex: string): string {
@@ -50,6 +51,7 @@ function tenureDays(createdAt: string): number {
 const COPY = {
   es: {
     description: "Tarjeta de fidelidad d-stellar",
+    tierLabel: "Nivel",
     nameLabel: "Miembro",
     tenureLabel: "Antigüedad",
     tenureValue: (days: number) => `${days} ${days === 1 ? "día" : "días"}`,
@@ -61,6 +63,7 @@ const COPY = {
   },
   en: {
     description: "d-stellar loyalty card",
+    tierLabel: "Level",
     nameLabel: "Member",
     tenureLabel: "Member for",
     tenureValue: (days: number) => `${days} ${days === 1 ? "day" : "days"}`,
@@ -79,6 +82,7 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
   }
 
   const copy = COPY[member.locale];
+  const tier = tierForLifetimeStamps(member.lifetime_stamps);
   const assets = await loadAssets();
 
   const pass = new PKPass(
@@ -105,6 +109,10 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
   );
 
   pass.type = "storeCard";
+
+  // Arriba a la derecha, junto al logo — mismo lugar donde Iberia/Flying
+  // Blue muestran el nivel del viajero.
+  pass.headerFields.push({ key: "tier", label: copy.tierLabel, value: tier.label[member.locale] });
 
   pass.primaryFields.push({ key: "stamps", value: `${member.stamps}/${member.stamps_required}` });
 

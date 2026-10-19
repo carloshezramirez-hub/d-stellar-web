@@ -10,13 +10,18 @@ import sharp from "sharp";
 // Vercel no tiene ninguna fuente instalada para que sharp/librsvg
 // rasterice texto (ni siquiera "sans-serif" genérico resuelve a nada ahí,
 // aunque en local sí por los fonts del sistema). Se comprobó en iPhone
-// real. Por eso esta imagen es solo el logo sobre un rosa oscuro plano —
-// todo el texto (nombre, sellos, antigüedad) vive como campos nativos de
+// real. Por eso esta imagen es solo el logo sobre negro plano — todo el
+// texto (nivel, nombre, sellos, antigüedad) vive como campos nativos de
 // Wallet — ver lib/wallet/apple-pass.ts — esos los dibuja iOS
 // directamente, nunca fallan.
+//
+// Estilo "tarjeta de aerolínea" (Iberia Club / Flying Blue): logo arriba a
+// la izquierda, el nivel como headerField arriba a la derecha (nativo), y
+// el número grande (primaryField) abajo a la izquierda — por eso el logo
+// va a la izquierda, dejando la esquina derecha libre para el headerField
+// y la esquina inferior izquierda libre para el número.
 const BASE_WIDTH = 375;
 const BASE_HEIGHT = 123;
-const DARK_PINK = "#4a1636"; // rosa de marca (#ff70e0) oscurecido, plano — sin degradado
 
 let logoCache: Buffer | null = null;
 
@@ -38,15 +43,9 @@ export async function buildStampStrip(scale: 1 | 2 | 3): Promise<Buffer> {
   const logoB64 = logoBuffer.toString("base64");
   const margin = Math.round(18 * scale);
 
-  // En un storeCard, Wallet dibuja el primaryField (el número de sellos)
-  // ENCIMA de esta imagen, abajo a la izquierda — por eso el logo va
-  // arriba a la derecha, lejos de esa zona.
-  const logoX = width - margin - logoWidth;
-  const logoY = margin;
-
   const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${width}" height="${height}" fill="${DARK_PINK}"/>
-    <image x="${logoX}" y="${logoY}" width="${logoWidth}" height="${logoHeight}"
+    <rect width="${width}" height="${height}" fill="#000000"/>
+    <image x="${margin}" y="${margin}" width="${logoWidth}" height="${logoHeight}"
       href="data:image/png;base64,${logoB64}" />
   </svg>`;
 
