@@ -403,11 +403,6 @@
       "errorBody": "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",
       "notConfiguredTitle": "Aún no disponible",
       "notConfiguredBody": "Esta beta todavía no está activa en este ambiente — vuelve a intentarlo más tarde."
-    },
-    "qr": {
-      "label": "O escanea en tienda",
-      "alt": "Código QR para agregar la tarjeta de fidelidad de d-stellar",
-      "download": "Descargar QR para imprimir"
     }
   }
 }

@@ -1,13 +1,8 @@
 import QRCode from "qrcode";
 
-export async function loyaltySignupQrDataUrl(url: string): Promise<string> {
-  return QRCode.toDataURL(url, {
-    margin: 1,
-    width: 480,
-    color: { dark: "#000000", light: "#ffffff" },
-  });
-}
-
+// Solo para imprimir en tienda (ver app/api/wallet/qr) — la página pública
+// /fidelidad ya no muestra el QR en pantalla, no tiene sentido para alguien
+// que ya está viendo la página.
 export async function loyaltySignupQrPng(url: string): Promise<Buffer> {
   return QRCode.toBuffer(url, {
     margin: 2,

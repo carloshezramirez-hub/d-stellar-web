@@ -403,11 +403,6 @@
       "errorBody": "Something went wrong. Try again or message us on WhatsApp.",
       "notConfiguredTitle": "Not available yet",
       "notConfiguredBody": "This beta isn't live in this environment yet — check back later."
-    },
-    "qr": {
-      "label": "Or scan in store",
-      "alt": "QR code to add the d-stellar loyalty card",
-      "download": "Download printable QR"
     }
   }
 }
