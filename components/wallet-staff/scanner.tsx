@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import jsQR from "jsqr";
 
 type Member = { name: string; stamps: number; stamps_required: number };
-type Status = "scanning" | "found" | "error" | "camera_error";
+type Status = "idle" | "scanning" | "found" | "error" | "camera_error";
 
 export function WalletStaffScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -12,7 +12,7 @@ export function WalletStaffScanner() {
   const rafRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const [status, setStatus] = useState<Status>("scanning");
+  const [status, setStatus] = useState<Status>("idle");
   const [serial, setSerial] = useState<string | null>(null);
   const [member, setMember] = useState<Member | null>(null);
   const [busy, setBusy] = useState(false);
@@ -69,6 +69,7 @@ export function WalletStaffScanner() {
   }, [handleScanned]);
 
   const startCamera = useCallback(async () => {
+    setStatus("scanning");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
       streamRef.current = stream;
@@ -83,7 +84,6 @@ export function WalletStaffScanner() {
   }, []);
 
   function reset() {
-    setStatus("scanning");
     setSerial(null);
     setMember(null);
     setMessage(null);
@@ -110,18 +110,29 @@ export function WalletStaffScanner() {
     }
   }
 
-  useEffect(() => {
-    // startCamera only sets state inside its async continuation (after the
-    // getUserMedia await) or in its catch handler — never synchronously —
-    // so this is the standard "request camera on mount" pattern.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void startCamera();
-    return () => stopCamera();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // La cámara solo arranca cuando el staff toca "Escanear" — no al cargar
+  // la página — así el permiso del navegador no salta de sorpresa y el
+  // dashboard es lo primero que se ve.
+  useEffect(() => stopCamera, [stopCamera]);
 
   return (
     <div className="mx-auto grid max-w-md gap-6 p-6">
+      {status === "idle" && (
+        <div className="grid gap-5 border-2 border-line bg-stellar-black-soft p-6 text-center">
+          <div>
+            <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">d-stellar · Fidelidad</p>
+            <p className="mt-2 font-demi text-lg font-bold text-stellar-white">Escanea la tarjeta del cliente</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void startCamera()}
+            className="bg-stellar-pink px-6 py-4 font-tag text-xs font-bold uppercase tracking-widest text-stellar-black"
+          >
+            Escanear código QR
+          </button>
+        </div>
+      )}
+
       {status === "scanning" && (
         <div className="relative aspect-square w-full overflow-hidden border-2 border-line bg-black">
           <video ref={videoRef} className="h-full w-full object-cover" muted playsInline />

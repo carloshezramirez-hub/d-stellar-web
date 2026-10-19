@@ -5,6 +5,7 @@ import { BUSINESS, SITE_URL } from "@/data/site";
 import { appleWalletEnv } from "./env";
 import { buildStampStrip } from "./strip";
 import { relevantTextOfTheDay } from "./relevant-phrases";
+import { tierForLifetimeStamps } from "./tiers";
 import type { LoyaltyMember } from "./loyalty-db";
 
 function hexToRgb(hex: string): string {
@@ -13,23 +14,22 @@ function hexToRgb(hex: string): string {
 }
 
 // Sin logo.png aparte a propósito — el wordmark vive dentro de la franja
-// (strip.png), junto con el nombre del cliente y la fecha de alta, para
-// que la tarjeta no necesite campos nativos de Wallet debajo (más
-// compacta).
+// (strip.png), junto con el nombre del cliente. La franja se queda en el
+// tamaño que documenta Apple (375x123 @1x): una franja más alta se corta
+// al centro en Wallet real (comprobado en iPhone) — por eso "miembro
+// desde" y el nivel viven como campos nativos, no en la imagen.
 const STATIC_ASSET_FILES = ["icon.png", "icon@2x.png", "icon@3x.png"];
 
-async function loadAssets(member: LoyaltyMember, joinDate: string): Promise<Record<string, Buffer>> {
-  const stripArgs = [member.stamps, member.stamps_required, member.lifetime_stamps, member.name, joinDate, member.locale] as const;
-
+async function loadAssets(member: LoyaltyMember): Promise<Record<string, Buffer>> {
   const [staticEntries, strip1x, strip2x, strip3x] = await Promise.all([
     Promise.all(
       STATIC_ASSET_FILES.map(
         async (name) => [name, await readFile(join(process.cwd(), "public/wallet", name))] as const,
       ),
     ),
-    buildStampStrip(...stripArgs, 1),
-    buildStampStrip(...stripArgs, 2),
-    buildStampStrip(...stripArgs, 3),
+    buildStampStrip(member.stamps, member.stamps_required, member.name, 1),
+    buildStampStrip(member.stamps, member.stamps_required, member.name, 2),
+    buildStampStrip(member.stamps, member.stamps_required, member.name, 3),
   ]);
 
   return {
@@ -41,11 +41,14 @@ async function loadAssets(member: LoyaltyMember, joinDate: string): Promise<Reco
 }
 
 // Copy de placeholder para el beta técnico — la regla "10 sellos = 1
-// sorpresa" ya la confirmó Carlos (se ve como ecuación visual en la franja,
-// no como texto); el resto del programa sigue pendiente de definir.
+// sorpresa" ya la confirmó Carlos (se ve como progreso visual en la franja,
+// terminando en la cajita de regalo); el resto del programa sigue
+// pendiente de definir.
 const COPY = {
   es: {
     description: "Tarjeta de fidelidad d-stellar",
+    memberLabel: "Miembro desde",
+    tierLabel: "Nivel",
     backHeader: "d-stellar — Junt★s brillamos más",
     backBody:
       "Muestra el código QR en caja para sumar un sello por compra. Esta es una tarjeta de fidelidad beta — las reglas del programa pueden cambiar.",
@@ -54,6 +57,8 @@ const COPY = {
   },
   en: {
     description: "d-stellar loyalty card",
+    memberLabel: "Member since",
+    tierLabel: "Level",
     backHeader: "d-stellar — We shine brighter together",
     backBody:
       "Show the QR code at checkout to earn a stamp per purchase. This is a beta loyalty card — program rules may change.",
@@ -73,7 +78,8 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
     year: "numeric",
     month: "short",
   });
-  const assets = await loadAssets(member, joinDate);
+  const tier = tierForLifetimeStamps(member.lifetime_stamps);
+  const assets = await loadAssets(member);
 
   const pass = new PKPass(
     assets,
@@ -99,6 +105,9 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
   );
 
   pass.type = "storeCard";
+
+  pass.secondaryFields.push({ key: "member", label: copy.memberLabel, value: joinDate });
+  pass.auxiliaryFields.push({ key: "tier", label: copy.tierLabel, value: tier.label[member.locale] });
 
   pass.backFields.push(
     { key: "about", label: copy.backHeader, value: copy.backBody },
