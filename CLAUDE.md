@@ -41,6 +41,13 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   `app/api/cron/prospect-events`, `lib/prospecting/*`,
   `lib/ai/private-event-*` — mismo patrón draft-then-human-approve que
   `stoutlab-outreach`, gate de confianza 85. Nada se envía automático.
+- `/fidelidad` — tarjeta de fidelidad en Apple Wallet (beta): geofence
+  nativo de iOS + actualización en vivo vía push de Apple (staff escanea en
+  `/wallet-staff` y suma sellos, la tarjeta ya instalada se refresca sola).
+  Regla confirmada: 10 sellos = 1 sorpresa. Ver `lib/wallet/*`,
+  `app/api/wallet/*`, `app/api/wallet-staff/*`, y **`WALLET_SETUP.md`**
+  (certificados Apple ya configurados en Vercel, estado completo del
+  sistema). `WALLET_STAFF_PASSWORD` protege `/wallet-staff`.
 
 ## Notas técnicas recurrentes
 - Botón "Preferred Sources" de Google en el footer — método manual control,

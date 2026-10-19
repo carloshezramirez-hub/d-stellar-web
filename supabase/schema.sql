@@ -143,3 +143,56 @@ create index if not exists web_orders_email_customer_status_idx on web_orders (e
 create index if not exists web_orders_created_at_idx on web_orders (created_at desc);
 
 alter table web_orders enable row level security;
+
+-- Tarjeta de fidelidad en Apple Wallet (beta) — pase tipo storeCard con
+-- geofence (notificación en pantalla de bloqueo al pasar cerca de Nuevo
+-- León 217). Ver lib/wallet/*, app/api/wallet/*, app/[locale]/fidelidad.
+-- stamps/stamps_required son placeholders del beta técnico, no el
+-- programa de fidelidad real todavía (pendiente de definir con Carlos).
+create table if not exists loyalty_members (
+  id uuid primary key default gen_random_uuid(),
+
+  serial_number text unique not null, -- serialNumber del pase (Apple Wallet)
+  auth_token text not null, -- token del webservice de actualización de pases (Authorization: ApplePass ...)
+
+  name text not null,
+  phone text not null,
+  email text,
+  locale text not null default 'es' check (locale in ('es', 'en')),
+
+  stamps int not null default 0,
+  stamps_required int not null default 10,
+  -- Nunca se reinicia al canjear (a diferencia de `stamps`) — cuenta todos
+  -- los sellos ganados en la vida del cliente, es lo que define su nivel
+  -- (ver lib/wallet/tiers.ts).
+  lifetime_stamps int not null default 0,
+
+  created_at timestamptz not null default now(),
+  -- Se actualiza al sumar un sello/canjear y también en bloque desde el cron
+  -- diario de frases — es el "tag" que usa el protocolo de Wallet
+  -- (passesUpdatedSince) para saber qué pases volver a descargar.
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists loyalty_members_phone_idx on loyalty_members (phone);
+
+-- Dispositivos que registraron esta tarjeta para recibir actualizaciones
+-- push (protocolo PassKit web service) — ver app/api/wallet/v1/*,
+-- lib/wallet/apns.ts, lib/wallet/device-db.ts.
+create table if not exists loyalty_devices (
+  id uuid primary key default gen_random_uuid(),
+
+  device_library_identifier text not null,
+  loyalty_member_id uuid not null references loyalty_members (id) on delete cascade,
+  push_token text not null,
+
+  created_at timestamptz not null default now(),
+
+  unique (device_library_identifier, loyalty_member_id)
+);
+
+create index if not exists loyalty_devices_member_idx on loyalty_devices (loyalty_member_id);
+
+alter table loyalty_devices enable row level security;
+
+alter table loyalty_members enable row level security;

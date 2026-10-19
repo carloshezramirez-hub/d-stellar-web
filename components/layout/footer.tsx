@@ -43,6 +43,7 @@ export function Footer() {
           <Link href="/historias" className="hover:text-stellar-pink">{nav("historias")}</Link>
           <Link href="/events" className="hover:text-stellar-pink">{nav("events")}</Link>
           <Link href="/pickup" className="hover:text-stellar-pink">{nav("pickup")}</Link>
+          <Link href="/fidelidad" className="hover:text-stellar-pink">{nav("loyalty")}</Link>
           <Link href="/visit" className="hover:text-stellar-pink">{nav("visit")}</Link>
           <Link href={{ pathname: "/events", hash: "private-events" }} className="hover:text-stellar-pink">
             {nav("privateEvents")}

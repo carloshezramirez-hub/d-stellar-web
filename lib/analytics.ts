@@ -13,6 +13,7 @@ export type AnalyticsEvent =
   | "begin_checkout_pickup"
   | "pickup_payment_approved"
   | "submit_private_event_inquiry"
+  | "submit_loyalty_signup"
   | "submit_ticket_order"
   | "begin_checkout_ticket"
   | "ticket_payment_approved"

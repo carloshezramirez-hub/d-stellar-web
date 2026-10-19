@@ -13,7 +13,8 @@
     "press": "Prensa",
     "about": "Nosotros",
     "language": "English",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "loyalty": "Fidelidad"
   },
   "cta": {
     "directions": "Cómo llegar",
@@ -31,7 +32,8 @@
     "openInMaps": "Abrir en Google Maps",
     "comingSoon": "Pickup en línea, muy pronto",
     "preferredSource": "Añadir como fuente preferida",
-    "preferredSourceAriaLabel": "Añadir d-stellar como fuente preferida en Google"
+    "preferredSourceAriaLabel": "Añadir d-stellar como fuente preferida en Google",
+    "loyaltyCard": "Baja tu tarjeta de fidelidad"
   },
   "home": {
     "eyebrow": "Condesa, Ciudad de México",
@@ -383,5 +385,28 @@
         "a": "d-stellar es una cookie shop de galletas de autor en Hipódromo Condesa (Nuevo León 217): el menú completo —cookies, bebidas de autor y sección sin cafeína— rota cada mes con sabores y narrativa nuevos, se hornea en tandas cortas y siempre incluye opciones veganas. También es un trans safe space y negocio LGBTQ+ friendly desde su fundación en 2024, con 5.0★ y 156 reseñas en Google. No es una galletería estilo Nueva York de porción gigante — es un concepto de autor que cambia por completo cada mes."
       }
     ]
+  },
+  "loyalty": {
+    "eyebrow": "Beta",
+    "title": "Tarjeta de fidelidad en tu Apple Wallet",
+    "intro": "Agrégala a tu Wallet y tu teléfono te avisa en la pantalla de bloqueo cuando pasas cerca de Nuevo León 217 — sin abrir ninguna app.",
+    "betaNote": "Esto es una prueba beta: las reglas del programa de sellos todavía pueden cambiar.",
+    "form": {
+      "eyebrow": "Súmate",
+      "title": "Obtén tu tarjeta",
+      "name": "Nombre",
+      "phone": "Teléfono (WhatsApp)",
+      "email": "Email (opcional)",
+      "submit": "Agregar a Apple Wallet",
+      "submitting": "Generando tu pase...",
+      "errorBody": "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",
+      "notConfiguredTitle": "Aún no disponible",
+      "notConfiguredBody": "Esta beta todavía no está activa en este ambiente — vuelve a intentarlo más tarde."
+    },
+    "qr": {
+      "label": "O escanea en tienda",
+      "alt": "Código QR para agregar la tarjeta de fidelidad de d-stellar",
+      "download": "Descargar QR para imprimir"
+    }
   }
 }

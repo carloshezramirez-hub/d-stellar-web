@@ -25,6 +25,7 @@ export const routing = defineRouting({
     "/faq": { es: "/faq", en: "/faq" },
     "/historias": { es: "/historias", en: "/historias" },
     "/historias/[mes]": { es: "/historias/[mes]", en: "/historias/[mes]" },
+    "/fidelidad": { es: "/fidelidad", en: "/fidelidad" },
   },
 });
 

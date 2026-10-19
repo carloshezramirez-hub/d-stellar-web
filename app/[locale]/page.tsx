@@ -66,6 +66,9 @@ export default async function HomePage({ params }: Props) {
                     <CtaLink href="/pickup" variant="outline">
                       {cta("orderPickup")}
                     </CtaLink>
+                    <CtaLink href="/fidelidad" variant="ghost">
+                      {cta("loyaltyCard")}
+                    </CtaLink>
                   </div>
                 </div>
 
