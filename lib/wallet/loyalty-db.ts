@@ -25,7 +25,7 @@ export interface LoyaltyMember {
   auth_token: string;
   name: string;
   phone: string;
-  email: string | null;
+  email: string;
   locale: "es" | "en";
   stamps: number;
   stamps_required: number;
@@ -37,7 +37,7 @@ export interface LoyaltyMember {
 export async function createLoyaltyMember(input: {
   name: string;
   phone: string;
-  email?: string;
+  email: string;
   locale: "es" | "en";
 }): Promise<LoyaltyMember> {
   const db = getWalletDb();
@@ -51,7 +51,7 @@ export async function createLoyaltyMember(input: {
       auth_token,
       name: input.name,
       phone: input.phone,
-      email: input.email ?? null,
+      email: input.email,
       locale: input.locale,
     })
     .select()
@@ -59,6 +59,14 @@ export async function createLoyaltyMember(input: {
 
   if (error) throw error;
   return data as LoyaltyMember;
+}
+
+/** Toda la base de clientes — para contactarlos por teléfono/correo. */
+export async function listAllLoyaltyMembers(): Promise<LoyaltyMember[]> {
+  const db = getWalletDb();
+  const { data, error } = await db.from("loyalty_members").select().order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data as LoyaltyMember[]) ?? [];
 }
 
 export async function getLoyaltyMemberBySerial(serialNumber: string): Promise<LoyaltyMember | null> {

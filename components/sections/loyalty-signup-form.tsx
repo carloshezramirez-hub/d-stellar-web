@@ -23,7 +23,7 @@ export function LoyaltySignupForm() {
         body: JSON.stringify({
           name: form.get("name"),
           phone: form.get("phone"),
-          email: form.get("email") || undefined,
+          email: form.get("email"),
           locale,
           website: form.get("website"),
         }),
@@ -81,6 +81,7 @@ export function LoyaltySignupForm() {
         <input
           type="email"
           name="email"
+          required
           className="border-2 border-line bg-transparent px-4 py-3 text-stellar-white outline-none focus:border-stellar-pink"
         />
       </label>

@@ -397,7 +397,7 @@
       "title": "Obtén tu tarjeta",
       "name": "Nombre",
       "phone": "Teléfono (WhatsApp)",
-      "email": "Email (opcional)",
+      "email": "Email",
       "submit": "Agregar a Apple Wallet",
       "submitting": "Generando tu pase...",
       "errorBody": "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",

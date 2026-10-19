@@ -157,7 +157,9 @@ create table if not exists loyalty_members (
 
   name text not null,
   phone text not null,
-  email text,
+  -- Obligatorio: el objetivo es poder contactar a toda la base de clientes
+  -- por teléfono y correo más adelante (ver /wallet-staff/clientes).
+  email text not null,
   locale text not null default 'es' check (locale in ('es', 'en')),
 
   stamps int not null default 0,

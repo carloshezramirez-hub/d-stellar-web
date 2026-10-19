@@ -397,7 +397,7 @@
       "title": "Get your card",
       "name": "Name",
       "phone": "Phone (WhatsApp)",
-      "email": "Email (optional)",
+      "email": "Email",
       "submit": "Add to Apple Wallet",
       "submitting": "Generating your pass...",
       "errorBody": "Something went wrong. Try again or message us on WhatsApp.",
