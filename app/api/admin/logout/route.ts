@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { ORDERS_SESSION_COOKIE } from "@/lib/orders-auth";
+import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
 
 export async function POST() {
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(ORDERS_SESSION_COOKIE, "", { path: "/pedidos", maxAge: 0 });
+  response.cookies.set(ADMIN_SESSION_COOKIE, "", { path: "/", maxAge: 0 });
   return response;
 }

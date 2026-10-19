@@ -147,8 +147,8 @@ blows one up to a full-bleed hero. Re-export at full resolution from the
 original camera roll before using any of them larger than ~700px wide.
 
 **Event cover photography is still a placeholder** (official gradient + logo,
-clearly labeled) — no real event photos were supplied. Swap
-`data/events.ts` → `coverImage` for real photos when available.
+clearly labeled) — no real event photos were supplied. Swap `coverImage` for
+real photos (upload from `/admin/eventos/[slug]`) when available.
 
 **Entrance walkthrough video** (added 2026-09-01) — `public/videos/como-llegar.mp4`
 is a real phone recording supplied by the client (WhatsApp export, 478×850,
@@ -178,7 +178,9 @@ the file in place — no code change needed since the path is fixed.
   (customers choose which cookies fill their 3/5/10-pack, repeats allowed),
   `compareAtPriceMXN` is the struck-through "before discount" price
   (`packSize × single-cookie price`) shown next to the pack price on `/menu`.
-- `data/events.ts` — `EventRecord[]`. See "Updating content."
+- `lib/events-db.ts` / `lib/events-types.ts` — `EventRecord`, backed by the
+  Supabase `events` table (not a hardcoded file since 2026-10-19). Managed
+  from `/admin/eventos`. See "Updating content."
 - `data/menu-history.ts` — `MonthlyStory[]`, rendered on `/historias` (was
   `/calendar` until 2026-08-16, when the client sent 9 months of real
   monthly narratives — see "Historias del menú" in "Updating content" for
@@ -271,7 +273,7 @@ so the app works end-to-end without payment credentials.
   `back_urls`, `notification_url`); `getPayment` fetches a payment by ID,
   shared by both webhooks. Pickup trusts the client-submitted per-item price
   (matches the menu it just rendered); **tickets do not** — `app/api/tickets/route.ts`
-  looks up the real ticket price from `data/events.ts` server-side by
+  looks up the real ticket price from the `events` table server-side by
   `eventSlug`/`ticketIndex`, never from the request body, so a tampered
   client request can't buy a ticket below its real price.
 - `app/api/pickup/route.ts` + `app/api/pickup/webhook/route.ts` and
@@ -353,7 +355,8 @@ art), they're wired into three places:
    that includes `MENU_MONTH_LABEL.es`, so it resurfaces on its own the next
    time the monthly label changes — no manual reset needed. Copy lives in
    `messages/{es,en}.json` → `menuPromo`.
-3. `data/events.ts` → `EventRecord.galleryImages` (optional `string[]`):
+3. `EventRecord.galleryImages` (optional `string[]`, edited from
+   `/admin/eventos/[slug]`):
    when set, the event detail page's hero renders a `HeroCarousel` (dot
    nav) of `[coverImage, ...galleryImages]` instead of one static image —
    used to give `el-camino-de-regreso` (the blind tasting of this exact
@@ -400,27 +403,24 @@ becomes a fixed recipe.
 **Prices** — every `MenuItem.priceMXN` and `EventRecord.priceMXN` is a plain
 number, edit directly.
 
-**New event** — add to `data/events.ts`: `slug` (becomes the URL), `dateISO`
-(with `-06:00` offset), `summary`, `description` (paragraphs), `includes`,
-`capacity`, optional `priceMXN`, a `coverImage` (real photo if you have one,
-otherwise regenerate a placeholder via
-`node scripts/gen-event-placeholders.mjs` after adding an entry to that
-script), and `status: "upcoming" | "past"` (flip manually once it's over —
-there's no automatic date-based sorting). Sitemap, JSON-LD, and the Google
-Calendar link all derive from this automatically.
-
-`dateISO`, `capacity`, and `includes` are all optional (added 2026-08-16 for
-retroactively-documented past events where those details were never
-tracked) — don't invent a time, headcount, or perk list to fill them in.
-When even the day is unknown, omit `dateISO` entirely and set `monthLabel`
-instead (`{ es: "Julio 2026", en: "July 2026" }`); when the day is known but
-the hour isn't, keep `dateISO` at midnight and set `timeKnown: false` so the
-formatted date drops the time instead of showing a fake one. The "Agregar al
-calendario" button only renders for `status: "upcoming"` events with a real
-`dateISO` — past events never get one, even if they have a full timestamp,
-since adding a past event to your calendar makes no sense. `externalUrl` is
-an optional CTA button (labeled "Instagram" today, but generic) linking out
-to a real social post about the event, when one exists.
+**New event** — since 2026-10-19 events live in Supabase (table `events`,
+see `lib/events-db.ts`/`lib/events-types.ts`), not in a hardcoded file
+anymore (`data/events.ts` was deleted). Create/edit/delete them from
+**`/admin/eventos`** (behind the unified `/admin` login) — the form covers
+`slug`, date/sessions, bilingual summary/description/includes, capacity,
+single price or multi-tier tickets, cover/gallery images (uploaded straight
+to Supabase Storage), and `status: upcoming | past`. Saving/deleting
+revalidates `/events` and `/events/[slug]` immediately, no redeploy needed.
+Sitemap, JSON-LD, and the Google Calendar link all derive from the same
+record automatically — same rules as before on not inventing data: leave a
+field blank in the form rather than guessing a time, headcount, or perk
+list. When even the day is unknown, pick "Solo mes aproximado" in the date
+mode selector instead of a fake date; when the day is known but not the
+hour, pick "Día confirmado, hora no" so the formatted date drops the time.
+The "Agregar al calendario" button only renders for `status: upcoming`
+events with a real date — past events never get one. `externalUrl` is an
+optional CTA button (labeled "Instagram" today, but generic) linking out to
+a real social post about the event, when one exists.
 
 ## SEO / GEO
 

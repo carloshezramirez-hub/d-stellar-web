@@ -33,9 +33,13 @@ StoutLab, `jhycktyloblpytwmtfmc.supabase.co`). **Nunca reutilizar** el de
 sin excepción (ya se rompió esta regla una vez por accidente).
 
 ## Sub-proyectos en este repo
+- `/admin` — panel único de staff (desde 2026-10-19): un solo login
+  (`ANALYTICS_DASHBOARD_PASSWORD`, cookie `admin_session` con `path: "/"`)
+  que autoriza también `/analytics`, `/pedidos` y `/wallet-staff` sin volver
+  a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 4
+  botones: Fidelidad, Analytics, Eventos, Pedidos.
 - `/analytics` — dashboard de analítica social (IG+FB+TikTok) en
-  construcción por fases, protegido con contraseña compartida
-  (`dstellar-cookies-26`). Ver memoria `project_dstellar_analytics_dashboard`
+  construcción por fases. Ver memoria `project_dstellar_analytics_dashboard`
   para el estado detallado por fase.
 - Motor de prospección B2B para "Private Session" (alquiler de local):
   `app/api/cron/prospect-events`, `lib/prospecting/*`,
@@ -44,10 +48,18 @@ sin excepción (ya se rompió esta regla una vez por accidente).
 - `/fidelidad` — tarjeta de fidelidad en Apple Wallet (beta): geofence
   nativo de iOS + actualización en vivo vía push de Apple (staff escanea en
   `/wallet-staff` y suma sellos, la tarjeta ya instalada se refresca sola).
-  Regla confirmada: 10 sellos = 1 sorpresa. Ver `lib/wallet/*`,
-  `app/api/wallet/*`, `app/api/wallet-staff/*`, y **`WALLET_SETUP.md`**
-  (certificados Apple ya configurados en Vercel, estado completo del
-  sistema). `WALLET_STAFF_PASSWORD` protege `/wallet-staff`.
+  Regla confirmada: 10 sellos = 1 sorpresa. `/wallet-staff/clientes` lista
+  toda la base de clientes (nombre/teléfono/email/nivel/sellos) con CSV —
+  el email es obligatorio en el signup. Ver `lib/wallet/*`,
+  `app/api/wallet/*`, `app/api/wallet-staff/*`, y **`WALLET_SETUP.md`**.
+- `/admin/eventos` — CRUD completo de eventos (crear/editar/borrar,
+  sesiones múltiples con toggle "agotada", niveles de boleto, subida de
+  imágenes a Supabase Storage) + panel de ventas por evento (quién pagó,
+  boletos vendidos, ingreso total). Los eventos viven en la tabla `events`
+  de Supabase (antes hardcodeados en `data/events.ts`, que ya no existe) —
+  ver `lib/events-db.ts`, `lib/events-types.ts`,
+  `components/admin/event-form.tsx`. Cualquier cambio revalida
+  `/events` y `/events/[slug]` al instante (sin redeploy).
 
 ## Notas técnicas recurrentes
 - Botón "Preferred Sources" de Google en el footer — método manual control,

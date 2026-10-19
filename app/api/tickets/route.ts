@@ -6,7 +6,7 @@ import { sendMail } from "@/lib/notifications/mailer";
 import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
 import { isMercadoPagoConfigured } from "@/lib/payments/env";
 import { createTicketPreference } from "@/lib/payments/mercadopago";
-import { getEvent } from "@/data/events";
+import { getEventBySlug } from "@/lib/events-db";
 import { isUpcomingSession, resolveOrderDateLabel } from "@/lib/event-date";
 
 export async function POST(request: Request) {
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
   // Look up the event and ticket server-side rather than trusting a
   // client-supplied price — the client only picks an index.
-  const event = getEvent(eventSlug);
+  const event = await getEventBySlug(eventSlug);
   const ticket = event?.tickets?.[ticketIndex];
   if (!event || !ticket || event.status !== "upcoming") {
     return NextResponse.json({ error: "invalid_ticket" }, { status: 400 });

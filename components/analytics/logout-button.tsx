@@ -6,8 +6,8 @@ export function LogoutButton() {
   const router = useRouter();
 
   async function handleLogout() {
-    await fetch("/api/analytics/logout", { method: "POST" });
-    router.push("/analytics/login");
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
     router.refresh();
   }
 

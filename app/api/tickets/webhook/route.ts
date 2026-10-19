@@ -8,7 +8,7 @@ import { emailEnv } from "@/lib/notifications/env";
 import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
 import { insertOrderIfNew, updateEmailStatus } from "@/lib/orders-db";
 import { buildTicketWebOrder } from "@/lib/orders-from-payment";
-import { getEvent } from "@/data/events";
+import { getEventBySlug } from "@/lib/events-db";
 import { resolveOrderDateLabel } from "@/lib/event-date";
 
 type NotificationBody = { type?: string; data?: { id?: string }; id?: string };
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, status: payment.status });
   }
 
-  const newOrder = buildTicketWebOrder(payment, paymentId);
+  const newOrder = await buildTicketWebOrder(payment, paymentId);
   const { order, isNew } = await insertOrderIfNew(newOrder);
 
   if (!isNew) {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
   const safeLocale = get("locale") === "en" ? "en" : "es";
   const eventSlug = get("eventSlug");
   const email = get("email");
-  const event = eventSlug ? getEvent(eventSlug) : undefined;
+  const event = eventSlug ? await getEventBySlug(eventSlug) : undefined;
   const ticket = event?.tickets?.[Number(get("ticketIndex"))];
 
   if (!event || !ticket || !email) {

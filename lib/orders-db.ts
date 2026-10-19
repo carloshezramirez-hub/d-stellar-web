@@ -132,6 +132,18 @@ export async function listOrders(limit = 200): Promise<WebOrder[]> {
   return (data ?? []) as WebOrder[];
 }
 
+/** Pedidos de boletos de un evento específico — usado por /admin/eventos/[slug]. */
+export async function listOrdersByEventSlug(eventSlug: string): Promise<WebOrder[]> {
+  const db = getOrdersDb();
+  const { data, error } = await db
+    .from("web_orders")
+    .select("*")
+    .eq("event_slug", eventSlug)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as WebOrder[];
+}
+
 export async function getOrderById(id: string): Promise<WebOrder | null> {
   const db = getOrdersDb();
   const { data, error } = await db.from("web_orders").select("*").eq("id", id).maybeSingle();

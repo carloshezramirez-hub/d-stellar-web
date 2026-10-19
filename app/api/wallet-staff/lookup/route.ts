@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { isValidStaffSessionCookie, WALLET_STAFF_SESSION_COOKIE } from "@/lib/wallet/staff-auth";
+import { ADMIN_SESSION_COOKIE, isValidAdminSession } from "@/lib/admin-auth";
 import { getLoyaltyMemberBySerial } from "@/lib/wallet/loyalty-db";
 
 export async function GET(request: Request) {
   const cookieStore = await cookies();
-  const session = cookieStore.get(WALLET_STAFF_SESSION_COOKIE)?.value;
-  if (!isValidStaffSessionCookie(session)) {
+  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  if (!isValidAdminSession(session)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

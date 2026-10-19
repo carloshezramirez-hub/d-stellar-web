@@ -141,8 +141,55 @@ create index if not exists web_orders_kind_idx on web_orders (kind);
 create index if not exists web_orders_code_idx on web_orders (code);
 create index if not exists web_orders_email_customer_status_idx on web_orders (email_customer_status);
 create index if not exists web_orders_created_at_idx on web_orders (created_at desc);
+create index if not exists web_orders_event_slug_idx on web_orders (event_slug);
 
 alter table web_orders enable row level security;
+
+-- Eventos públicos (viewing parties, cenas temáticas, etc.) — antes vivían
+-- hardcodeados en data/events.ts; se migraron aquí para poder editarlos
+-- desde /admin/eventos sin necesitar un redeploy. event_slug en web_orders
+-- y el `eventSlug`/`ticketIndex` que viajan en los metadata de Mercado Pago
+-- siguen apuntando a `slug` y al índice dentro de `tickets` — nunca
+-- convertir `tickets` en una tabla aparte con sus propios IDs.
+create table if not exists events (
+  id uuid primary key default gen_random_uuid(),
+
+  slug text unique not null,
+  title text not null,
+
+  date_iso timestamptz,
+  end_iso timestamptz,
+  -- false = el día está confirmado pero no la hora exacta (ver monthLabel
+  -- en EventRecord históricamente) — los formatos de fecha omiten la hora.
+  time_known boolean not null default true,
+  month_label jsonb, -- {es, en} — fallback cuando ni siquiera el día está confirmado (date_iso null)
+  session_dates timestamptz[],
+  sold_out_session_dates timestamptz[],
+  dates_summary jsonb, -- {es, en} — override del formateo automático cuando hay sessionDates
+  doors_note jsonb, -- {es, en}
+
+  summary jsonb not null, -- {es, en}
+  description jsonb not null, -- {es: string[], en: string[]} — un string por párrafo
+  includes jsonb, -- {es: string[], en: string[]}
+
+  capacity int,
+  price_mxn numeric, -- precio único; null cuando el evento usa `tickets` (niveles)
+  tickets jsonb, -- EventTicket[] — [{name:{es,en}, priceMXN, includes:{es,en}, note?:{es,en}}]
+
+  cover_image text not null,
+  gallery_images text[],
+  image_alt jsonb not null, -- {es, en}
+
+  status text not null default 'upcoming' check (status in ('upcoming', 'past')),
+  external_url text,
+
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists events_status_idx on events (status);
+
+alter table events enable row level security;
 
 -- Tarjeta de fidelidad en Apple Wallet (beta) — pase tipo storeCard con
 -- geofence (notificación en pantalla de bloqueo al pasar cerca de Nuevo

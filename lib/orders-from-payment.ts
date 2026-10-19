@@ -1,5 +1,5 @@
 import { getMetadataValue } from "@/lib/payments/metadata";
-import { getEvent } from "@/data/events";
+import { getEventBySlug } from "@/lib/events-db";
 import { resolveOrderDateLabel } from "@/lib/event-date";
 import type { NewWebOrder } from "@/lib/orders-db";
 import type { PickupOrderFormValues } from "@/lib/pickup-schema";
@@ -18,7 +18,7 @@ export function isPickupPayment(metadata: Record<string, unknown>) {
   return Boolean(getMetadataValue(metadata, "items"));
 }
 
-export function buildTicketWebOrder(payment: PaymentLike, paymentId: string): NewWebOrder {
+export async function buildTicketWebOrder(payment: PaymentLike, paymentId: string): Promise<NewWebOrder> {
   const metadata = (payment.metadata ?? {}) as Record<string, string>;
   const get = (key: string) => getMetadataValue(metadata, key);
   const code = get("code") || payment.external_reference || paymentId;
@@ -26,7 +26,7 @@ export function buildTicketWebOrder(payment: PaymentLike, paymentId: string): Ne
   const eventSlug = get("eventSlug");
   const email = get("email");
 
-  const event = eventSlug ? getEvent(eventSlug) : undefined;
+  const event = eventSlug ? await getEventBySlug(eventSlug) : undefined;
   const ticket = event?.tickets?.[Number(get("ticketIndex"))];
 
   // Pedido pagado pero con metadata incompleta (caso raro) — igual se deja
@@ -64,8 +64,8 @@ export function buildTicketWebOrder(payment: PaymentLike, paymentId: string): Ne
     currency: "MXN",
     concept: `${event.title} · ${qty}x ${ticketName}`,
     // Guarda todo lo necesario para reconstruir el TicketOrderData exacto al
-    // reenviar el correo desde /pedidos, sin depender de que data/events.ts
-    // siga teniendo el mismo evento/boleto más adelante.
+    // reenviar el correo desde /pedidos, sin depender de que el evento/
+    // boleto siga existiendo igual en la tabla `events` más adelante.
     items: {
       eventTitle: event.title,
       ticketName,

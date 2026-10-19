@@ -1,4 +1,4 @@
-import type { EventRecord } from "@/data/events";
+import type { EventRecord } from "@/lib/events-types";
 
 type Locale = "es" | "en";
 

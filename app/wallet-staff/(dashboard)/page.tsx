@@ -8,8 +8,8 @@ export default function WalletStaffPage() {
   const router = useRouter();
 
   async function logout() {
-    await fetch("/api/wallet-staff/logout", { method: "POST" });
-    router.push("/wallet-staff/login");
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
     router.refresh();
   }
 

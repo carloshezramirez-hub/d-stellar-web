@@ -6,8 +6,8 @@ export function LogoutButton() {
   const router = useRouter();
 
   async function handleLogout() {
-    await fetch("/api/pedidos/logout", { method: "POST" });
-    router.push("/pedidos/login");
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
     router.refresh();
   }
 

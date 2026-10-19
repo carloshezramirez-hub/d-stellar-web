@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { ORDERS_SESSION_COOKIE, isValidOrdersSessionCookie } from "@/lib/orders-auth";
+import { ADMIN_SESSION_COOKIE, isValidAdminSession } from "@/lib/admin-auth";
 import { getOrderById, insertOrderIfNew, updateEmailStatus, getOrdersDb } from "@/lib/orders-db";
 import { sendPaymentMail } from "@/lib/notifications/resend-mailer";
 import { buildTicketCustomerEmail, type TicketOrderData } from "@/lib/notifications/ticket-templates";
@@ -13,7 +13,7 @@ import { buildTicketWebOrder, buildPickupWebOrder, isTicketPayment, isPickupPaym
 
 async function requireSession() {
   const cookieStore = await cookies();
-  return isValidOrdersSessionCookie(cookieStore.get(ORDERS_SESSION_COOKIE)?.value);
+  return isValidAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
 }
 
 /**
@@ -126,7 +126,7 @@ export async function syncHistoricalOrders(): Promise<SyncResult> {
     const metadata = (payment.metadata ?? {}) as Record<string, unknown>;
 
     const newOrder = isTicketPayment(metadata)
-      ? buildTicketWebOrder(payment, paymentId)
+      ? await buildTicketWebOrder(payment, paymentId)
       : isPickupPayment(metadata)
         ? buildPickupWebOrder(payment, paymentId)
         : null;

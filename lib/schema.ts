@@ -1,6 +1,6 @@
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { googleReviewStats } from "@/data/reviews";
-import type { EventRecord } from "@/data/events";
+import type { EventRecord } from "@/lib/events-types";
 
 export function localBusinessSchema() {
   return {

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { isValidStaffSessionCookie, WALLET_STAFF_SESSION_COOKIE } from "@/lib/wallet/staff-auth";
+import { ADMIN_SESSION_COOKIE, isValidAdminSession } from "@/lib/admin-auth";
 import { listAllLoyaltyMembers } from "@/lib/wallet/loyalty-db";
 import { tierForLifetimeStamps } from "@/lib/wallet/tiers";
 
 export async function GET() {
   const cookieStore = await cookies();
-  const session = cookieStore.get(WALLET_STAFF_SESSION_COOKIE)?.value;
-  if (!isValidStaffSessionCookie(session)) {
+  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  if (!isValidAdminSession(session)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

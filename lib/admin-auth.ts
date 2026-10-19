@@ -1,15 +1,16 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { analyticsDashboardEnv } from "@/lib/social/env";
 
-export const WALLET_STAFF_SESSION_COOKIE = "wallet_staff_session";
+// Sesión única para todo el panel /admin (y lo que cuelga de él:
+// /analytics, /pedidos, /wallet-staff) — un solo login, una sola
+// contraseña (ANALYTICS_DASHBOARD_PASSWORD). Reemplaza los 3 sistemas de
+// auth que existían antes (uno por sección).
+export const ADMIN_SESSION_COOKIE = "admin_session";
 const SESSION_DAYS = 30;
-export const WALLET_STAFF_SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
+export const ADMIN_SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
 
-export const walletStaffEnv = {
-  password: process.env.WALLET_STAFF_PASSWORD,
-};
-
-export function isWalletStaffConfigured(): boolean {
-  return Boolean(walletStaffEnv.password);
+export function isAdminAuthConfigured(): boolean {
+  return Boolean(analyticsDashboardEnv.password);
 }
 
 function sign(expiresAt: number, password: string): string {
@@ -17,15 +18,15 @@ function sign(expiresAt: number, password: string): string {
 }
 
 /** Cookie value = "<expiresAtMs>.<hmac>", firmada con la contraseña — sin secreto extra que gestionar. */
-export function createStaffSessionCookieValue(): string | null {
-  const password = walletStaffEnv.password;
+export function createAdminSessionCookieValue(): string | null {
+  const password = analyticsDashboardEnv.password;
   if (!password) return null;
-  const expiresAt = Date.now() + WALLET_STAFF_SESSION_MAX_AGE * 1000;
+  const expiresAt = Date.now() + ADMIN_SESSION_MAX_AGE * 1000;
   return `${expiresAt}.${sign(expiresAt, password)}`;
 }
 
-export function isValidStaffSessionCookie(value: string | undefined): boolean {
-  const password = walletStaffEnv.password;
+export function isValidAdminSession(value: string | undefined): boolean {
+  const password = analyticsDashboardEnv.password;
   if (!password || !value) return false;
 
   const [expiresAtRaw, signature] = value.split(".");

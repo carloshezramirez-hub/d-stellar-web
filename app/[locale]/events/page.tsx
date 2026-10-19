@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { PrivateEventForm } from "@/components/sections/private-event-form";
-import { upcomingEvents, pastEvents, eventStartingPrice, type EventRecord } from "@/data/events";
+import { listUpcomingEvents, listPastEvents, eventStartingPrice, type EventRecord } from "@/lib/events-db";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -46,8 +46,8 @@ export default async function EventsPage({ params }: Props) {
   const tPrivate = await getTranslations("privateEvents");
   const cta = await getTranslations("cta");
 
-  const upcoming = upcomingEvents();
-  const past = pastEvents();
+  const upcoming = await listUpcomingEvents();
+  const past = await listPastEvents();
 
   return (
     <div>

@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { trackEvent } from "@/lib/analytics";
 import { formatSessionDate, isUpcomingSession } from "@/lib/event-date";
-import type { EventRecord } from "@/data/events";
+import type { EventRecord } from "@/lib/events-types";
 
 type Locale = "es" | "en";
 
@@ -14,8 +14,8 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
   const t = useTranslations("events.order");
   const locale = useLocale() as Locale;
   const tickets = event.tickets ?? [];
-  // Never offer a date that's already passed, even if it's still listed on
-  // data/events.ts (e.g. the printed flyer's dates outlive individual
+  // Never offer a date that's already passed, even if it's still listed in
+  // the `events` table (e.g. the printed flyer's dates outlive individual
   // sessions) — see lib/event-date.ts.
   const sessionDates = (event.sessionDates ?? []).filter((iso) => isUpcomingSession(iso));
   const soldOutDates = event.soldOutSessionDates ?? [];

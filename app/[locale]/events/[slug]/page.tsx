@@ -9,7 +9,8 @@ import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { events, getEvent, eventStartingPrice } from "@/data/events";
+import { listAllEvents, getEventBySlug, eventStartingPrice } from "@/lib/events-db";
+import type { EventRecord } from "@/lib/events-types";
 import { formatEventDate } from "@/lib/event-date";
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { TicketOrderForm } from "@/components/sections/ticket-order-form";
@@ -22,13 +23,14 @@ type Props = {
 };
 type Locale = "es" | "en";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const events = await listAllEvents();
   return events.map((event) => ({ slug: event.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const event = getEvent(slug);
+  const event = await getEventBySlug(slug);
   if (!event) return {};
   const loc = locale as Locale;
 
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-function googleCalendarUrl(event: NonNullable<ReturnType<typeof getEvent>> & { dateISO: string }) {
+function googleCalendarUrl(event: EventRecord & { dateISO: string }) {
   const start = new Date(event.dateISO).toISOString().replace(/[-:]|\.\d{3}/g, "");
   const end = new Date(event.endISO ?? event.dateISO).toISOString().replace(/[-:]|\.\d{3}/g, "");
   const params = new URLSearchParams({
@@ -59,7 +61,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   const { status, code } = await searchParams;
   setRequestLocale(locale);
-  const event = getEvent(slug);
+  const event = await getEventBySlug(slug);
   if (!event) notFound();
 
   const loc = locale as Locale;

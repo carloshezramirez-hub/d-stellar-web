@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createStaffSessionCookieValue, walletStaffEnv, WALLET_STAFF_SESSION_COOKIE, WALLET_STAFF_SESSION_MAX_AGE } from "@/lib/wallet/staff-auth";
+import { analyticsDashboardEnv } from "@/lib/social/env";
+import { ADMIN_SESSION_COOKIE, ADMIN_SESSION_MAX_AGE, createAdminSessionCookieValue } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -11,22 +12,22 @@ export async function POST(request: Request) {
 
   const password = typeof body === "object" && body !== null ? (body as Record<string, unknown>).password : undefined;
 
-  if (!walletStaffEnv.password || password !== walletStaffEnv.password) {
+  if (!analyticsDashboardEnv.password || password !== analyticsDashboardEnv.password) {
     return NextResponse.json({ error: "invalid_password" }, { status: 401 });
   }
 
-  const cookieValue = createStaffSessionCookieValue();
+  const cookieValue = createAdminSessionCookieValue();
   if (!cookieValue) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(WALLET_STAFF_SESSION_COOKIE, cookieValue, {
+  response.cookies.set(ADMIN_SESSION_COOKIE, cookieValue, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: WALLET_STAFF_SESSION_MAX_AGE,
-    path: "/wallet-staff",
+    maxAge: ADMIN_SESSION_MAX_AGE,
+    path: "/",
   });
   return response;
 }

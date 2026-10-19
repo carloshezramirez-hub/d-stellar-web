@@ -15,9 +15,14 @@ solo en la pantalla de bloqueo cuando el cliente pasa cerca de Nuevo León
 - Las 6 variables `APPLE_*` ya están en Vercel (Production + Preview) como
   secretos "sensitive" — nunca se guardaron en texto plano en ningún lado
   después de configurarlas.
-- `WALLET_STAFF_PASSWORD` también está en Vercel (los tres entornos) —
-  valor: `dstellar-fidelidad-26` (coméntaselo al equipo de caja; cámbialo
-  desde el dashboard de Vercel cuando quieras).
+- `/wallet-staff` ya no tiene su propia contraseña — desde el 2026-10-19
+  cuelga del panel único `/admin` (una sola sesión para Fidelidad,
+  Analytics, Eventos y Pedidos). Entra por `/admin/login` con
+  `ANALYTICS_DASHBOARD_PASSWORD` y de ahí navega a cualquier sección sin
+  volver a loguearte — ver `lib/admin-auth.ts`.
+- `/wallet-staff/clientes` muestra la base completa de clientes que
+  descargaron la tarjeta (nombre, teléfono, email, nivel, sellos) con
+  descarga en CSV — el email es obligatorio desde el signup.
 - Schema de Supabase aplicado al proyecto `d-stellar` (`loyalty_members`,
   `loyalty_devices`).
 - Diseño final de la franja (`lib/wallet/strip.ts`): fondo negro con
