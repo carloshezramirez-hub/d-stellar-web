@@ -1,9 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
-import { ensureBrandFontRegistered, BRAND_DISPLAY_FONT } from "./register-brand-font";
-
-ensureBrandFontRegistered();
 
 // Apple Wallet storeCard strip image — la única zona de un storeCard donde
 // se puede meter arte propio (todo lo demás es backgroundColor plano).
@@ -153,35 +150,29 @@ async function buildHeaderSvg(width: number, height: number, name: string): Prom
   const logoBuffer = await loadLogo();
   const logoMeta = await sharp(logoBuffer).metadata();
   const scale = width / BASE_WIDTH;
-  const logoHeight = Math.round(20 * scale);
+  const logoHeight = Math.round(17 * scale);
   const logoWidth = Math.round(logoHeight * ((logoMeta.width ?? 2458) / (logoMeta.height ?? 502)));
   const logoB64 = logoBuffer.toString("base64");
-  const margin = Math.round(18 * scale);
-  const headerY = Math.round(height * 0.26);
-  const nameFontSize = Math.round(15 * scale);
+  // Márgenes generosos a propósito: Wallet puede recortar un poco los
+  // bordes de la franja según el dispositivo/pantalla, así que nada
+  // importante vive cerca del borde.
+  const margin = Math.round(30 * scale);
+  const headerY = Math.round(height * 0.27);
+  const nameFontSize = Math.round(14 * scale);
+
+  // Misma familia tipográfica que el resto de la tarjeta (labels nativos
+  // de Wallet) — una fuente de marca personalizada no renderizaba igual en
+  // producción, mejor consistencia garantizada que un detalle que puede
+  // fallar.
+  const textFont = "-apple-system, 'Helvetica Neue', Arial, sans-serif";
 
   return `
-    <defs>
-      <filter id="nameGlow" x="-60%" y="-60%" width="220%" height="220%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="${2 * scale}" result="blur"/>
-        <feFlood flood-color="#ff70e0" flood-opacity="0.9"/>
-        <feComposite in2="blur" operator="in" result="glow"/>
-        <feMerge>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-
     <image x="${margin}" y="${headerY - logoHeight / 2}" width="${logoWidth}" height="${logoHeight}"
       href="data:image/png;base64,${logoB64}" />
 
-    <g filter="url(#nameGlow)">
-      <text x="${width - margin}" y="${headerY + nameFontSize * 0.35}" text-anchor="end"
-        font-family="${BRAND_DISPLAY_FONT}" font-weight="600"
-        font-size="${nameFontSize}" fill="#ffffff">${escapeXml(name)}</text>
-    </g>
+    <text x="${width - margin}" y="${headerY + nameFontSize * 0.35}" text-anchor="end"
+      font-family="${textFont}" font-weight="700"
+      font-size="${nameFontSize}" fill="#ffffff">${escapeXml(name)}</text>
   `;
 }
 
@@ -201,8 +192,10 @@ export async function buildStampStrip(stamps: number, stampsRequired: number, na
   const earned = Math.max(0, Math.min(stamps, count));
 
   const starSource = await loadStarCookie();
-  const marginX = Math.round(18 * scale);
-  const gapTarget = Math.round(5 * scale);
+  // Mismo margen que la fila del logo/nombre, por consistencia y para que
+  // nada (ni el halo de los sellos ganados) quede pegado al borde.
+  const marginX = Math.round(30 * scale);
+  const gapTarget = Math.round(4 * scale);
   const giftGap = Math.round(10 * scale);
   // count galletas + 1 cajita de regalo al final, todas del mismo tamaño,
   // repartidas en el ancho disponible.
