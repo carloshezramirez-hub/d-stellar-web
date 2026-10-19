@@ -4,32 +4,21 @@ import sharp from "sharp";
 
 // Apple Wallet storeCard strip image — la única zona de un storeCard donde
 // se puede meter arte propio (todo lo demás es backgroundColor plano).
-// IMPORTANTE: Wallet recorta la franja al alto que documenta Apple
-// (375x123 @1x) — una franja más alta no se ve completa, se corta al
-// centro (se comprobó en iPhone real). Por eso esto son solo DOS filas:
-//   1) logo (izquierda) + nombre del cliente (derecha, con glow, tipografía
-//      de marca)
-//   2) la fila de progreso: la galleta en forma de estrella por cada sello
-//      (glow rosa en las ganadas, apagada en las que faltan) terminando en
-//      la cajita de regalo — "llega hasta aquí y te lo ganas"
-// El nivel del cliente y "miembro desde" van como campos nativos de Wallet
-// (ver lib/wallet/apple-pass.ts), no en esta imagen.
+//
+// Se simplificó a propósito: cualquier <text> dibujado aquí (nombre,
+// contador, etc.) sale como cuadros vacíos en producción — el runtime de
+// Vercel no tiene ninguna fuente instalada para que sharp/librsvg
+// rasterice texto (ni siquiera "sans-serif" genérico resuelve a nada ahí,
+// aunque en local sí por los fonts del sistema). Se comprobó en iPhone
+// real. Por eso esta imagen es solo el logo sobre un fondo con destellos
+// rosa (formas/gradientes, no texto — esos si renderizan bien en
+// cualquier lado). Todo el texto (nombre, sellos, miembro desde, nivel)
+// vive como campos nativos de Wallet — ver lib/wallet/apple-pass.ts — esos
+// los dibuja iOS directamente, nunca fallan.
 const BASE_WIDTH = 375;
 const BASE_HEIGHT = 123;
-const ICON_COUNT_MAX = 10;
-const GLOW_RGB = { r: 255, g: 112, b: 224 }; // #FF70E0, el rosa de marca
 
-const transparent = { r: 0, g: 0, b: 0, alpha: 0 };
-
-let starCookieCache: Buffer | null = null;
 let logoCache: Buffer | null = null;
-
-async function loadStarCookie(): Promise<Buffer> {
-  if (!starCookieCache) {
-    starCookieCache = await readFile(join(process.cwd(), "public/wallet/star-cookie.png"));
-  }
-  return starCookieCache;
-}
 
 async function loadLogo(): Promise<Buffer> {
   if (!logoCache) {
@@ -38,97 +27,15 @@ async function loadLogo(): Promise<Buffer> {
   return logoCache;
 }
 
-function escapeXml(value: string): string {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-async function resizeIcon(source: Buffer, size: number): Promise<Buffer> {
-  return sharp(source).resize(size, size, { fit: "contain", background: transparent }).toBuffer();
-}
-
-/** Copia apagada/desaturada para los sellos que aún no se ganan. */
-async function dimIcon(source: Buffer, size: number): Promise<Buffer> {
-  const { data, info } = await sharp(source)
-    .resize(size, size, { fit: "contain", background: transparent })
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const out = Buffer.from(data);
-  for (let i = 0; i < out.length; i += 4) {
-    const luma = Math.round(out[i] * 0.3 + out[i + 1] * 0.59 + out[i + 2] * 0.11);
-    out[i] = luma;
-    out[i + 1] = luma;
-    out[i + 2] = luma;
-    out[i + 3] = Math.round(out[i + 3] * 0.35);
-  }
-  return sharp(out, { raw: { width: info.width, height: info.height, channels: info.channels } })
-    .png()
-    .toBuffer();
-}
-
-/** Icono + halo rosa fuerte detrás, sobre un lienzo más grande — sellos ya ganados. */
-async function glowIcon(source: Buffer, size: number, blurPx: number): Promise<{ buffer: Buffer; pad: number }> {
-  const pad = Math.round(blurPx * 2.6);
-  const resized = await resizeIcon(source, size);
-  const { data, info } = await sharp(resized).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const tint = Buffer.from(data);
-  for (let i = 0; i < tint.length; i += 4) {
-    tint[i] = GLOW_RGB.r;
-    tint[i + 1] = GLOW_RGB.g;
-    tint[i + 2] = GLOW_RGB.b;
-    tint[i + 3] = Math.min(255, Math.round(tint[i + 3] * 1.6));
-  }
-  const glowLayer = await sharp(tint, { raw: { width: info.width, height: info.height, channels: info.channels } })
-    .png()
-    .blur(Math.max(1, blurPx))
-    .toBuffer();
-
-  const canvasSize = size + pad * 2;
-  // Dos pasadas de glow (ancho tenue + angosto intenso) para un halo más
-  // premium que un solo blur plano.
-  const tightGlow = await sharp(tint, { raw: { width: info.width, height: info.height, channels: info.channels } })
-    .png()
-    .blur(Math.max(1, blurPx * 0.45))
-    .toBuffer();
-
-  const buffer = await sharp({ create: { width: canvasSize, height: canvasSize, channels: 4, background: transparent } })
-    .composite([
-      { input: glowLayer, left: pad, top: pad },
-      { input: tightGlow, left: pad, top: pad },
-      { input: resized, left: pad, top: pad },
-    ])
-    .png()
-    .toBuffer();
-
-  return { buffer, pad };
-}
-
-async function giftBoxIcon(size: number): Promise<Buffer> {
-  const half = size / 2;
-  const lidH = size * 0.22;
-  const ribbonW = size * 0.16;
-  const svg = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="${lidH}" width="${size}" height="${size - lidH}" rx="${size * 0.06}" fill="#ffffff"/>
-    <rect x="${-size * 0.04}" y="0" width="${size * 1.08}" height="${lidH}" rx="${size * 0.05}" fill="#ff70e0"/>
-    <rect x="${half - ribbonW / 2}" y="0" width="${ribbonW}" height="${size}" fill="#ff70e0"/>
-    <path d="M ${half} ${lidH * 0.55}
-             C ${half - size * 0.28} ${lidH * 0.55}, ${half - size * 0.28} ${-size * 0.1}, ${half} ${lidH * 0.22}
-             C ${half + size * 0.28} ${-size * 0.1}, ${half + size * 0.28} ${lidH * 0.55}, ${half} ${lidH * 0.55} Z"
-      fill="none" stroke="#ff70e0" stroke-width="${size * 0.07}" stroke-linejoin="round"/>
-  </svg>`;
-  return sharp(Buffer.from(svg)).png().toBuffer();
-}
-
 /**
  * Posiciones fijas (no aleatorias en cada render, para que no "parpadeen"
  * entre descargas) de los destellos rosa tipo "shine" sobre el fondo negro.
  * Coordenadas en fracción de width/height.
  */
 const SHINE_SPOTS: Array<{ x: number; y: number; r: number; opacity: number }> = [
-  { x: 0.06, y: 0.1, r: 0.3, opacity: 0.5 },
-  { x: 0.85, y: 0.05, r: 0.22, opacity: 0.4 },
-  { x: 0.97, y: 0.6, r: 0.2, opacity: 0.26 },
-  { x: 0.5, y: 1.0, r: 0.28, opacity: 0.2 },
+  { x: 0.1, y: 0.15, r: 0.35, opacity: 0.45 },
+  { x: 0.85, y: 0.1, r: 0.3, opacity: 0.35 },
+  { x: 0.95, y: 0.85, r: 0.3, opacity: 0.22 },
 ];
 
 function shineSvg(width: number, height: number): string {
@@ -146,89 +53,23 @@ function shineSvg(width: number, height: number): string {
   return `<defs>${defs}</defs>${circles}`;
 }
 
-async function buildHeaderSvg(width: number, height: number, name: string): Promise<string> {
+export async function buildStampStrip(scale: 1 | 2 | 3): Promise<Buffer> {
+  const width = BASE_WIDTH * scale;
+  const height = BASE_HEIGHT * scale;
+
   const logoBuffer = await loadLogo();
   const logoMeta = await sharp(logoBuffer).metadata();
-  const scale = width / BASE_WIDTH;
-  const logoHeight = Math.round(17 * scale);
+  const logoHeight = Math.round(30 * scale);
   const logoWidth = Math.round(logoHeight * ((logoMeta.width ?? 2458) / (logoMeta.height ?? 502)));
   const logoB64 = logoBuffer.toString("base64");
-  // Márgenes generosos a propósito: Wallet puede recortar un poco los
-  // bordes de la franja según el dispositivo/pantalla, así que nada
-  // importante vive cerca del borde.
-  const margin = Math.round(30 * scale);
-  const headerY = Math.round(height * 0.27);
-  const nameFontSize = Math.round(14 * scale);
 
-  // Misma familia tipográfica que el resto de la tarjeta (labels nativos
-  // de Wallet) — una fuente de marca personalizada no renderizaba igual en
-  // producción, mejor consistencia garantizada que un detalle que puede
-  // fallar.
-  const textFont = "-apple-system, 'Helvetica Neue', Arial, sans-serif";
-
-  return `
-    <image x="${margin}" y="${headerY - logoHeight / 2}" width="${logoWidth}" height="${logoHeight}"
-      href="data:image/png;base64,${logoB64}" />
-
-    <text x="${width - margin}" y="${headerY + nameFontSize * 0.35}" text-anchor="end"
-      font-family="${textFont}" font-weight="700"
-      font-size="${nameFontSize}" fill="#ffffff">${escapeXml(name)}</text>
-  `;
-}
-
-function backgroundSvg(width: number, height: number, headerSvg: string): string {
-  return `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
     <rect width="${width}" height="${height}" fill="#000000"/>
     ${shineSvg(width, height)}
     <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
-    ${headerSvg}
+    <image x="${(width - logoWidth) / 2}" y="${(height - logoHeight) / 2}" width="${logoWidth}" height="${logoHeight}"
+      href="data:image/png;base64,${logoB64}" />
   </svg>`;
-}
 
-export async function buildStampStrip(stamps: number, stampsRequired: number, name: string, scale: 1 | 2 | 3): Promise<Buffer> {
-  const width = BASE_WIDTH * scale;
-  const height = BASE_HEIGHT * scale;
-  const count = Math.min(stampsRequired, ICON_COUNT_MAX);
-  const earned = Math.max(0, Math.min(stamps, count));
-
-  const starSource = await loadStarCookie();
-  // Mismo margen que la fila del logo/nombre, por consistencia y para que
-  // nada (ni el halo de los sellos ganados) quede pegado al borde.
-  const marginX = Math.round(30 * scale);
-  const gapTarget = Math.round(4 * scale);
-  const giftGap = Math.round(10 * scale);
-  // count galletas + 1 cajita de regalo al final, todas del mismo tamaño,
-  // repartidas en el ancho disponible.
-  const slots = count + 1;
-  const iconSize = Math.round((width - marginX * 2 - gapTarget * (slots - 1) - (giftGap - gapTarget)) / slots);
-  const blurPx = Math.max(1, Math.round(iconSize * 0.2));
-
-  const [emptyIcon, { buffer: filledGlow, pad }, giftIcon] = await Promise.all([
-    dimIcon(starSource, iconSize),
-    glowIcon(starSource, iconSize, blurPx),
-    giftBoxIcon(iconSize),
-  ]);
-
-  const rowCenterY = Math.round(height * 0.72);
-  const emptyTop = Math.round(rowCenterY - iconSize / 2);
-
-  const composites: Array<{ input: Buffer; left: number; top: number }> = [];
-  let left = marginX;
-  for (let i = 0; i < count; i++) {
-    if (i < earned) {
-      composites.push({ input: filledGlow, left: left - pad, top: Math.round(rowCenterY - (iconSize + pad * 2) / 2) });
-    } else {
-      composites.push({ input: emptyIcon, left, top: emptyTop });
-    }
-    left += iconSize + gapTarget;
-  }
-  left += giftGap - gapTarget;
-  composites.push({ input: giftIcon, left, top: emptyTop });
-
-  const headerSvg = await buildHeaderSvg(width, height, name);
-
-  return sharp(Buffer.from(backgroundSvg(width, height, headerSvg)))
-    .composite(composites)
-    .png()
-    .toBuffer();
+  return sharp(Buffer.from(svg)).png().toBuffer();
 }
