@@ -295,6 +295,21 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      {/* LOYALTY BANNER — muy visual, poco texto */}
+      <section className="border-b border-line bg-stellar-pink px-5 py-14">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
+          <div className="flex items-center gap-5">
+            <Image src="/wallet/star-cookie.png" alt="" width={242} height={203} className="h-16 w-auto md:h-24" />
+            <h2 className="font-display text-3xl font-black uppercase leading-[0.9] text-stellar-black md:text-5xl">
+              {t("loyaltyBannerTitle")}
+            </h2>
+          </div>
+          <CtaLink href="/fidelidad" variant="solid" className="shrink-0 bg-stellar-black text-stellar-white hover:bg-stellar-white hover:text-stellar-black">
+            {cta("loyaltyCard")} <ArrowUpRight size={14} />
+          </CtaLink>
+        </div>
+      </section>
+
       {/* VISIT TEASER — photo backdrop */}
       <section className="relative overflow-hidden px-5 py-24 md:py-32">
         <Image
