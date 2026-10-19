@@ -59,15 +59,24 @@ export async function buildStampStrip(scale: 1 | 2 | 3): Promise<Buffer> {
 
   const logoBuffer = await loadLogo();
   const logoMeta = await sharp(logoBuffer).metadata();
-  const logoHeight = Math.round(30 * scale);
+  const logoHeight = Math.round(20 * scale);
   const logoWidth = Math.round(logoHeight * ((logoMeta.width ?? 2458) / (logoMeta.height ?? 502)));
   const logoB64 = logoBuffer.toString("base64");
+  const margin = Math.round(18 * scale);
+
+  // En un storeCard, Wallet dibuja el primaryField ("Sellos") ENCIMA de
+  // esta imagen, abajo a la izquierda — no debajo de la franja como en
+  // otros tipos de pase (se comprobó en iPhone real, se encimaba con el
+  // logo centrado). Por eso el logo va arriba a la derecha, lejos de esa
+  // zona.
+  const logoX = width - margin - logoWidth;
+  const logoY = margin;
 
   const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
     <rect width="${width}" height="${height}" fill="#000000"/>
     ${shineSvg(width, height)}
     <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
-    <image x="${(width - logoWidth) / 2}" y="${(height - logoHeight) / 2}" width="${logoWidth}" height="${logoHeight}"
+    <image x="${logoX}" y="${logoY}" width="${logoWidth}" height="${logoHeight}"
       href="data:image/png;base64,${logoB64}" />
   </svg>`;
 
