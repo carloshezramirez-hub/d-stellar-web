@@ -66,11 +66,6 @@ export interface Learning {
  */
 export function buildLearnings(): Learning[] {
   const eff = buildAllEfficiency();
-  const cdmxCampaigns = AD_CAMPAIGNS.filter((c) => c.audienceRegion === "cdmx-100");
-  const broadCampaign = AD_CAMPAIGNS.find((c) => c.audienceRegion !== "cdmx-100");
-
-  const avgLikeRateCdmx = cdmxCampaigns.reduce((s, c) => s + (c.likes / c.videoViews) * 100, 0) / cdmxCampaigns.length;
-  const broadLikeRate = broadCampaign ? (broadCampaign.likes / broadCampaign.videoViews) * 100 : 0;
 
   const shortest = [...AD_CAMPAIGNS].sort((a, b) => a.videoDurationSec - b.videoDurationSec)[0];
   const bestCompletion = [...AD_CAMPAIGNS].sort((a, b) => b.retention.watchedFull.value - a.retention.watchedFull.value)[0];
@@ -87,14 +82,6 @@ export function buildLearnings(): Learning[] {
   const flagged = AD_CAMPAIGNS.filter((c) => c.flaggedIssue);
 
   const learnings: Learning[] = [];
-
-  if (broadCampaign) {
-    learnings.push({
-      severity: "fix",
-      title: "Targeting amplio (todo LATAM + todas las edades) fue la peor decisión, confirmado con números",
-      body: `"${broadCampaign.videoCaption.slice(0, 40)}…" fue la única campaña con targeting abierto (18 países, todas las edades/intereses) y terminó con el like rate más bajo entre las de bajo presupuesto (${broadLikeRate.toFixed(1)}% vs. ${avgLikeRateCdmx.toFixed(1)}% promedio de las campañas con CDMX fijo), 49% del público de 13-17 años, y los países top fueron República Dominicana, Bolivia, Guatemala y Paraguay — nada del mercado real. Fue correcto cerrarla. Regla para adelante: nunca lanzar una promoción sin fijar "CDMX - Zona amplia" como ubicación.`,
-    });
-  }
 
   learnings.push({
     severity: "win",
