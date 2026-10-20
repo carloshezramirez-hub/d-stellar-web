@@ -20,8 +20,8 @@ export function buildEfficiency(campaign: AdCampaign): CampaignEfficiency {
   };
 }
 
-export function buildAllEfficiency(): CampaignEfficiency[] {
-  return AD_CAMPAIGNS.map(buildEfficiency);
+export function buildAllEfficiency(campaigns: AdCampaign[] = AD_CAMPAIGNS): CampaignEfficiency[] {
+  return campaigns.map(buildEfficiency);
 }
 
 export interface AdsTotals {
@@ -34,12 +34,12 @@ export interface AdsTotals {
   campaignCount: number;
 }
 
-export function buildTotals(): AdsTotals {
-  const totalSpendMXN = AD_CAMPAIGNS.reduce((sum, c) => sum + c.adCostMXN, 0);
-  const totalViews = AD_CAMPAIGNS.reduce((sum, c) => sum + c.videoViews, 0);
-  const totalLikes = AD_CAMPAIGNS.reduce((sum, c) => sum + c.likes, 0);
-  const totalNewFollowers = AD_CAMPAIGNS.reduce((sum, c) => sum + (c.newFollowers ?? 0), 0);
-  const totalClicks = AD_CAMPAIGNS.reduce((sum, c) => sum + (c.buttonClicks ?? 0), 0);
+export function buildTotals(campaigns: AdCampaign[] = AD_CAMPAIGNS): AdsTotals {
+  const totalSpendMXN = campaigns.reduce((sum, c) => sum + c.adCostMXN, 0);
+  const totalViews = campaigns.reduce((sum, c) => sum + c.videoViews, 0);
+  const totalLikes = campaigns.reduce((sum, c) => sum + c.likes, 0);
+  const totalNewFollowers = campaigns.reduce((sum, c) => sum + (c.newFollowers ?? 0), 0);
+  const totalClicks = campaigns.reduce((sum, c) => sum + (c.buttonClicks ?? 0), 0);
 
   return {
     totalSpendMXN,
@@ -48,7 +48,7 @@ export function buildTotals(): AdsTotals {
     totalNewFollowers,
     totalClicks,
     blendedCpmMXN: totalViews > 0 ? (totalSpendMXN / totalViews) * 1000 : 0,
-    campaignCount: AD_CAMPAIGNS.length,
+    campaignCount: campaigns.length,
   };
 }
 

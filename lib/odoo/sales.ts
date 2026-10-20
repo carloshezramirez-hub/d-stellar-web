@@ -36,10 +36,19 @@ export interface SalesSummary {
   dailySeries: SalesDayPoint[];
 }
 
-/** Trae ventas de piso (Punto de Venta) de los últimos `days` días y arma el resumen completo en una sola pasada. */
-export async function fetchSalesSummary(days = 30): Promise<SalesSummary> {
+/**
+ * Trae ventas de piso (Punto de Venta) y arma el resumen completo en una
+ * sola pasada. `chartDays` controla cuántos días dibuja la gráfica diaria
+ * (el filtro de fecha del dashboard); "hoy"/"este mes" siempre son el día y
+ * el mes calendario reales sin importar el rango elegido, así que la
+ * ventana que se le pide a Odoo es siempre al menos 35 días (cubre
+ * cualquier mes completo) aunque el usuario esté viendo solo "7 días".
+ */
+export async function fetchSalesSummary(chartDays = 30): Promise<SalesSummary> {
+  const days = chartDays;
+  const fetchWindowDays = Math.max(days, 35);
   const now = new Date();
-  const cutoff = new Date(now.getTime() - (days + 1) * DAY_MS);
+  const cutoff = new Date(now.getTime() - (fetchWindowDays + 1) * DAY_MS);
 
   const orders = await odooSearchRead<RawPosOrder>(
     "pos.order",

@@ -1,9 +1,11 @@
 import { listOrders, type EmailDeliveryStatus, type WebOrder } from "@/lib/orders-db";
 import { ConsoleShell } from "@/components/admin/console-shell";
+import { DateRangeFilter } from "@/components/admin/date-range-filter";
 import { KpiTile } from "@/components/admin/kpi-tile";
 import { OrdersChart, type OrdersDayPoint } from "@/components/pedidos/orders-chart";
 import { ResendButton } from "@/components/pedidos/resend-button";
 import { SyncButton } from "@/components/pedidos/sync-button";
+import { resolveRange, withinRange } from "@/lib/admin/date-range";
 
 function formatMoney(amount: number, currency: string) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency }).format(amount);
@@ -69,19 +71,30 @@ function buildDailySeries(orders: WebOrder[], days: number): OrdersDayPoint[] {
   return [...buckets.values()];
 }
 
-export default async function PedidosPage() {
-  const orders = await listOrders();
-  const needsAttention = orders.filter((o) => o.email_customer_status === "bounced" || o.email_customer_status === "failed" || o.email_customer_status === "complained");
+interface PageProps {
+  searchParams: Promise<{ range?: string }>;
+}
+
+export default async function PedidosPage({ searchParams }: PageProps) {
+  const { range: rawRange } = await searchParams;
+  const range = resolveRange(rawRange, "30");
+
+  const allOrders = await listOrders();
+  // La alerta de correos sin confirmar es operativa — se queda siempre sobre TODOS los pedidos, no se oculta al filtrar por fecha.
+  const needsAttention = allOrders.filter((o) => o.email_customer_status === "bounced" || o.email_customer_status === "failed" || o.email_customer_status === "complained");
+
+  const orders = allOrders.filter((o) => withinRange(o.created_at, range.days));
   const totalRevenue = orders.reduce((sum, o) => sum + o.amount_mxn, 0);
   const ticketOrders = orders.filter((o) => o.kind === "ticket").length;
-  const dailySeries = buildDailySeries(orders, 14);
+  const chartDays = range.days ?? 180;
+  const dailySeries = buildDailySeries(orders, chartDays);
 
   return (
     <main className="min-h-screen">
       <ConsoleShell />
 
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-8 flex items-start justify-between gap-4">
+        <div className="mb-6 flex items-start justify-between gap-4">
           <div>
             <p className="font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Pedidos</p>
             <p className="mt-1 text-sm text-stellar-white/60">
@@ -91,11 +104,13 @@ export default async function PedidosPage() {
           <SyncButton />
         </div>
 
+        <DateRangeFilter basePath="/pedidos" current={range.value} />
+
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <KpiTile icon="🧾" value={String(orders.length)} label="pedidos totales" accent="purple" />
-          <KpiTile icon="💰" value={formatMoney(totalRevenue, "MXN")} label="ingreso total" accent="green" />
+          <KpiTile icon="🧾" value={String(orders.length)} label="pedidos en el periodo" accent="purple" />
+          <KpiTile icon="💰" value={formatMoney(totalRevenue, "MXN")} label="ingreso en el periodo" accent="green" />
           <KpiTile icon="🎟️" value={String(ticketOrders)} label="boletos vendidos" accent="pink" />
-          <KpiTile icon="⚠️" value={String(needsAttention.length)} label="correo sin confirmar" accent={needsAttention.length > 0 ? "red" : "white"} />
+          <KpiTile icon="⚠️" value={String(needsAttention.length)} label="correo sin confirmar (total)" accent={needsAttention.length > 0 ? "red" : "white"} />
         </div>
 
         <div className="mb-10">
@@ -148,7 +163,7 @@ export default async function PedidosPage() {
               {orders.length === 0 && (
                 <tr>
                   <td colSpan={8} className="px-3 py-10 text-center text-stellar-white/50">
-                    Todavía no hay pedidos registrados.
+                    No hay pedidos dentro de este rango de fechas.
                   </td>
                 </tr>
               )}

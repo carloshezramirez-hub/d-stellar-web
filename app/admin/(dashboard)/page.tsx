@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
+import { HomeFinanceOverview } from "@/components/admin/home-finance-overview";
 import { StarField } from "@/components/ui/star-field";
+import { isCurrentMonth } from "@/lib/admin/date-range";
+import { buildTotals } from "@/lib/ads/analysis";
+import { isOdooConfigured } from "@/lib/odoo/env";
+import { fetchSalesSummary } from "@/lib/odoo/sales";
+import { listOrders } from "@/lib/orders-db";
 
 const SECTIONS = [
   {
@@ -55,7 +61,19 @@ const ACCENT_STYLE: Record<string, { ring: string; iconBg: string; icon: string 
   purple: { ring: "hover:border-stellar-purple", iconBg: "bg-stellar-purple/15", icon: "text-stellar-purple" },
 };
 
-export default function AdminHubPage() {
+export default async function AdminHubPage() {
+  const [salesSummary, webOrders] = await Promise.all([
+    isOdooConfigured() ? fetchSalesSummary(31) : Promise.resolve(null),
+    listOrders(1000),
+  ]);
+  const adsTotals = buildTotals();
+
+  const financeData = {
+    posSalesMonth: salesSummary?.monthTotal ?? 0,
+    webRevenueMonth: webOrders.filter((o) => isCurrentMonth(o.created_at)).reduce((sum, o) => sum + o.amount_mxn, 0),
+    adsSpendTotal: adsTotals.totalSpendMXN,
+  };
+
   return (
     <main className="relative min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -68,6 +86,8 @@ export default function AdminHubPage() {
         <p className="mb-8 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">
           Centro de control · d-stellar
         </p>
+
+        <HomeFinanceOverview data={financeData} />
 
         <div className="grid gap-4 sm:grid-cols-2">
           {SECTIONS.map(({ href, title, description, icon: Icon, accent }) => {
