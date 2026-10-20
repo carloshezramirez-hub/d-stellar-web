@@ -1,4 +1,9 @@
 import { ChannelChart } from "@/components/admin/trafico/channel-chart";
+import { ConversionsTable } from "@/components/admin/trafico/conversions-table";
+import { DeviceChart } from "@/components/admin/trafico/device-chart";
+import { PagesTable } from "@/components/admin/trafico/pages-table";
+import { SearchTrendChart } from "@/components/admin/trafico/search-trend-chart";
+import { SeoOpportunities } from "@/components/admin/trafico/seo-opportunities";
 import { SessionsChart } from "@/components/admin/trafico/sessions-chart";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { DateRangeFilter } from "@/components/admin/date-range-filter";
@@ -13,6 +18,11 @@ function formatNumber(n: number) {
 }
 function formatPct(n: number) {
   return `${(n * 100).toFixed(1)}%`;
+}
+function formatDuration(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
 interface PageProps {
@@ -54,7 +64,8 @@ export default async function TraficoPage({ searchParams }: PageProps) {
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <p className="mb-1 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Tráfico</p>
         <p className="mb-6 max-w-2xl text-sm text-stellar-white/60">
-          Google Analytics (GA4) + Search Console, en vivo — quién llega al sitio y qué busca para encontrarte.
+          Google Analytics (GA4) + Search Console, en vivo — quién llega al sitio, cuánto se queda, qué funciona y
+          qué busca para encontrarte.
         </p>
 
         <DateRangeFilter basePath="/admin/trafico" current={range.value} />
@@ -63,9 +74,9 @@ export default async function TraficoPage({ searchParams }: PageProps) {
           <>
             <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <KpiTile icon="👤" value={formatNumber(traffic.totalSessions)} label="sesiones" accent="blue" />
-              <KpiTile icon="🧑‍🤝‍🧑" value={formatNumber(traffic.totalUsers)} label="usuarios" accent="purple" />
-              {search && <KpiTile icon="🔍" value={formatNumber(search.totalClicks)} label="clics desde Google" accent="pink" />}
-              {search && <KpiTile icon="📈" value={search.avgPosition.toFixed(1)} label="posición promedio" accent="green" />}
+              <KpiTile icon="⏱️" value={formatDuration(traffic.avgSessionDurationSeconds)} label="tiempo promedio en el sitio" accent="green" />
+              <KpiTile icon="📄" value={traffic.pagesPerSession.toFixed(1)} label="páginas por visita" accent="purple" />
+              <KpiTile icon="↩️" value={formatPct(traffic.bounceRate)} label="se van sin interactuar" accent={traffic.bounceRate >= 0.6 ? "red" : "white"} />
             </div>
 
             <div className="mb-10">
@@ -74,54 +85,70 @@ export default async function TraficoPage({ searchParams }: PageProps) {
 
             <div className="mb-10 grid gap-4 sm:grid-cols-2">
               <ChannelChart data={traffic.channels} />
+              <DeviceChart data={traffic.devices} />
+            </div>
+
+            <div className="mb-10">
+              <PagesTable pages={traffic.topPages} />
+            </div>
+
+            {traffic.conversions.length > 0 && (
+              <div className="mb-10">
+                <ConversionsTable events={traffic.conversions} />
+              </div>
+            )}
+          </>
+        )}
+
+        {search && (
+          <>
+            <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <KpiTile icon="🔍" value={formatNumber(search.totalImpressions)} label="vistas en Google" accent="white" />
+              <KpiTile icon="🖱️" value={formatNumber(search.totalClicks)} label="clics desde Google" accent="pink" />
+              <KpiTile icon="📊" value={formatPct(search.avgCtr)} label="CTR promedio" accent="green" />
+              <KpiTile icon="📈" value={search.avgPosition.toFixed(1)} label="posición promedio" accent="purple" />
+            </div>
+
+            <div className="mb-10">
+              <SearchTrendChart data={search.dailySeries} />
+            </div>
+
+            <div className="mb-10">
+              <SeoOpportunities queries={search.topQueries} />
+            </div>
+
+            <div className="mb-10 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-lg border border-line p-4">
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Qué busca la gente en Google</p>
+                <p className="mb-4 text-[11px] text-stellar-white/35">Clics / impresiones / posición promedio</p>
+                <div className="grid gap-2">
+                  {search.topQueries.slice(0, 10).map((q) => (
+                    <div key={q.query} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
+                      <span className="truncate text-stellar-white/80">{q.query}</span>
+                      <span className="shrink-0 text-xs text-stellar-white/50">
+                        {q.clicks} clics · {q.impressions} vistas · pos. {q.position.toFixed(1)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="rounded-lg border border-line p-4">
-                <p className="mb-4 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Páginas más vistas</p>
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Páginas que más aparecen en Google</p>
+                <p className="mb-4 text-[11px] text-stellar-white/35">CTR = qué tan seguido le dan clic cuando la ven</p>
                 <div className="grid gap-2">
-                  {traffic.topPages.slice(0, 8).map((p) => (
-                    <div key={p.path} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
-                      <span className="truncate text-stellar-white/80">{p.path}</span>
-                      <span className="shrink-0 font-bold text-stellar-white">{formatNumber(p.views)}</span>
+                  {search.topPages.slice(0, 10).map((p) => (
+                    <div key={p.page} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
+                      <span className="truncate text-stellar-white/80">{p.page.replace("https://www.d-stellar.co", "")}</span>
+                      <span className="shrink-0 text-xs text-stellar-white/50">
+                        {p.clicks} clics · {formatPct(p.ctr)} CTR
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
           </>
-        )}
-
-        {search && (
-          <div className="mb-10 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-line p-4">
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Qué busca la gente en Google</p>
-              <p className="mb-4 text-[11px] text-stellar-white/35">Clics / impresiones / posición promedio</p>
-              <div className="grid gap-2">
-                {search.topQueries.slice(0, 10).map((q) => (
-                  <div key={q.query} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
-                    <span className="truncate text-stellar-white/80">{q.query}</span>
-                    <span className="shrink-0 text-xs text-stellar-white/50">
-                      {q.clicks} clics · {q.impressions} vistas · pos. {q.position.toFixed(1)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-line p-4">
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Páginas que más aparecen en Google</p>
-              <p className="mb-4 text-[11px] text-stellar-white/35">CTR = qué tan seguido le dan clic cuando la ven</p>
-              <div className="grid gap-2">
-                {search.topPages.slice(0, 10).map((p) => (
-                  <div key={p.page} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
-                    <span className="truncate text-stellar-white/80">{p.page.replace("https://www.d-stellar.co", "")}</span>
-                    <span className="shrink-0 text-xs text-stellar-white/50">
-                      {p.clicks} clics · {formatPct(p.ctr)} CTR
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         )}
       </div>
     </main>
