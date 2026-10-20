@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Sparkles, BarChart3, CalendarDays, ShoppingBag } from "lucide-react";
+import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -16,6 +16,12 @@ const SECTIONS = [
     title: "Analytics",
     description: "Redes sociales — Instagram, Facebook, TikTok.",
     icon: BarChart3,
+  },
+  {
+    href: "/admin/anuncios",
+    title: "Anuncios",
+    description: "Campañas pagadas de TikTok — qué funcionó, qué corregir.",
+    icon: Megaphone,
   },
   {
     href: "/admin/eventos",
