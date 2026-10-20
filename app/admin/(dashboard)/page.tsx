@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store } from "lucide-react";
+import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store, Lightbulb } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { HomeFinanceOverview } from "@/components/admin/home-finance-overview";
 import { StarField } from "@/components/ui/star-field";
@@ -10,6 +10,13 @@ import { fetchSalesSummary } from "@/lib/odoo/sales";
 import { listOrders } from "@/lib/orders-db";
 
 const SECTIONS = [
+  {
+    href: "/admin/ideas",
+    title: "Ideas para vender más",
+    description: "Recomendaciones automáticas cruzando Ventas, Anuncios, Eventos, Fidelidad y Redes.",
+    icon: Lightbulb,
+    accent: "pink" as const,
+  },
   {
     href: "/admin/ventas",
     title: "Ventas",

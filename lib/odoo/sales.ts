@@ -137,3 +137,42 @@ export async function fetchTopProducts(days = 30, limit = 8): Promise<TopProduct
 
   return [...byProduct.values()].sort((a, b) => b.revenue - a.revenue).slice(0, limit);
 }
+
+export interface WeekdayPoint {
+  key: number; // 0=lunes .. 6=domingo
+  label: string;
+  total: number;
+  orders: number;
+  avgTicket: number;
+}
+
+const WEEKDAY_LABELS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+/** En qué día de la semana vende más la tienda (promedio por venta) — para decidir cuándo reforzar personal/promos. */
+export async function fetchWeekdayPattern(days = 90): Promise<WeekdayPoint[]> {
+  const cutoff = new Date(Date.now() - days * DAY_MS);
+
+  const orders = await odooSearchRead<RawPosOrder>(
+    "pos.order",
+    [
+      ["date_order", ">=", toOdooUtcString(cutoff)],
+      ["state", "!=", "cancel"],
+    ],
+    { fields: ["date_order", "amount_total"] },
+  );
+
+  const buckets = WEEKDAY_LABELS.map((label, key) => ({ key, label, total: 0, orders: 0, avgTicket: 0 }));
+
+  for (const order of orders) {
+    const orderDate = new Date(`${order.date_order.replace(" ", "T")}Z`);
+    // Intl weekday "1"=lunes..."7"=domingo en formato numérico no existe directo; se deriva del nombre largo en es-MX.
+    const weekdayName = new Intl.DateTimeFormat("es-MX", { timeZone: MX_TZ, weekday: "long" }).format(orderDate);
+    const idx = WEEKDAY_LABELS.findIndex((l) => l.toLowerCase() === weekdayName.toLowerCase());
+    if (idx === -1) continue;
+    buckets[idx].total += order.amount_total;
+    buckets[idx].orders += 1;
+  }
+
+  for (const b of buckets) b.avgTicket = b.orders > 0 ? b.total / b.orders : 0;
+  return buckets;
+}

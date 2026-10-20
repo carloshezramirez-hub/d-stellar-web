@@ -48,9 +48,17 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   — lee `pos.order` / `pos.order.line`, agrupa por día en zona horaria
   `America/Mexico_City` (Odoo guarda `date_order` en UTC naive). Variables
   en Vercel: `ODOO_URL`, `ODOO_DB`, `ODOO_USERNAME`, `ODOO_API_KEY`. Odoo
-  también tiene Compras/Inventario/Manufactura/Contabilidad con datos
-  reales — si se pide ampliar esta sección, el cliente ya está listo,
-  solo hace falta agregar funciones nuevas en `lib/odoo/`.
+  también tiene Compras/Inventario/Manufactura/Contabilidad, pero **sin
+  datos reales todavía** (confirmado vía API: 0 facturas de proveedor,
+  purchase.order solo con registros de prueba/cancelados) — por eso el
+  panel no muestra "egresos operativos", solo ventas. `fetchWeekdayPattern`
+  agrega el patrón por día de la semana (qué día vende más/menos).
+- `/admin/ideas` (2026-10-20) — "Ideas para vender más": reglas
+  determinísticas (NO LLM, mismo patrón que `lib/ads/analysis.ts`) que
+  cruzan Ventas (Odoo) + Anuncios + Eventos + Fidelidad + Pedidos + mejor
+  post orgánico, en `lib/insights/sales-ideas.ts` (`buildSalesIdeas`).
+  Cada idea cita un número real; si una fuente no tiene datos suficientes,
+  esa idea simplemente no aparece (nunca se rellena con texto inventado).
 - **Sistema visual "centro de mando" (desde 2026-10-20):** todas las páginas
   de `/admin` + `/analytics` + `/pedidos` + `/wallet-staff` comparten
   `components/admin/console-shell.tsx` (barra superior fija: wordmark,

@@ -3,9 +3,10 @@ import { DateRangeFilter } from "@/components/admin/date-range-filter";
 import { KpiTile } from "@/components/admin/kpi-tile";
 import { SalesChart } from "@/components/admin/ventas/sales-chart";
 import { TopProductsChart } from "@/components/admin/ventas/top-products-chart";
+import { WeekdayChart } from "@/components/admin/ventas/weekday-chart";
 import { resolveRange } from "@/lib/admin/date-range";
 import { isOdooConfigured } from "@/lib/odoo/env";
-import { fetchSalesSummary, fetchTopProducts } from "@/lib/odoo/sales";
+import { fetchSalesSummary, fetchTopProducts, fetchWeekdayPattern } from "@/lib/odoo/sales";
 
 function formatMoney(n: number) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(n);
@@ -37,7 +38,11 @@ export default async function VentasPage({ searchParams }: PageProps) {
     );
   }
 
-  const [summary, topProducts] = await Promise.all([fetchSalesSummary(chartDays), fetchTopProducts(chartDays)]);
+  const [summary, topProducts, weekdayPattern] = await Promise.all([
+    fetchSalesSummary(chartDays),
+    fetchTopProducts(chartDays),
+    fetchWeekdayPattern(Math.max(chartDays, 90)),
+  ]);
   const periodOrders = summary.dailySeries.reduce((sum, d) => sum + d.orders, 0);
   const periodTotal = summary.dailySeries.reduce((sum, d) => sum + d.total, 0);
 
@@ -64,7 +69,8 @@ export default async function VentasPage({ searchParams }: PageProps) {
           <SalesChart data={summary.dailySeries} />
         </div>
 
-        <div className="mb-10">
+        <div className="mb-10 grid gap-4 sm:grid-cols-2">
+          <WeekdayChart data={weekdayPattern} />
           <TopProductsChart data={topProducts} />
         </div>
       </div>
