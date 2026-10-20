@@ -4,7 +4,7 @@ import "../globals.css";
 // /analytics vive fuera de [locale], que es el layout raíz (<html>/<body>)
 // del resto del sitio — este layout tiene que declarar el suyo propio.
 export const metadata: Metadata = {
-  title: "d-stellar · Analítica social",
+  title: "d-stellar · Redes sociales",
   robots: { index: false, follow: false },
 };
 
