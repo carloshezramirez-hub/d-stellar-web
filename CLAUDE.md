@@ -53,12 +53,27 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   purchase.order solo con registros de prueba/cancelados) — por eso el
   panel no muestra "egresos operativos", solo ventas. `fetchWeekdayPattern`
   agrega el patrón por día de la semana (qué día vende más/menos).
+- `/admin/trafico` (2026-10-20) — Google Analytics (GA4 Data API) +
+  Search Console (Search Analytics API), en vivo. Cliente propio en
+  `lib/google/client.ts` — JWT Bearer flow con cuenta de servicio
+  (`panel-dstellar@d-stellar-panel.iam.gserviceaccount.com`, proyecto GCP
+  `d-stellar-panel`), sin SDK de Google, solo `crypto` nativo de Node.
+  Variables en Vercel: `GOOGLE_SERVICE_ACCOUNT_JSON` (el JSON completo de
+  la cuenta de servicio, como un solo string), `GA4_PROPERTY_ID`
+  (`549524452`), `GSC_SITE_URL` (`sc-domain:d-stellar.co`). La cuenta de
+  servicio tiene rol **Lector/Viewer** en GA4 (Property access management)
+  y **Restringido** en Search Console (Users and permissions) — nunca
+  escritura. Lógica en `lib/google/analytics.ts`
+  (`fetchTrafficSummary`: sesiones por día, canal, páginas más vistas) y
+  `lib/google/search-console.ts` (`fetchSearchSummary`: qué busca la
+  gente, con qué CTR/posición).
 - `/admin/ideas` (2026-10-20) — "Ideas para vender más": reglas
   determinísticas (NO LLM, mismo patrón que `lib/ads/analysis.ts`) que
   cruzan Ventas (Odoo) + Anuncios + Eventos + Fidelidad + Pedidos + mejor
-  post orgánico, en `lib/insights/sales-ideas.ts` (`buildSalesIdeas`).
-  Cada idea cita un número real; si una fuente no tiene datos suficientes,
-  esa idea simplemente no aparece (nunca se rellena con texto inventado).
+  post orgánico + Search Console, en `lib/insights/sales-ideas.ts`
+  (`buildSalesIdeas`). Cada idea cita un número real; si una fuente no
+  tiene datos suficientes, esa idea simplemente no aparece (nunca se
+  rellena con texto inventado).
 - **Sistema visual "centro de mando" (desde 2026-10-20):** todas las páginas
   de `/admin` + `/analytics` + `/pedidos` + `/wallet-staff` comparten
   `components/admin/console-shell.tsx` (barra superior fija: wordmark,

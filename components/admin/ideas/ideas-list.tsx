@@ -13,6 +13,7 @@ const SOURCE_LABEL: Record<Idea["source"], string> = {
   fidelidad: "Fidelidad",
   pedidos: "Pedidos",
   redes: "Redes sociales",
+  trafico: "Tráfico web",
 };
 
 export function IdeasList({ ideas }: { ideas: Idea[] }) {

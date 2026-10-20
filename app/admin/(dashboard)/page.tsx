@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store, Lightbulb } from "lucide-react";
+import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store, Lightbulb, Globe } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { HomeFinanceOverview } from "@/components/admin/home-finance-overview";
 import { StarField } from "@/components/ui/star-field";
@@ -29,6 +29,13 @@ const SECTIONS = [
     title: "Analytics",
     description: "Crecimiento orgánico en Instagram, Facebook y TikTok — qué posts funcionan.",
     icon: BarChart3,
+    accent: "blue" as const,
+  },
+  {
+    href: "/admin/trafico",
+    title: "Tráfico",
+    description: "Google Analytics + Search Console — quién llega al sitio y qué busca para encontrarte.",
+    icon: Globe,
     accent: "blue" as const,
   },
   {

@@ -1,12 +1,13 @@
 import type { Learning } from "@/lib/ads/analysis";
 import type { EventRecord } from "@/lib/events-types";
+import type { SearchQueryRow } from "@/lib/google/search-console";
 import type { SalesSummary, TopProduct, WeekdayPoint } from "@/lib/odoo/sales";
 import type { WebOrder } from "@/lib/orders-db";
 import type { FeedPost } from "@/lib/social/queries";
 import type { LoyaltyMember } from "@/lib/wallet/loyalty-db";
 
 export interface Idea {
-  source: "ventas" | "anuncios" | "eventos" | "fidelidad" | "pedidos" | "redes";
+  source: "ventas" | "anuncios" | "eventos" | "fidelidad" | "pedidos" | "redes" | "trafico";
   severity: "win" | "fix" | "watch";
   title: string;
   body: string;
@@ -25,6 +26,7 @@ export interface SalesIdeasInput {
   webOrders: WebOrder[];
   members: LoyaltyMember[];
   topPost: FeedPost | null;
+  searchQueries: SearchQueryRow[];
 }
 
 /**
@@ -152,6 +154,21 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
       severity: "win",
       title: `Tu post con mejor desempeño fue en ${p.platform === "tiktok" ? "TikTok" : p.platform === "instagram" ? "Instagram" : "Facebook"}`,
       body: `${p.caption ? `"${p.caption.slice(0, 90)}…"` : "Sin caption registrado"} — fue el que más engagement generó frente al resto de tus posts del periodo. Repetir ese mismo formato/tono es más confiable que improvisar contenido nuevo cada vez.`,
+    });
+  }
+
+  // --- Tráfico / Search Console ---
+  const discoveryQueries = input.searchQueries
+    .filter((q) => !q.query.toLowerCase().includes("stellar"))
+    .filter((q) => q.impressions >= 3 && q.clicks === 0 && q.position <= 20)
+    .sort((a, b) => b.impressions - a.impressions);
+  if (discoveryQueries.length > 0) {
+    const q = discoveryQueries[0];
+    ideas.push({
+      source: "trafico",
+      severity: "watch",
+      title: `Gente busca "${q.query}" y te encuentra, pero no le da clic`,
+      body: `Google ya te muestra en esa búsqueda (posición ${q.position.toFixed(0)}, ${q.impressions} veces visto) pero 0 clics — el título/descripción que aparece en el resultado probablemente no está convenciendo. Vale la pena revisar el meta title/description de la página que rankea para ese término.`,
     });
   }
 
