@@ -36,8 +36,21 @@ sin excepción (ya se rompió esta regla una vez por accidente).
 - `/admin` — panel único de staff (desde 2026-10-19): un solo login
   (`ANALYTICS_DASHBOARD_PASSWORD`, cookie `admin_session` con `path: "/"`)
   que autoriza también `/analytics`, `/pedidos` y `/wallet-staff` sin volver
-  a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 5
-  botones: Fidelidad, Analytics, Anuncios, Eventos, Pedidos.
+  a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 6
+  botones: Ventas, Analytics, Anuncios, Eventos, Pedidos, Fidelidad.
+- `/admin/ventas` (2026-10-20) — ventas reales de piso, jaladas en vivo del
+  ERP **Odoo** de Carlos (`the-sweet-universe-company.odoo.com`, módulo
+  Punto de Venta) vía su External API (JSON-RPC, no REST — Odoo no tiene
+  REST nativo). Cliente en `lib/odoo/client.ts` (autentica con un **API
+  key**, no la contraseña real, generado desde Odoo → Mi perfil →
+  Seguridad → Claves API, alcance "RPC", sin expiración). Lógica de
+  negocio en `lib/odoo/sales.ts` (`fetchSalesSummary`, `fetchTopProducts`)
+  — lee `pos.order` / `pos.order.line`, agrupa por día en zona horaria
+  `America/Mexico_City` (Odoo guarda `date_order` en UTC naive). Variables
+  en Vercel: `ODOO_URL`, `ODOO_DB`, `ODOO_USERNAME`, `ODOO_API_KEY`. Odoo
+  también tiene Compras/Inventario/Manufactura/Contabilidad con datos
+  reales — si se pide ampliar esta sección, el cliente ya está listo,
+  solo hace falta agregar funciones nuevas en `lib/odoo/`.
 - **Sistema visual "centro de mando" (desde 2026-10-20):** todas las páginas
   de `/admin` + `/analytics` + `/pedidos` + `/wallet-staff` comparten
   `components/admin/console-shell.tsx` (barra superior fija: wordmark,

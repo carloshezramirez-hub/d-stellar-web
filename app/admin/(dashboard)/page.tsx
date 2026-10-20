@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag } from "lucide-react";
+import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { StarField } from "@/components/ui/star-field";
 
 const SECTIONS = [
+  {
+    href: "/admin/ventas",
+    title: "Ventas",
+    description: "Ventas reales de piso (Punto de Venta), directo de Odoo.",
+    icon: Store,
+    accent: "green" as const,
+  },
   {
     href: "/analytics",
     title: "Analytics",
@@ -23,21 +30,21 @@ const SECTIONS = [
     title: "Eventos",
     description: "Crear/editar eventos, marcar sesiones agotadas, ver quién ya pagó.",
     icon: CalendarDays,
-    accent: "green" as const,
+    accent: "purple" as const,
   },
   {
     href: "/pedidos",
     title: "Pedidos",
     description: "Historial de compras — boletos y pickup, con estado de entrega.",
     icon: ShoppingBag,
-    accent: "purple" as const,
+    accent: "pink" as const,
   },
   {
     href: "/wallet-staff",
     title: "Fidelidad",
     description: "Escanear tarjetas, sumar sellos y ver la base de clientes.",
     icon: Sparkles,
-    accent: "pink" as const,
+    accent: "purple" as const,
   },
 ];
 
