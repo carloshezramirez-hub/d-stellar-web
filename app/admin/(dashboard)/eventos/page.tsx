@@ -2,27 +2,29 @@ import Link from "next/link";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { DateRangeFilter } from "@/components/admin/date-range-filter";
 import { KpiTile } from "@/components/admin/kpi-tile";
-import { TicketsChart } from "@/components/admin/eventos/tickets-chart";
-import { resolveRange, withinRange } from "@/lib/admin/date-range";
+import { resolveDateRange, withinRange } from "@/lib/admin/date-range";
+import { SECTION_THEME } from "@/lib/admin/section-theme";
 import { listAllEvents } from "@/lib/events-db";
 import { listOrders } from "@/lib/orders-db";
+
+const ACCENT = SECTION_THEME.eventos.accent;
 
 function formatMoney(amount: number) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount);
 }
 
 interface PageProps {
-  searchParams: Promise<{ range?: string }>;
+  searchParams: Promise<{ range?: string; from?: string; to?: string }>;
 }
 
 export default async function AdminEventosPage({ searchParams }: PageProps) {
-  const { range: rawRange } = await searchParams;
+  const { range: rawRange, from, to } = await searchParams;
   // Default "Todo": los boletos de un evento suelen venderse semanas antes,
   // así que filtrar a "30 días" por defecto haría ver ventas en cero.
-  const range = resolveRange(rawRange, "all");
+  const range = resolveDateRange(rawRange, "all", from, to);
 
   const [events, allOrders] = await Promise.all([listAllEvents(), listOrders(1000)]);
-  const orders = allOrders.filter((o) => withinRange(o.created_at, range.days));
+  const orders = allOrders.filter((o) => withinRange(o.created_at, range));
 
   const statsBySlug = new Map<string, { count: number; revenue: number }>();
   for (const order of orders) {
@@ -37,7 +39,6 @@ export default async function AdminEventosPage({ searchParams }: PageProps) {
   const past = events.filter((e) => e.status === "past");
   const totalTickets = [...statsBySlug.values()].reduce((sum, s) => sum + s.count, 0);
   const totalRevenue = [...statsBySlug.values()].reduce((sum, s) => sum + s.revenue, 0);
-  const chartData = events.map((e) => ({ label: e.title, boletos: statsBySlug.get(e.slug)?.count ?? 0 }));
 
   return (
     <main className="min-h-screen">
@@ -54,21 +55,17 @@ export default async function AdminEventosPage({ searchParams }: PageProps) {
           </Link>
         </div>
 
-        <DateRangeFilter basePath="/admin/eventos" current={range.value} />
+        <DateRangeFilter basePath="/admin/eventos" current={range.value} accent={ACCENT} from={from} to={to} />
         <p className="mb-6 -mt-3 text-[11px] text-stellar-white/35">
-          El rango filtra las ventas de boletos (KPIs y gráfica) por fecha de compra — la lista de eventos de abajo
-          siempre muestra todo.
+          El rango filtra las ventas de boletos (KPIs) por fecha de compra — la lista de eventos de abajo siempre
+          muestra todo.
         </p>
 
-        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <KpiTile icon="📅" value={String(upcoming.length)} label="eventos próximos" accent="green" />
-          <KpiTile icon="🎟️" value={String(totalTickets)} label="boletos vendidos" accent="pink" />
-          <KpiTile icon="💰" value={formatMoney(totalRevenue)} label="ingreso en el periodo" accent="purple" />
+        <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <KpiTile icon="📅" value={String(upcoming.length)} label="eventos próximos" accent={ACCENT} />
+          <KpiTile icon="🎟️" value={String(totalTickets)} label="boletos vendidos" accent={ACCENT} />
+          <KpiTile icon="💰" value={formatMoney(totalRevenue)} label="ingreso en el periodo" accent={ACCENT} />
           <KpiTile icon="🗄️" value={String(past.length)} label="eventos pasados" accent="white" />
-        </div>
-
-        <div className="mb-10">
-          <TicketsChart data={chartData} />
         </div>
 
         {upcoming.length === 0 && past.length === 0 && <p className="text-sm text-stellar-white/60">Todavía no hay eventos.</p>}

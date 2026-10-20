@@ -1,3 +1,5 @@
+import type { ResolvedRange } from "@/lib/admin/date-range";
+import { mxDateKey } from "@/lib/admin/date-range";
 import { gscSearchAnalytics } from "@/lib/google/client";
 
 export interface SearchQueryRow {
@@ -41,18 +43,14 @@ export interface SearchSummary {
   devices: SearchDevicePoint[];
 }
 
-function isoDaysAgo(days: number): string {
-  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-}
-
 function dayLabel(iso: string): string {
   return new Date(`${iso}T00:00:00Z`).toLocaleDateString("es-MX", { day: "numeric", month: "short", timeZone: "UTC" });
 }
 
-/** Qué busca la gente en Google para encontrar d-stellar, y en qué páginas aterriza — últimos `days` días. */
-export async function fetchSearchSummary(days = 30): Promise<SearchSummary> {
-  const startDate = isoDaysAgo(days);
-  const endDate = isoDaysAgo(0);
+/** Qué busca la gente en Google para encontrar d-stellar, y en qué páginas aterriza — dentro del rango. */
+export async function fetchSearchSummary(range: ResolvedRange): Promise<SearchSummary> {
+  const startDate = mxDateKey(range.start ?? new Date("2026-09-01"));
+  const endDate = mxDateKey(range.end);
 
   const [queriesRes, pagesRes, dailyRes, deviceRes] = await Promise.all([
     gscSearchAnalytics({ startDate, endDate, dimensions: ["query"], rowLimit: 15 }),

@@ -2,24 +2,26 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { SECTION_ORDER, SECTION_THEME, type SectionAccent } from "@/lib/admin/section-theme";
 
-const SECTIONS = [
-  { href: "/admin/ventas", label: "Ventas" },
-  { href: "/admin/ideas", label: "Ideas" },
-  { href: "/analytics", label: "Analytics" },
-  { href: "/admin/trafico", label: "Tráfico" },
-  { href: "/admin/anuncios", label: "Anuncios" },
-  { href: "/admin/eventos", label: "Eventos" },
-  { href: "/pedidos", label: "Pedidos" },
-  { href: "/wallet-staff", label: "Fidelidad" },
-];
+const ACCENT_HEX: Record<SectionAccent, string> = {
+  pink: "var(--color-stellar-pink)",
+  green: "var(--color-stellar-green)",
+  blue: "var(--color-stellar-blue)",
+  red: "var(--color-stellar-red)",
+  purple: "var(--color-stellar-purple)",
+  white: "var(--color-stellar-white)",
+};
 
 /**
  * Barra superior fija, compartida por /admin y todo lo que cuelga de ahí —
  * reemplaza los headers ad hoc + botones "Salir"/"Volver al panel"
  * duplicados que tenía cada sección. Al estar siempre visible, cualquier
  * sección es un clic desde cualquier otra (navegación libre pedida por
- * Carlos), no solo "volver".
+ * Carlos), no solo "volver". Cada pill usa el color fijo de su sección
+ * (ver lib/admin/section-theme.ts) — texto negro sobre fondo de color
+ * cuando está activa, que es el patrón aprobado por el manual de marca
+ * para esos tonos saturados (ver nota en app/globals.css).
  */
 export function ConsoleShell() {
   const pathname = usePathname();
@@ -39,21 +41,16 @@ export function ConsoleShell() {
           <span className="text-stellar-pink">✺</span>
         </Link>
 
-        <nav
-          className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto"
-          style={{ scrollbarWidth: "none" }}
-        >
-          {SECTIONS.map((s) => {
+        <nav className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+          {SECTION_ORDER.map((key) => {
+            const s = SECTION_THEME[key];
             const active = pathname === s.href || pathname.startsWith(`${s.href}/`);
             return (
               <Link
-                key={s.href}
+                key={key}
                 href={s.href}
-                className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 font-tag text-[11px] font-bold tracking-widest uppercase transition-colors ${
-                  active
-                    ? "bg-stellar-pink text-stellar-black"
-                    : "text-stellar-white/55 hover:text-stellar-white"
-                }`}
+                className="shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 font-tag text-[11px] font-bold tracking-widest uppercase transition-colors text-stellar-white/55 hover:text-stellar-white"
+                style={active ? { background: ACCENT_HEX[s.accent], color: "#000" } : undefined}
               >
                 {s.label}
               </Link>

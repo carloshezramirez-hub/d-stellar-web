@@ -1,6 +1,7 @@
-import { ChannelChart } from "@/components/admin/trafico/channel-chart";
+import { ChannelTable } from "@/components/admin/trafico/channel-table";
 import { ConversionsTable } from "@/components/admin/trafico/conversions-table";
 import { DeviceChart } from "@/components/admin/trafico/device-chart";
+import { MentionsFeed } from "@/components/admin/trafico/mentions-feed";
 import { PagesTable } from "@/components/admin/trafico/pages-table";
 import { SearchTrendChart } from "@/components/admin/trafico/search-trend-chart";
 import { SeoOpportunities } from "@/components/admin/trafico/seo-opportunities";
@@ -8,10 +9,16 @@ import { SessionsChart } from "@/components/admin/trafico/sessions-chart";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { DateRangeFilter } from "@/components/admin/date-range-filter";
 import { KpiTile } from "@/components/admin/kpi-tile";
-import { resolveRange } from "@/lib/admin/date-range";
-import { fetchTrafficSummary } from "@/lib/google/analytics";
+import { StatusBanner } from "@/components/admin/status-banner";
+import { resolveDateRange, withinRange } from "@/lib/admin/date-range";
+import { SECTION_THEME } from "@/lib/admin/section-theme";
+import { fetchTrafficSummary, type TrafficSummary } from "@/lib/google/analytics";
 import { isGa4Configured, isSearchConsoleConfigured } from "@/lib/google/env";
-import { fetchSearchSummary } from "@/lib/google/search-console";
+import { fetchSearchSummary, type SearchSummary } from "@/lib/google/search-console";
+import { getRecentMentions } from "@/lib/mentions/db";
+import { isMentionsConfigured } from "@/lib/mentions/env";
+
+const ACCENT = SECTION_THEME.trafico.accent;
 
 function formatNumber(n: number) {
   return new Intl.NumberFormat("es-MX").format(Math.round(n));
@@ -26,36 +33,39 @@ function formatDuration(seconds: number) {
 }
 
 interface PageProps {
-  searchParams: Promise<{ range?: string }>;
+  searchParams: Promise<{ range?: string; from?: string; to?: string }>;
 }
 
 export default async function TraficoPage({ searchParams }: PageProps) {
-  const { range: rawRange } = await searchParams;
-  const range = resolveRange(rawRange, "30");
-  const days = range.days ?? 90;
+  const { range: rawRange, from, to } = await searchParams;
+  const range = resolveDateRange(rawRange, "30", from, to);
 
   const ga4Ready = isGa4Configured();
   const gscReady = isSearchConsoleConfigured();
+  const mentionsReady = isMentionsConfigured();
 
-  if (!ga4Ready && !gscReady) {
-    return (
-      <main className="min-h-screen">
-        <ConsoleShell />
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <p className="font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Tráfico</p>
-          <p className="mt-4 text-sm text-stellar-white/60">
-            Esta sección lee Google Analytics y Search Console — faltan las variables de entorno
-            (GOOGLE_SERVICE_ACCOUNT_JSON / GA4_PROPERTY_ID / GSC_SITE_URL) en este ambiente.
-          </p>
-        </div>
-      </main>
-    );
+  let traffic: TrafficSummary | null = null;
+  let trafficError = false;
+  if (ga4Ready) {
+    try {
+      traffic = await fetchTrafficSummary(range);
+    } catch {
+      trafficError = true;
+    }
   }
 
-  const [traffic, search] = await Promise.all([
-    ga4Ready ? fetchTrafficSummary(days) : Promise.resolve(null),
-    gscReady ? fetchSearchSummary(days) : Promise.resolve(null),
-  ]);
+  let search: SearchSummary | null = null;
+  let searchError = false;
+  if (gscReady) {
+    try {
+      search = await fetchSearchSummary(range);
+    } catch {
+      searchError = true;
+    }
+  }
+
+  const allMentions = mentionsReady ? await getRecentMentions() : [];
+  const mentions = allMentions.filter((m) => range.value === "all" || (m.publishedAt && withinRange(m.publishedAt, range))).slice(0, 8);
 
   return (
     <main className="min-h-screen">
@@ -64,18 +74,25 @@ export default async function TraficoPage({ searchParams }: PageProps) {
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <p className="mb-1 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Tráfico</p>
         <p className="mb-6 max-w-2xl text-sm text-stellar-white/60">
-          Google Analytics (GA4) + Search Console, en vivo — quién llega al sitio, cuánto se queda, qué funciona y
-          qué busca para encontrarte.
+          Google Analytics + Search Console, en vivo — quién llega al sitio, cuánto se queda, qué funciona y qué
+          busca para encontrarte.
         </p>
 
-        <DateRangeFilter basePath="/admin/trafico" current={range.value} />
+        <DateRangeFilter basePath="/admin/trafico" current={range.value} accent={ACCENT} from={from} to={to} />
 
-        {traffic && (
+        {/* Google Analytics */}
+        {!ga4Ready && <StatusBanner status="not_connected" message="Google Analytics no está conectado todavía." />}
+        {ga4Ready && trafficError && <StatusBanner status="error" message="No se pudo cargar Google Analytics — intenta de nuevo en un momento." />}
+        {ga4Ready && !trafficError && traffic && traffic.totalSessions === 0 && (
+          <StatusBanner status="empty" message="No hay sesiones registradas en este rango de fechas." />
+        )}
+
+        {traffic && traffic.totalSessions > 0 && (
           <>
             <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <KpiTile icon="👤" value={formatNumber(traffic.totalSessions)} label="sesiones" accent="blue" />
-              <KpiTile icon="⏱️" value={formatDuration(traffic.avgSessionDurationSeconds)} label="tiempo promedio en el sitio" accent="green" />
-              <KpiTile icon="📄" value={traffic.pagesPerSession.toFixed(1)} label="páginas por visita" accent="purple" />
+              <KpiTile icon="👤" value={formatNumber(traffic.totalSessions)} label="sesiones" accent={ACCENT} />
+              <KpiTile icon="⏱️" value={formatDuration(traffic.avgSessionDurationSeconds)} label="tiempo promedio en el sitio" accent={ACCENT} />
+              <KpiTile icon="📄" value={traffic.pagesPerSession.toFixed(1)} label="páginas por visita" accent={ACCENT} />
               <KpiTile icon="↩️" value={formatPct(traffic.bounceRate)} label="se van sin interactuar" accent={traffic.bounceRate >= 0.6 ? "red" : "white"} />
             </div>
 
@@ -83,8 +100,11 @@ export default async function TraficoPage({ searchParams }: PageProps) {
               <SessionsChart data={traffic.dailySeries} />
             </div>
 
-            <div className="mb-10 grid gap-4 sm:grid-cols-2">
-              <ChannelChart data={traffic.channels} />
+            <div className="mb-10">
+              <ChannelTable channels={traffic.channels} />
+            </div>
+
+            <div className="mb-10 max-w-sm">
               <DeviceChart data={traffic.devices} />
             </div>
 
@@ -100,13 +120,36 @@ export default async function TraficoPage({ searchParams }: PageProps) {
           </>
         )}
 
-        {search && (
+        {/* Menciones de marca (antes en Redes sociales) */}
+        <section className="mb-10">
+          <h2 className="mb-1 font-demi text-lg font-bold">Menciones de la marca</h2>
+          <p className="mb-4 text-sm text-stellar-white/50">Web (Google Alerts) + Instagram, cuando alguien te etiqueta.</p>
+          {!mentionsReady ? (
+            <StatusBanner status="not_connected" message="El rastreo de menciones no está conectado todavía." />
+          ) : mentions.length === 0 ? (
+            <StatusBanner
+              status="empty"
+              message={allMentions.length === 0 ? "Todavía no hay menciones registradas." : "No hay menciones dentro de este rango de fechas."}
+            />
+          ) : (
+            <MentionsFeed mentions={mentions} hasAnyMentions={allMentions.length > 0} />
+          )}
+        </section>
+
+        {/* Search Console */}
+        {!gscReady && <StatusBanner status="not_connected" message="Search Console no está conectado todavía." />}
+        {gscReady && searchError && <StatusBanner status="error" message="No se pudo cargar Search Console — intenta de nuevo en un momento." />}
+        {gscReady && !searchError && search && search.totalImpressions === 0 && (
+          <StatusBanner status="empty" message="No hay datos de búsqueda en este rango de fechas." />
+        )}
+
+        {search && search.totalImpressions > 0 && (
           <>
             <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <KpiTile icon="🔍" value={formatNumber(search.totalImpressions)} label="vistas en Google" accent="white" />
-              <KpiTile icon="🖱️" value={formatNumber(search.totalClicks)} label="clics desde Google" accent="pink" />
-              <KpiTile icon="📊" value={formatPct(search.avgCtr)} label="CTR promedio" accent="green" />
-              <KpiTile icon="📈" value={search.avgPosition.toFixed(1)} label="posición promedio" accent="purple" />
+              <KpiTile icon="🖱️" value={formatNumber(search.totalClicks)} label="clics desde Google" accent={ACCENT} />
+              <KpiTile icon="📊" value={formatPct(search.avgCtr)} label="CTR promedio" accent={ACCENT} />
+              <KpiTile icon="📈" value={search.avgPosition.toFixed(1)} label="posición promedio" accent={ACCENT} />
             </div>
 
             <div className="mb-10">

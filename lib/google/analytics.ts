@@ -1,3 +1,5 @@
+import type { ResolvedRange } from "@/lib/admin/date-range";
+import { mxDateKey, previousPeriod } from "@/lib/admin/date-range";
 import { ga4RunReport } from "@/lib/google/client";
 
 export interface TrafficDayPoint {
@@ -9,6 +11,8 @@ export interface TrafficDayPoint {
 export interface ChannelPoint {
   channel: string;
   sessions: number;
+  engagementRate: number;
+  previousSessions: number | null; // null = no hay periodo anterior que comparar (ej. "Todo")
 }
 
 export interface TopPage {
@@ -71,9 +75,14 @@ const MEANINGFUL_EVENTS = new Set([
   "click_tiktok",
 ]);
 
-/** Tráfico real del sitio (GA4) de los últimos `days` días — todo lo útil en una sola función. */
-export async function fetchTrafficSummary(days = 30): Promise<TrafficSummary> {
-  const dateRange = { startDate: `${days}daysAgo`, endDate: "today" };
+/** Tráfico real del sitio (GA4) dentro del rango — todo lo útil en una sola función. */
+export async function fetchTrafficSummary(range: ResolvedRange): Promise<TrafficSummary> {
+  const dateRange = { startDate: mxDateKey(range.start ?? new Date("2026-09-01")), endDate: mxDateKey(range.end) };
+  const prev = previousPeriod(range);
+
+  const channelRanges = prev
+    ? [dateRange, { startDate: mxDateKey(prev.start!), endDate: mxDateKey(prev.end) }]
+    : [dateRange];
 
   const [daily, totals, channels, pages, devices, events] = await Promise.all([
     ga4RunReport({
@@ -95,9 +104,9 @@ export async function fetchTrafficSummary(days = 30): Promise<TrafficSummary> {
       ],
     }),
     ga4RunReport({
-      dateRanges: [dateRange],
+      dateRanges: channelRanges,
       dimensions: [{ name: "sessionDefaultChannelGroup" }],
-      metrics: [{ name: "sessions" }],
+      metrics: [{ name: "sessions" }, { name: "engagementRate" }],
       orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
     }),
     ga4RunReport({
@@ -133,10 +142,26 @@ export async function fetchTrafficSummary(days = 30): Promise<TrafficSummary> {
     return { key, label, sessions: Number(r.metricValues[0].value) };
   });
 
-  const channelRows: ChannelPoint[] = (channels.rows ?? []).map((r: any) => ({
-    channel: r.dimensionValues[0].value,
-    sessions: Number(r.metricValues[0].value),
-  }));
+  // Al pedir 2 dateRanges, GA4 agrega "dateRange" como la ÚLTIMA dimensión de
+  // forma automática (no se declara en `dimensions`, y NO va primero —
+  // confirmado en vivo: pedirlo explícito tira 400 "Field dateRange is not
+  // a dimension"): "date_range_0" = actual, "date_range_1" = anterior.
+  const channelMap = new Map<string, ChannelPoint>();
+  for (const r of channels.rows ?? []) {
+    const channel = r.dimensionValues[0].value;
+    const isCurrent = prev ? r.dimensionValues[r.dimensionValues.length - 1].value === "date_range_0" : true;
+    const sessions = Number(r.metricValues[0].value);
+    const engagementRate = Number(r.metricValues[1].value);
+    const existing = channelMap.get(channel) ?? { channel, sessions: 0, engagementRate: 0, previousSessions: prev ? 0 : null };
+    if (isCurrent) {
+      existing.sessions = sessions;
+      existing.engagementRate = engagementRate;
+    } else if (existing.previousSessions !== null) {
+      existing.previousSessions = sessions;
+    }
+    channelMap.set(channel, existing);
+  }
+  const channelRows = [...channelMap.values()].sort((a, b) => b.sessions - a.sessions);
 
   const topPages: TopPage[] = (pages.rows ?? []).map((r: any) => ({
     path: r.dimensionValues[0].value,

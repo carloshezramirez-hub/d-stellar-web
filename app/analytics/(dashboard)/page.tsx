@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { KpiCards } from "@/components/analytics/kpi-cards";
-import { MentionsFeed } from "@/components/analytics/mentions-feed";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { InteractionsChart, ReachChart } from "@/components/analytics/performance-chart";
 import { PostGrid } from "@/components/analytics/post-grid";
 import { RetentionFunnel } from "@/components/analytics/retention-funnel";
+import { StatusBanner } from "@/components/admin/status-banner";
 import { StarField } from "@/components/ui/star-field";
-import { filterMentionsInWindow, getRecentMentions } from "@/lib/mentions/db";
+import { SECTION_THEME } from "@/lib/admin/section-theme";
 import { isMetaConfigured, isTikTokConfigured } from "@/lib/social/env";
 import {
   buildDailySeries,
@@ -83,7 +83,7 @@ function DateRangeFilter({ current }: { current: string }) {
           href={opt.value === DEFAULT_RANGE ? "/analytics" : `/analytics?range=${opt.value}`}
           className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all ${
             opt.value === current
-              ? "border-stellar-pink bg-stellar-pink text-stellar-black"
+              ? "border-stellar-purple bg-stellar-purple text-stellar-black"
               : "border-line text-stellar-white/60 hover:border-stellar-white/40 hover:scale-105"
           }`}
         >
@@ -150,21 +150,26 @@ interface PageProps {
   searchParams: Promise<{ range?: string }>;
 }
 
+// Orden fijo pedido por Carlos: TikTok d-stellar, Instagram d-stellar, Facebook d-stellar, TikTok Cookies CDMX.
+function accountSortKey(s: { platform: string; handle: string }): number {
+  if (s.platform === "tiktok" && s.handle === "dstellarmx") return 0;
+  if (s.platform === "instagram") return 1;
+  if (s.platform === "facebook") return 2;
+  if (s.platform === "tiktok" && s.handle === "cookiescdmx") return 3;
+  return 99;
+}
+
 export default async function AnalyticsDashboardPage({ searchParams }: PageProps) {
   const { range: rawRange } = await searchParams;
   const range = DATE_RANGE_OPTIONS.some((o) => o.value === rawRange) ? rawRange! : DEFAULT_RANGE;
 
   const hasMeta = isMetaConfigured();
   const hasTikTok = isTikTokConfigured();
-  const [stats, allPosts, allMentions] = await Promise.all([
-    getLatestAccountStats(),
-    getPostsFeed(),
-    getRecentMentions(),
-  ]);
+  const [stats, allPosts] = await Promise.all([getLatestAccountStats(), getPostsFeed()]);
+  const sortedStats = [...stats].sort((a, b) => accountSortKey(a) - accountSortKey(b));
 
   const windowDays = resolveRangeDays(range, allPosts);
   const posts = filterPostsInWindow(allPosts, windowDays);
-  const mentions = filterMentionsInWindow(allMentions, windowDays, range).slice(0, 5);
 
   const kpiSummaries = buildKpiSummaries(allPosts, windowDays);
   const dailySeries = buildDailySeries(allPosts, windowDays);
@@ -181,19 +186,29 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
         </div>
 
         <p className="mb-6 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">
-          Analítica social
+          Redes sociales
         </p>
 
       <WelcomeBanner allSummary={kpiSummaries.find((s) => s.platform === "all")} windowDays={windowDays} />
 
+      {allPosts.length === 0 && (
+        <StatusBanner
+          status="not_connected"
+          message={`Todavía no hay publicaciones que mostrar. Instagram + Facebook: ${hasMeta ? "conectado ✓" : "pendiente de credenciales"} · TikTok: ${hasTikTok ? "conectado ✓" : "pendiente del @handle"}.`}
+        />
+      )}
+      {allPosts.length > 0 && posts.length === 0 && (
+        <StatusBanner status="empty" message="No hay publicaciones dentro de este rango de fechas." />
+      )}
+
       {spotlightPost && <Spotlight post={spotlightPost} />}
 
-      {stats.length > 0 && (
-        <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          {stats.map((s) => (
+      {sortedStats.length > 0 && (
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {sortedStats.map((s) => (
             <div
               key={`${s.platform}-${s.handle}`}
-              className="rounded-lg border border-line p-6 transition-colors hover:border-stellar-white/30"
+              className="rounded-lg border border-line p-6 transition-colors hover:border-stellar-purple/40"
             >
               <p className="text-xs uppercase tracking-widest text-stellar-white/50">
                 {PLATFORM_LABEL[s.platform] ?? s.platform} · @{s.handle}
@@ -215,28 +230,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
 
       <DateRangeFilter current={range} />
 
-      <section className="mb-10">
-        <h2 className="mb-1 font-demi text-xl font-bold">Menciones de la marca</h2>
-        <p className="mb-4 text-sm text-stellar-white/50">
-          Web (Google Alerts) + Instagram (cuando alguien te etiqueta en una foto/video), ambas gratis. No incluye
-          búsqueda de texto en redes (TikTok/Instagram bloquean esa parte del scraping) ni reach real de terceros (no
-          es público).
-        </p>
-        <MentionsFeed mentions={mentions} hasAnyMentions={allMentions.length > 0} />
-      </section>
-
-      {posts.length === 0 && allPosts.length === 0 ? (
-        <div className="grid gap-4 rounded border border-line p-6 text-stellar-white/70">
-          <p>
-            Todavía no hay publicaciones que mostrar. Esta pantalla se llena automáticamente en cuanto el cron de
-            métricas corra.
-          </p>
-          <ul className="grid gap-1 text-sm">
-            <li>Instagram + Facebook: {hasMeta ? "conectado ✓" : "pendiente de credenciales"}</li>
-            <li>TikTok: {hasTikTok ? "conectado ✓" : "pendiente del @handle"}</li>
-          </ul>
-        </div>
-      ) : (
+      {allPosts.length > 0 && (
         <>
           <div className="mb-8 grid gap-4 sm:grid-cols-2">
             {kpiSummaries.map((summary) => (
@@ -249,13 +243,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
             <ReachChart data={dailySeries} />
           </div>
 
-          {posts.length === 0 ? (
-            <p className="rounded border border-line p-6 text-sm text-stellar-white/60">
-              No hay publicaciones dentro de este rango de fechas.
-            </p>
-          ) : (
-            <PostGrid posts={posts} topId={topId} lowId={lowId} />
-          )}
+          {posts.length > 0 && <PostGrid posts={posts} topId={topId} lowId={lowId} />}
         </>
       )}
       </div>

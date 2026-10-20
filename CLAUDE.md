@@ -36,8 +36,25 @@ sin excepción (ya se rompió esta regla una vez por accidente).
 - `/admin` — panel único de staff (desde 2026-10-19): un solo login
   (`ANALYTICS_DASHBOARD_PASSWORD`, cookie `admin_session` con `path: "/"`)
   que autoriza también `/analytics`, `/pedidos` y `/wallet-staff` sin volver
-  a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 6
-  botones: Ventas, Analytics, Anuncios, Eventos, Pedidos, Fidelidad.
+  a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 8
+  botones: Ventas, Ideas, Redes sociales (antes "Analytics", mismo URL
+  `/analytics`), Tráfico, Anuncios, Eventos, Pedidos, Fidelidad — orden y
+  color fijos en `lib/admin/section-theme.ts` (`SECTION_THEME`,
+  `SECTION_ORDER`), reusados en `ConsoleShell`, el hub y el borde de cada
+  `KpiTile`. Solo 6 colores de marca existen (ver nota de `app/globals.css`:
+  "no sustituir con colores parecidos") para 8 secciones, así que dos pares
+  comparten color a propósito (Ventas/Eventos=verde, Ideas/Fidelidad=rosa) —
+  nunca se inventaron tonos nuevos fuera del manual de marca.
+- **Filtro de fechas compartido (`lib/admin/date-range.ts`)** — usado por
+  Ventas/Pedidos/Eventos/Anuncios/Tráfico/Fidelidad. `resolveDateRange`
+  devuelve un `{start, end}` real (no solo un conteo de días), con presets
+  Hoy/7d/30d/Este mes/Mes anterior/90d/Todo + "Personalizado" (2 inputs de
+  fecha, componente `DateRangeFilter`). `rangeWindowDays`/`mxDateKey` son
+  los puentes hacia fetchers que piden un conteo de días o fechas literales
+  (Odoo, GA4, Search Console). **Gotcha ya resuelto:** el cálculo de días
+  entre `start` (00:00) y `end` (23:59:59.999) necesita `+1ms` antes de
+  dividir entre `DAY_MS`, si no un mes de 30 días calcula 29.999... y
+  `Math.round` lo sube a 31, corriendo todo un rango un día.
 - `/admin/ventas` (2026-10-20) — ventas reales de piso, jaladas en vivo del
   ERP **Odoo** de Carlos (`the-sweet-universe-company.odoo.com`, módulo
   Punto de Venta) vía su External API (JSON-RPC, no REST — Odoo no tiene
@@ -52,10 +69,21 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   datos reales todavía** (confirmado vía API: 0 facturas de proveedor,
   purchase.order solo con registros de prueba/cancelados) — por eso el
   panel no muestra "egresos operativos", solo ventas. `fetchWeekdayPattern`
-  agrega el patrón por día de la semana (qué día vende más/menos).
-- `/admin/trafico` (2026-10-20) — Google Analytics (GA4 Data API) +
-  Search Console (Search Analytics API), en vivo. Cliente propio en
-  `lib/google/client.ts` — JWT Bearer flow con cuenta de servicio
+  agrega el patrón por día de la semana (qué día vende más/menos),
+  `fetchMonthlyTrend` la evolución de ticket promedio e ingresos por mes.
+  Tabla "Productos más vendidos" (no gráfica, a propósito, para poder leer
+  unidades/ingreso/% exactos) en `components/admin/ventas/top-products-table.tsx`.
+  **Gotcha real encontrado 2026-10-20:** Odoo responde HTTP 429 "Rate limit
+  exceeded" (HTML, no JSON) ante ráfagas de `common.login` concurrentes —
+  pasa en cuanto una página dispara 3+ fetchers de Odoo en paralelo
+  (`Promise.all`). `lib/odoo/client.ts` ya lo resuelve con (a) una promesa
+  de login compartida (`uidPromise`, nunca más de 1 login real a la vez) y
+  (b) una cola de concurrencia máxima 2 para cualquier llamada a
+  `/jsonrpc`. Si se agregan más fetchers de Odoo a una página, no hace
+  falta tocar nada — la cola ya los protege.
+- `/admin/trafico` (2026-10-20, ampliado el mismo día) — Google Analytics
+  (GA4 Data API) + Search Console (Search Analytics API), en vivo. Cliente
+  propio en `lib/google/client.ts` — JWT Bearer flow con cuenta de servicio
   (`panel-dstellar@d-stellar-panel.iam.gserviceaccount.com`, proyecto GCP
   `d-stellar-panel`), sin SDK de Google, solo `crypto` nativo de Node.
   Variables en Vercel: `GOOGLE_SERVICE_ACCOUNT_JSON` (el JSON completo de
@@ -63,17 +91,38 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   (`549524452`), `GSC_SITE_URL` (`sc-domain:d-stellar.co`). La cuenta de
   servicio tiene rol **Lector/Viewer** en GA4 (Property access management)
   y **Restringido** en Search Console (Users and permissions) — nunca
-  escritura. Lógica en `lib/google/analytics.ts`
-  (`fetchTrafficSummary`: sesiones por día, canal, páginas más vistas) y
+  escritura. Lógica en `lib/google/analytics.ts` (`fetchTrafficSummary`:
+  sesiones, engagement/rebote/tiempo por página, dispositivo, canal con
+  variación vs. periodo anterior, eventos de conversión reales) y
   `lib/google/search-console.ts` (`fetchSearchSummary`: qué busca la
-  gente, con qué CTR/posición).
-- `/admin/ideas` (2026-10-20) — "Ideas para vender más": reglas
-  determinísticas (NO LLM, mismo patrón que `lib/ads/analysis.ts`) que
-  cruzan Ventas (Odoo) + Anuncios + Eventos + Fidelidad + Pedidos + mejor
-  post orgánico + Search Console, en `lib/insights/sales-ideas.ts`
-  (`buildSalesIdeas`). Cada idea cita un número real; si una fuente no
-  tiene datos suficientes, esa idea simplemente no aparece (nunca se
-  rellena con texto inventado).
+  gente, con qué CTR/posición, tendencia diaria). También vive aquí
+  "Menciones de la marca" (antes en `/analytics`, movida porque es
+  descubrimiento/tráfico, no redes) y `components/admin/status-banner.tsx`
+  (un solo tipo de aviso: sin datos / fuente no conectada / error).
+  **Gotcha real encontrado 2026-10-20:** al pedir 2 `dateRanges` a GA4 para
+  comparar periodos, el campo `dateRange` ("date_range_0"/"date_range_1")
+  lo agrega la API sola como la ÚLTIMA dimensión de cada fila — pedirlo
+  explícito en `dimensions` tira 400 "Field dateRange is not a dimension".
+  **Google Business Profile (Maps) — investigado, NO conectado:** a
+  diferencia de GA4/GSC, su API no es autoservicio — requiere solicitud
+  formal a Google (hasta 14 días de revisión) y perfil verificado 60+
+  días. `lib/google/client.ts` ya es genérico, listo para reusarse si se
+  aprueba el acceso.
+- `/admin/ideas` (2026-10-20, rediseño a tarjetas el mismo día) — "Ideas
+  para vender más": reglas determinísticas (NO LLM, mismo patrón que
+  `lib/ads/analysis.ts`) que cruzan Ventas (Odoo) + Anuncios + Eventos +
+  Fidelidad + Pedidos + mejor post orgánico + Search Console, en
+  `lib/insights/sales-ideas.ts` (`buildSalesIdeas`). Cada `Idea` tiene
+  `id` determinístico (`source-slug`), `severity` (fix/watch/win → mapea a
+  prioridad alta/media/baja) y `action` (paso concreto, separado del
+  `body`). Cada idea cita un número real; si una fuente no tiene datos
+  suficientes, esa idea simplemente no aparece. UI en
+  `components/admin/ideas/ideas-board.tsx` (tarjetas agrupadas por
+  sección, 3 visibles + "ver más") — el estado pendiente/en
+  curso/completada se guarda en Supabase (`idea_statuses`, solo
+  id+status, la idea en sí siempre se recalcula en vivo) vía
+  `lib/insights/idea-status-db.ts` + server action en
+  `app/admin/(dashboard)/ideas/actions.ts`.
 - **Sistema visual "centro de mando" (desde 2026-10-20):** todas las páginas
   de `/admin` + `/analytics` + `/pedidos` + `/wallet-staff` comparten
   `components/admin/console-shell.tsx` (barra superior fija: wordmark,
@@ -84,9 +133,13 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   un panel de control real — gráficas primero, navegación libre entre
   secciones sin depender del botón atrás. Al agregar una sección nueva:
   reusar `ConsoleShell` + `KpiTile`, no crear un header propio.
-- `/analytics` — dashboard de analítica social orgánica (IG+FB+TikTok) en
-  construcción por fases. Ver memoria `project_dstellar_analytics_dashboard`
-  para el estado detallado por fase.
+- `/analytics` (hub la llama **"Redes sociales"** desde 2026-10-20, la URL
+  se quedó igual a propósito) — dashboard de analítica social orgánica
+  (IG+FB+TikTok) en construcción por fases. Ver memoria
+  `project_dstellar_analytics_dashboard` para el estado detallado por fase.
+  Orden fijo de cuentas: TikTok d-stellar, Instagram d-stellar, Facebook
+  d-stellar, TikTok Cookies CDMX (`accountSortKey` en el page.tsx).
+  Menciones de marca se movieron a `/admin/trafico`.
 - `/admin/anuncios` — dashboard de campañas pagadas de TikTok Ads
   (@dstellarmx), separado de `/analytics` porque es orgánico vs. pagado.
   Datos 100% reales pegados a mano desde TikTok Ads Manager en
@@ -103,10 +156,16 @@ sin excepción (ya se rompió esta regla una vez por accidente).
 - `/fidelidad` — tarjeta de fidelidad en Apple Wallet (beta): geofence
   nativo de iOS + actualización en vivo vía push de Apple (staff escanea en
   `/wallet-staff` y suma sellos, la tarjeta ya instalada se refresca sola).
-  Regla confirmada: 10 sellos = 1 sorpresa. `/wallet-staff/clientes` lista
-  toda la base de clientes (nombre/teléfono/email/nivel/sellos) con CSV —
-  el email es obligatorio en el signup. Ver `lib/wallet/*`,
-  `app/api/wallet/*`, `app/api/wallet-staff/*`, y **`WALLET_SETUP.md`**.
+  Regla confirmada: 10 sellos = 1 sorpresa. **Desde 2026-10-20, `/wallet-staff`
+  fusiona escáner + lista de clientes en una sola vista** (antes la lista
+  vivía en `/wallet-staff/clientes`, un clic aparte) — grid 2 columnas en
+  escritorio (`components/wallet-staff/clients-panel.tsx` principal +
+  `components/wallet-staff/scanner-panel.tsx` lateral), en móvil el
+  escáner arranca colapsado arriba (botón "📷 Escanear tarjeta") y la
+  lista abajo. `/wallet-staff/clientes` ahora solo redirige a
+  `/wallet-staff` (por links viejos guardados). El email es obligatorio
+  en el signup. Ver `lib/wallet/*`, `app/api/wallet/*`,
+  `app/api/wallet-staff/*`, y **`WALLET_SETUP.md`**.
 - `/admin/eventos` — CRUD completo de eventos (crear/editar/borrar,
   sesiones múltiples con toggle "agotada", niveles de boleto, subida de
   imágenes a Supabase Storage) + panel de ventas por evento (quién pagó,

@@ -6,15 +6,24 @@ import type { WebOrder } from "@/lib/orders-db";
 import type { FeedPost } from "@/lib/social/queries";
 import type { LoyaltyMember } from "@/lib/wallet/loyalty-db";
 
+export type IdeaSource = "ventas" | "anuncios" | "eventos" | "fidelidad" | "pedidos" | "redes" | "trafico";
+
 export interface Idea {
-  source: "ventas" | "anuncios" | "eventos" | "fidelidad" | "pedidos" | "redes" | "trafico";
+  id: string;
+  source: IdeaSource;
   severity: "win" | "fix" | "watch";
   title: string;
   body: string;
+  action: string;
 }
 
 function formatMoney(n: number) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
+}
+
+/** id estable por regla — mismo source+slug siempre que la regla se dispare, para poder guardarle un estado (pendiente/en curso/completada) en Supabase sin depender del texto exacto. */
+function ideaId(source: IdeaSource, slug: string): string {
+  return `${source}-${slug}`;
 }
 
 export interface SalesIdeasInput {
@@ -44,10 +53,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   if (input.topProducts.length > 0) {
     const top = input.topProducts[0];
     ideas.push({
+      id: ideaId("ventas", "producto-estrella"),
       source: "ventas",
       severity: "win",
       title: `Tu producto estrella es "${top.name}"`,
-      body: `Generó ${formatMoney(top.revenue)} (${top.qty.toFixed(0)} unidades) en el periodo seleccionado de Ventas. Asegúrate de que nunca falte en piso y que sea protagonista en tus próximos posts/anuncios — ya sabes que vende.`,
+      body: `Generó ${formatMoney(top.revenue)} (${top.qty.toFixed(0)} unidades) en el periodo seleccionado de Ventas.`,
+      action: "Asegúrate de que nunca falte en piso y hazlo protagonista de tu próximo post/anuncio.",
     });
   }
 
@@ -57,19 +68,39 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
     const worst = [...daysWithSales].sort((a, b) => a.total - b.total)[0];
     if (best.key !== worst.key) {
       ideas.push({
+        id: ideaId("ventas", "dia-flojo"),
         source: "ventas",
         severity: "watch",
-        title: `${worst.label} es tu día más flojo (${formatMoney(worst.total)} vs. ${formatMoney(best.total)} de ${best.label})`,
-        body: `En vez de repartir presupuesto de anuncios parejo entre toda la semana, prueba concentrar una promo o impulso en redes específicamente los ${worst.label.toLowerCase()} — es donde más margen hay para crecer.`,
+        title: `${worst.label} es tu día más flojo`,
+        body: `${formatMoney(worst.total)} vs. ${formatMoney(best.total)} de ${best.label} en el mismo periodo.`,
+        action: `Concentra una promo o impulso en redes específicamente los ${worst.label.toLowerCase()}.`,
       });
     }
   }
 
   // --- Anuncios (TikTok Ads) — se toma el primer "win" y el primer "fix" para no repetir toda la lista de /admin/anuncios ---
   const adsWin = input.adsLearnings.find((l) => l.severity === "win");
-  if (adsWin) ideas.push({ source: "anuncios", severity: "win", title: adsWin.title, body: adsWin.body });
+  if (adsWin) {
+    ideas.push({
+      id: ideaId("anuncios", "win"),
+      source: "anuncios",
+      severity: "win",
+      title: adsWin.title,
+      body: adsWin.body,
+      action: "Revisa la campaña en /admin/anuncios y sube su presupuesto.",
+    });
+  }
   const adsFix = input.adsLearnings.find((l) => l.severity === "fix");
-  if (adsFix) ideas.push({ source: "anuncios", severity: "fix", title: adsFix.title, body: adsFix.body });
+  if (adsFix) {
+    ideas.push({
+      id: ideaId("anuncios", "fix"),
+      source: "anuncios",
+      severity: "fix",
+      title: adsFix.title,
+      body: adsFix.body,
+      action: "Corrige el problema antes de volver a promocionar ese video.",
+    });
+  }
 
   // --- Eventos ---
   const statsBySlug = new Map<string, { count: number; revenue: number }>();
@@ -87,10 +118,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   if (pastWithSales.length > 0) {
     const bestEvent = pastWithSales[0];
     ideas.push({
+      id: ideaId("eventos", "mejor-evento"),
       source: "eventos",
       severity: "win",
-      title: `"${bestEvent.event.title}" fue tu evento con más ingreso (${formatMoney(bestEvent.stats.revenue)}, ${bestEvent.stats.count} boletos)`,
-      body: `Si funcionó una vez, probablemente funcione otra — vale la pena repetir el formato (mismo tipo de experiencia/precio) en vez de inventar un concepto nuevo desde cero cada vez.`,
+      title: `"${bestEvent.event.title}" fue tu evento con más ingreso`,
+      body: `${formatMoney(bestEvent.stats.revenue)} en ${bestEvent.stats.count} boletos.`,
+      action: "Repite el mismo formato/precio en vez de inventar un concepto nuevo desde cero.",
     });
   }
 
@@ -102,10 +135,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   if (upcomingLagging.length > 0) {
     const e = upcomingLagging[0];
     ideas.push({
+      id: ideaId("eventos", "evento-rezagado"),
       source: "eventos",
       severity: "watch",
-      title: `"${e.event.title}" lleva pocos boletos vendidos para estar tan cerca`,
-      body: `Solo ${formatMoney(e.stats.revenue)} vendidos hasta ahora, muy por debajo del promedio de tus eventos pasados (${formatMoney(avgPastRevenue)}) — vale la pena empujarlo con un post/historia o un anuncio dirigido antes de que sea tarde.`,
+      title: `"${e.event.title}" lleva pocos boletos vendidos`,
+      body: `Solo ${formatMoney(e.stats.revenue)} vendidos, muy por debajo del promedio de tus eventos pasados (${formatMoney(avgPastRevenue)}).`,
+      action: "Empújalo con un post/historia o un anuncio dirigido antes de que sea tarde.",
     });
   }
 
@@ -113,10 +148,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   const closeToReward = input.members.filter((m) => m.stamps_required - m.stamps > 0 && m.stamps_required - m.stamps <= 2);
   if (closeToReward.length > 0) {
     ideas.push({
+      id: ideaId("fidelidad", "cerca-del-premio"),
       source: "fidelidad",
       severity: "win",
       title: `${closeToReward.length} cliente${closeToReward.length > 1 ? "s están" : " está"} a 1-2 sellos de su premio`,
-      body: `Un mensaje directo (WhatsApp o historia etiquetándolos) invitándolos a volver por su recompensa suele traerlos de regreso antes de que se les olvide la tarjeta. Nombres: ${closeToReward.slice(0, 6).map((m) => m.name).join(", ")}${closeToReward.length > 6 ? "…" : ""}.`,
+      body: `Nombres: ${closeToReward.slice(0, 6).map((m) => m.name).join(", ")}${closeToReward.length > 6 ? "…" : ""}.`,
+      action: "Mándales un WhatsApp o etiquétalos en una historia invitándolos a volver.",
     });
   }
 
@@ -125,10 +162,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
     const noobiePct = (noobies / input.members.length) * 100;
     if (noobiePct >= 60) {
       ideas.push({
+        id: ideaId("fidelidad", "segunda-visita"),
         source: "fidelidad",
         severity: "watch",
-        title: `${noobiePct.toFixed(0)}% de tu base de fidelidad nunca pasó de su primer sello`,
-        body: `La mayoría de la gente se registra pero no vuelve a sellar. Vale la pena un incentivo para la "segunda visita" (ej. doble sello la segunda vez) en vez de solo enfocarte en registrar gente nueva.`,
+        title: `${noobiePct.toFixed(0)}% de tu base nunca pasó de su primer sello`,
+        body: "La mayoría se registra pero no vuelve a sellar.",
+        action: "Prueba un incentivo para la segunda visita (ej. doble sello).",
       });
     }
   }
@@ -139,21 +178,26 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   );
   if (needsAttention.length > 0) {
     ideas.push({
+      id: ideaId("pedidos", "correos-sin-confirmar"),
       source: "pedidos",
       severity: "fix",
       title: `${needsAttention.length} pedido${needsAttention.length > 1 ? "s" : ""} con el correo de confirmación sin llegar`,
-      body: `Un cliente que no recibió su confirmación de boleto/pickup puede no presentarse o desconfiar de la compra. Revisa /pedidos y usa el botón de reenviar con el correo corregido.`,
+      body: "Un cliente sin confirmación puede no presentarse o desconfiar de la compra.",
+      action: "Ve a /pedidos y reenvía con el correo corregido.",
     });
   }
 
   // --- Redes orgánicas ---
   if (input.topPost) {
     const p = input.topPost;
+    const platformLabel = p.platform === "tiktok" ? "TikTok" : p.platform === "instagram" ? "Instagram" : "Facebook";
     ideas.push({
+      id: ideaId("redes", "mejor-post"),
       source: "redes",
       severity: "win",
-      title: `Tu post con mejor desempeño fue en ${p.platform === "tiktok" ? "TikTok" : p.platform === "instagram" ? "Instagram" : "Facebook"}`,
-      body: `${p.caption ? `"${p.caption.slice(0, 90)}…"` : "Sin caption registrado"} — fue el que más engagement generó frente al resto de tus posts del periodo. Repetir ese mismo formato/tono es más confiable que improvisar contenido nuevo cada vez.`,
+      title: `Tu post con mejor desempeño fue en ${platformLabel}`,
+      body: p.caption ? `"${p.caption.slice(0, 90)}…"` : "Fue el que más engagement generó frente al resto del periodo.",
+      action: "Repite ese mismo formato/tono en vez de improvisar contenido nuevo.",
     });
   }
 
@@ -165,10 +209,12 @@ export function buildSalesIdeas(input: SalesIdeasInput): Idea[] {
   if (discoveryQueries.length > 0) {
     const q = discoveryQueries[0];
     ideas.push({
+      id: ideaId("trafico", "busqueda-sin-clic"),
       source: "trafico",
       severity: "watch",
       title: `Gente busca "${q.query}" y te encuentra, pero no le da clic`,
-      body: `Google ya te muestra en esa búsqueda (posición ${q.position.toFixed(0)}, ${q.impressions} veces visto) pero 0 clics — el título/descripción que aparece en el resultado probablemente no está convenciendo. Vale la pena revisar el meta title/description de la página que rankea para ese término.`,
+      body: `Posición ${q.position.toFixed(0)}, ${q.impressions} veces visto, 0 clics.`,
+      action: "Revisa el título/descripción de la página que rankea para ese término.",
     });
   }
 

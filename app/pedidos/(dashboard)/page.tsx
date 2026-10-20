@@ -5,7 +5,10 @@ import { KpiTile } from "@/components/admin/kpi-tile";
 import { OrdersChart, type OrdersDayPoint } from "@/components/pedidos/orders-chart";
 import { ResendButton } from "@/components/pedidos/resend-button";
 import { SyncButton } from "@/components/pedidos/sync-button";
-import { resolveRange, withinRange } from "@/lib/admin/date-range";
+import { rangeWindowDays, resolveDateRange, withinRange } from "@/lib/admin/date-range";
+import { SECTION_THEME } from "@/lib/admin/section-theme";
+
+const ACCENT = SECTION_THEME.pedidos.accent;
 
 function formatMoney(amount: number, currency: string) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency }).format(amount);
@@ -72,22 +75,21 @@ function buildDailySeries(orders: WebOrder[], days: number): OrdersDayPoint[] {
 }
 
 interface PageProps {
-  searchParams: Promise<{ range?: string }>;
+  searchParams: Promise<{ range?: string; from?: string; to?: string }>;
 }
 
 export default async function PedidosPage({ searchParams }: PageProps) {
-  const { range: rawRange } = await searchParams;
-  const range = resolveRange(rawRange, "30");
+  const { range: rawRange, from, to } = await searchParams;
+  const range = resolveDateRange(rawRange, "30", from, to);
 
   const allOrders = await listOrders();
   // La alerta de correos sin confirmar es operativa — se queda siempre sobre TODOS los pedidos, no se oculta al filtrar por fecha.
   const needsAttention = allOrders.filter((o) => o.email_customer_status === "bounced" || o.email_customer_status === "failed" || o.email_customer_status === "complained");
 
-  const orders = allOrders.filter((o) => withinRange(o.created_at, range.days));
+  const orders = allOrders.filter((o) => withinRange(o.created_at, range));
   const totalRevenue = orders.reduce((sum, o) => sum + o.amount_mxn, 0);
   const ticketOrders = orders.filter((o) => o.kind === "ticket").length;
-  const chartDays = range.days ?? 180;
-  const dailySeries = buildDailySeries(orders, chartDays);
+  const dailySeries = buildDailySeries(orders, rangeWindowDays(range));
 
   return (
     <main className="min-h-screen">
@@ -104,12 +106,12 @@ export default async function PedidosPage({ searchParams }: PageProps) {
           <SyncButton />
         </div>
 
-        <DateRangeFilter basePath="/pedidos" current={range.value} />
+        <DateRangeFilter basePath="/pedidos" current={range.value} accent={ACCENT} from={from} to={to} />
 
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <KpiTile icon="🧾" value={String(orders.length)} label="pedidos en el periodo" accent="purple" />
-          <KpiTile icon="💰" value={formatMoney(totalRevenue, "MXN")} label="ingreso en el periodo" accent="green" />
-          <KpiTile icon="🎟️" value={String(ticketOrders)} label="boletos vendidos" accent="pink" />
+          <KpiTile icon="🧾" value={String(orders.length)} label="pedidos en el periodo" accent={ACCENT} />
+          <KpiTile icon="💰" value={formatMoney(totalRevenue, "MXN")} label="ingreso en el periodo" accent={ACCENT} />
+          <KpiTile icon="🎟️" value={String(ticketOrders)} label="boletos vendidos" accent={ACCENT} />
           <KpiTile icon="⚠️" value={String(needsAttention.length)} label="correo sin confirmar (total)" accent={needsAttention.length > 0 ? "red" : "white"} />
         </div>
 
