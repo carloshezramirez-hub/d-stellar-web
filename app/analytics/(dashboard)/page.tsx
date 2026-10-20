@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { KpiCards } from "@/components/analytics/kpi-cards";
-import { LogoutButton } from "@/components/analytics/logout-button";
 import { MentionsFeed } from "@/components/analytics/mentions-feed";
+import { ConsoleShell } from "@/components/admin/console-shell";
 import { InteractionsChart, ReachChart } from "@/components/analytics/performance-chart";
 import { PostGrid } from "@/components/analytics/post-grid";
 import { RetentionFunnel } from "@/components/analytics/retention-funnel";
@@ -172,20 +172,17 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
   const spotlightPost = posts.find((p) => p.id === topId) ?? null;
 
   return (
-    <main className="relative mx-auto max-w-6xl overflow-hidden px-4 py-10">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <StarField />
-      </div>
+    <main className="relative min-h-screen overflow-hidden">
+      <ConsoleShell />
 
-      <header className="mb-2 flex items-center justify-between">
-        <div>
-          <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
-          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver al panel
-          </Link>
+      <div className="relative mx-auto max-w-6xl overflow-hidden px-4 py-10">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <StarField />
         </div>
-        <LogoutButton />
-      </header>
+
+        <p className="mb-6 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">
+          Analítica social
+        </p>
 
       <WelcomeBanner allSummary={kpiSummaries.find((s) => s.platform === "all")} windowDays={windowDays} />
 
@@ -261,6 +258,7 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
           )}
         </>
       )}
+      </div>
     </main>
   );
 }

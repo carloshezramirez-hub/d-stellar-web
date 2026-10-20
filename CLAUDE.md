@@ -38,6 +38,16 @@ sin excepción (ya se rompió esta regla una vez por accidente).
   que autoriza también `/analytics`, `/pedidos` y `/wallet-staff` sin volver
   a pedir contraseña — ver `lib/admin-auth.ts`. El hub (`/admin`) tiene 5
   botones: Fidelidad, Analytics, Anuncios, Eventos, Pedidos.
+- **Sistema visual "centro de mando" (desde 2026-10-20):** todas las páginas
+  de `/admin` + `/analytics` + `/pedidos` + `/wallet-staff` comparten
+  `components/admin/console-shell.tsx` (barra superior fija: wordmark,
+  pills de navegación entre secciones, indicador "en vivo", Salir — un solo
+  componente, no headers ad hoc por página) y
+  `components/admin/kpi-tile.tsx` (tile de estadística reusable, con acento
+  de color por sección). El objetivo pedido por Carlos: que se sienta como
+  un panel de control real — gráficas primero, navegación libre entre
+  secciones sin depender del botón atrás. Al agregar una sección nueva:
+  reusar `ConsoleShell` + `KpiTile`, no crear un header propio.
 - `/analytics` — dashboard de analítica social orgánica (IG+FB+TikTok) en
   construcción por fases. Ver memoria `project_dstellar_analytics_dashboard`
   para el estado detallado por fase.

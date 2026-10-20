@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ConsoleShell } from "@/components/admin/console-shell";
+import { KpiTile } from "@/components/admin/kpi-tile";
+import { TierChart } from "@/components/wallet-staff/tier-chart";
 
 type Member = {
   name: string;
@@ -53,35 +56,59 @@ export default function WalletStaffClientesPage() {
       .catch(() => setError(true));
   }, []);
 
+  const tierData = useMemo(() => {
+    if (!members) return [];
+    const counts = new Map<string, number>();
+    for (const m of members) counts.set(m.tier, (counts.get(m.tier) ?? 0) + 1);
+    return [...counts.entries()].map(([tier, count]) => ({ tier, count }));
+  }, [members]);
+
+  const totalStamps = members?.reduce((sum, m) => sum + m.lifetime_stamps, 0) ?? 0;
+
   return (
     <main className="min-h-screen">
-      <header className="flex items-center justify-between border-b border-line px-6 py-4">
-        <div>
-          <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">
-            d-stellar · Clientes de fidelidad
-          </h1>
-          <div className="flex gap-3">
+      <ConsoleShell />
+
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Clientes de fidelidad</p>
             <Link href="/wallet-staff" className="text-xs text-stellar-white/60 underline underline-offset-4">
               ← Volver al escáner
             </Link>
-            <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
-              ← Volver al panel
-            </Link>
           </div>
+          <button
+            type="button"
+            disabled={!members?.length}
+            onClick={() => members && downloadCsv(members)}
+            className="bg-stellar-pink px-4 py-2 font-tag text-xs font-bold uppercase tracking-widest text-stellar-black disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Descargar CSV
+          </button>
         </div>
-        <button
-          type="button"
-          disabled={!members?.length}
-          onClick={() => members && downloadCsv(members)}
-          className="bg-stellar-pink px-4 py-2 font-tag text-xs font-bold uppercase tracking-widest text-stellar-black disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Descargar CSV
-        </button>
-      </header>
 
-      <div className="mx-auto max-w-5xl p-6">
         {error && <p className="text-sm text-stellar-red">No se pudo cargar la lista de clientes.</p>}
         {!error && !members && <p className="text-sm text-stellar-white/60">Cargando...</p>}
+
+        {members && members.length > 0 && (
+          <>
+            <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <KpiTile icon="👥" value={String(members.length)} label="clientes registrados" accent="pink" />
+              <KpiTile icon="⭐" value={String(totalStamps)} label="sellos repartidos (histórico)" accent="purple" />
+              <KpiTile
+                icon="📈"
+                value={(totalStamps / members.length).toFixed(1)}
+                label="sellos promedio por cliente"
+                accent="green"
+              />
+            </div>
+
+            <div className="mb-10">
+              <TierChart data={tierData} />
+            </div>
+          </>
+        )}
+
         {members && members.length === 0 && (
           <p className="text-sm text-stellar-white/60">Todavía no hay clientes registrados.</p>
         )}

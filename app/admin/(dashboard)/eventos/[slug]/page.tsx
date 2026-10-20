@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getEventBySlug } from "@/lib/events-db";
 import { listOrdersByEventSlug } from "@/lib/orders-db";
 import { EventForm } from "@/components/admin/event-form";
+import { ConsoleShell } from "@/components/admin/console-shell";
 
 function formatMoney(amount: number) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount);
@@ -28,19 +29,13 @@ export default async function EditarEventoPage({ params }: { params: Promise<{ s
 
   return (
     <main className="min-h-screen">
-      <header className="border-b border-line px-6 py-4">
-        <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">{event.title}</h1>
-        <div className="flex gap-3">
-          <Link href="/admin/eventos" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver a eventos
-          </Link>
-          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver al panel
-          </Link>
-        </div>
-      </header>
+      <ConsoleShell />
 
-      <div className="mx-auto max-w-3xl p-6">
+      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+        <Link href="/admin/eventos" className="text-xs text-stellar-white/60 underline underline-offset-4">
+          ← Volver a eventos
+        </Link>
+        <h1 className="mt-2 mb-6 font-demi text-xl font-bold text-stellar-white">{event.title}</h1>
         <EventForm initialEvent={event} />
 
         <section className="mt-10 border-2 border-line bg-stellar-black-soft p-6">

@@ -1,21 +1,16 @@
 import Link from "next/link";
 import { EventForm } from "@/components/admin/event-form";
+import { ConsoleShell } from "@/components/admin/console-shell";
 
 export default function NuevoEventoPage() {
   return (
     <main className="min-h-screen">
-      <header className="border-b border-line px-6 py-4">
-        <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">Nuevo evento</h1>
-        <div className="flex gap-3">
-          <Link href="/admin/eventos" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver a eventos
-          </Link>
-          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver al panel
-          </Link>
-        </div>
-      </header>
-      <div className="mx-auto max-w-3xl p-6">
+      <ConsoleShell />
+      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+        <Link href="/admin/eventos" className="text-xs text-stellar-white/60 underline underline-offset-4">
+          ← Volver a eventos
+        </Link>
+        <h1 className="mt-2 mb-6 font-demi text-xl font-bold text-stellar-white">Nuevo evento</h1>
         <EventForm />
       </div>
     </main>
