@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listOrders, type EmailDeliveryStatus } from "@/lib/orders-db";
 import { LogoutButton } from "@/components/pedidos/logout-button";
 import { ResendButton } from "@/components/pedidos/resend-button";
@@ -53,6 +54,9 @@ export default async function PedidosPage() {
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
           <h1 className="font-bold text-2xl">d-stellar · Pedidos</h1>
+          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
+            ← Volver al panel
+          </Link>
           <p className="mt-1 text-sm text-stellar-white/60">
             Historial de todas las compras web (boletos + pickup) — se registra al momento del pago, pase lo que pase con el correo.
           </p>

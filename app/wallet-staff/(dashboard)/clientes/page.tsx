@@ -60,9 +60,14 @@ export default function WalletStaffClientesPage() {
           <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">
             d-stellar · Clientes de fidelidad
           </h1>
-          <Link href="/wallet-staff" className="text-xs text-stellar-white/60 underline underline-offset-4">
-            ← Volver al escáner
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/wallet-staff" className="text-xs text-stellar-white/60 underline underline-offset-4">
+              ← Volver al escáner
+            </Link>
+            <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
+              ← Volver al panel
+            </Link>
+          </div>
         </div>
         <button
           type="button"

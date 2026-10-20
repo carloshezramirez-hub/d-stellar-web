@@ -16,9 +16,14 @@ export default function WalletStaffPage() {
   return (
     <main className="min-h-screen">
       <header className="flex items-center justify-between border-b border-line px-6 py-4">
-        <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">
-          d-stellar · Fidelidad
-        </h1>
+        <div>
+          <h1 className="font-demi text-sm font-bold uppercase tracking-widest text-stellar-white">
+            d-stellar · Fidelidad
+          </h1>
+          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
+            ← Volver al panel
+          </Link>
+        </div>
         <div className="flex items-center gap-4">
           <Link href="/wallet-staff/clientes" className="text-xs text-stellar-white/60 underline underline-offset-4">
             Ver clientes

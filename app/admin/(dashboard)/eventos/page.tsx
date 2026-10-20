@@ -20,7 +20,6 @@ export default async function AdminEventosPage() {
 
   const upcoming = events.filter((e) => e.status === "upcoming");
   const past = events.filter((e) => e.status === "past");
-  const ordered = [...upcoming, ...past];
 
   return (
     <main className="min-h-screen">
@@ -40,31 +39,64 @@ export default async function AdminEventosPage() {
       </header>
 
       <div className="mx-auto max-w-5xl p-6">
-        {ordered.length === 0 && <p className="text-sm text-stellar-white/60">Todavía no hay eventos.</p>}
-        <div className="grid gap-4">
-          {ordered.map((event) => {
-            const stats = statsBySlug.get(event.slug);
-            return (
-              <Link
-                key={event.slug}
-                href={`/admin/eventos/${event.slug}`}
-                className="flex flex-wrap items-center justify-between gap-4 border-2 border-line bg-stellar-black-soft p-5 transition-colors hover:border-stellar-pink"
-              >
-                <div>
-                  <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
-                  <p className="mt-1 text-xs uppercase tracking-widest text-stellar-white/50">
-                    {event.status === "upcoming" ? "Próximo" : "Pasado"}
-                    {event.dateISO && ` · ${new Date(event.dateISO).toLocaleDateString("es-MX", { timeZone: "America/Mexico_City" })}`}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-stellar-white/80">{stats?.count ?? 0} boletos vendidos</p>
-                  <p className="text-sm text-stellar-green">{formatMoney(stats?.revenue ?? 0)}</p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        {upcoming.length === 0 && past.length === 0 && <p className="text-sm text-stellar-white/60">Todavía no hay eventos.</p>}
+
+        {upcoming.length > 0 && (
+          <div className="mb-10 grid gap-4">
+            {upcoming.map((event) => {
+              const stats = statsBySlug.get(event.slug);
+              return (
+                <Link
+                  key={event.slug}
+                  href={`/admin/eventos/${event.slug}`}
+                  className="flex flex-wrap items-center justify-between gap-4 border-2 border-line bg-stellar-black-soft p-5 transition-colors hover:border-stellar-pink"
+                >
+                  <div>
+                    <p className="font-demi text-lg font-bold text-stellar-white">{event.title}</p>
+                    <p className="mt-1 text-xs uppercase tracking-widest text-stellar-pink/70">
+                      Próximo
+                      {event.dateISO && ` · ${new Date(event.dateISO).toLocaleDateString("es-MX", { timeZone: "America/Mexico_City" })}`}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-stellar-white/80">{stats?.count ?? 0} boletos vendidos</p>
+                    <p className="text-sm text-stellar-green">{formatMoney(stats?.revenue ?? 0)}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {past.length > 0 && (
+          <div>
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-stellar-white/30">Eventos pasados</p>
+            <div className="grid gap-2">
+              {past.map((event) => {
+                const stats = statsBySlug.get(event.slug);
+                return (
+                  <Link
+                    key={event.slug}
+                    href={`/admin/eventos/${event.slug}`}
+                    className="flex flex-wrap items-center justify-between gap-4 border border-line/40 p-3 opacity-60 transition-opacity hover:opacity-100"
+                  >
+                    <div>
+                      <p className="text-sm font-bold text-stellar-white/70">{event.title}</p>
+                      <p className="mt-0.5 text-[11px] uppercase tracking-widest text-stellar-white/35">
+                        Pasado
+                        {event.dateISO && ` · ${new Date(event.dateISO).toLocaleDateString("es-MX", { timeZone: "America/Mexico_City" })}`}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-stellar-white/50">{stats?.count ?? 0} boletos vendidos</p>
+                      <p className="text-xs text-stellar-white/40">{formatMoney(stats?.revenue ?? 0)}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );

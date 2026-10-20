@@ -178,7 +178,12 @@ export default async function AnalyticsDashboardPage({ searchParams }: PageProps
       </div>
 
       <header className="mb-2 flex items-center justify-between">
-        <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
+        <div>
+          <h1 className="font-demi text-2xl font-bold sm:text-3xl">d-stellar · Analítica social</h1>
+          <Link href="/admin" className="text-xs text-stellar-white/60 underline underline-offset-4">
+            ← Volver al panel
+          </Link>
+        </div>
         <LogoutButton />
       </header>
 
