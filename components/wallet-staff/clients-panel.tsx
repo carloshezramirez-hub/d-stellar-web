@@ -13,7 +13,7 @@ const ACCENT = SECTION_THEME.fidelidad.accent;
 type Member = {
   name: string;
   phone: string;
-  email: string;
+  email: string | null;
   locale: "es" | "en";
   stamps: number;
   stamps_required: number;
@@ -27,7 +27,7 @@ function toCsv(members: Member[]): string {
   const rows = members.map((m) => [
     m.name,
     m.phone,
-    m.email,
+    m.email ?? "",
     m.tier,
     `${m.stamps}/${m.stamps_required}`,
     String(m.lifetime_stamps),
@@ -138,10 +138,10 @@ export function ClientsPanel() {
             </thead>
             <tbody>
               {members.map((m) => (
-                <tr key={m.email + m.phone} className="border-b border-line/50 text-stellar-white">
+                <tr key={m.phone + m.name} className="border-b border-line/50 text-stellar-white">
                   <td className="py-2 pr-4">{m.name}</td>
                   <td className="py-2 pr-4">{m.phone}</td>
-                  <td className="py-2 pr-4">{m.email}</td>
+                  <td className="py-2 pr-4">{m.email || "—"}</td>
                   <td className="py-2 pr-4">{m.tier}</td>
                   <td className="py-2 pr-4">
                     {m.stamps}/{m.stamps_required}

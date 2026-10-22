@@ -25,7 +25,13 @@ export interface LoyaltyMember {
   auth_token: string;
   name: string;
   phone: string;
-  email: string;
+  // Obligatorio en el alta en vivo (/api/wallet/signup, ver loyalty-schema.ts)
+  // pero opcional aquí — la base histórica importada del Excel de Carlos no
+  // tenía email, solo nombre/teléfono/fecha de nacimiento.
+  email: string | null;
+  // "YYYY-MM-DD" o null — mismo origen (import del Excel), no se recolecta
+  // todavía en el alta en vivo.
+  birth_date: string | null;
   locale: "es" | "en";
   stamps: number;
   stamps_required: number;
