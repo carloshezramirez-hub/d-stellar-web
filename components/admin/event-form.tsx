@@ -38,7 +38,7 @@ type TicketForm = {
   noteEn: string;
 };
 
-type SessionForm = { localValue: string; soldOut: boolean };
+type SessionForm = { localValue: string; soldOut: boolean; ticketLimit: string };
 
 function ticketToForm(t: EventTicket): TicketForm {
   return {
@@ -80,6 +80,9 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
     (initialEvent?.sessionDates ?? []).map((iso) => ({
       localValue: isoToCdmxLocalInput(iso),
       soldOut: initialEvent?.soldOutSessionDates?.includes(iso) ?? false,
+      ticketLimit: String(
+        initialEvent?.sessionTicketLimits?.find((l) => l.sessionDateISO === iso)?.maxTickets ?? "",
+      ),
     })),
   );
   const [datesSummaryEs, setDatesSummaryEs] = useState(initialEvent?.datesSummary?.es ?? "");
@@ -148,7 +151,7 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
   }
 
   function addSession() {
-    setSessions((prev) => [...prev, { localValue: "", soldOut: false }]);
+    setSessions((prev) => [...prev, { localValue: "", soldOut: false, ticketLimit: "" }]);
   }
   function updateSession(i: number, patch: Partial<SessionForm>) {
     setSessions((prev) => prev.map((s, idx) => (idx === i ? { ...s, ...patch } : s)));
@@ -170,6 +173,9 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
   function buildPayload(): EventRecord {
     const sessionISOs = sessions.filter((s) => s.localValue).map((s) => cdmxLocalInputToISO(s.localValue));
     const soldOutISOs = sessions.filter((s) => s.localValue && s.soldOut).map((s) => cdmxLocalInputToISO(s.localValue));
+    const sessionTicketLimits = sessions
+      .filter((s) => s.localValue && s.ticketLimit && Number(s.ticketLimit) > 0)
+      .map((s) => ({ sessionDateISO: cdmxLocalInputToISO(s.localValue), maxTickets: Number(s.ticketLimit) }));
 
     const dateISO =
       dateMode === "month-only"
@@ -189,6 +195,7 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
       monthLabel: dateMode === "month-only" ? { es: monthLabelEs, en: monthLabelEn } : undefined,
       sessionDates: sessionISOs.length ? sessionISOs : undefined,
       soldOutSessionDates: soldOutISOs.length ? soldOutISOs : undefined,
+      sessionTicketLimits: sessionTicketLimits.length ? sessionTicketLimits : undefined,
       datesSummary: datesSummaryEs || datesSummaryEn ? { es: datesSummaryEs, en: datesSummaryEn } : undefined,
       doorsNote: doorsNoteEs || doorsNoteEn ? { es: doorsNoteEs, en: doorsNoteEn } : undefined,
       summary: { es: summaryEs, en: summaryEn },
@@ -375,6 +382,17 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
                       className={inputClass}
                     />
                     <label className="flex items-center gap-2 text-xs uppercase tracking-widest text-stellar-white/70">
+                      Límite de boletos
+                      <input
+                        type="number"
+                        min={0}
+                        placeholder="sin límite"
+                        value={s.ticketLimit}
+                        onChange={(e) => updateSession(i, { ticketLimit: e.target.value })}
+                        className={`${inputClass} w-28 py-2`}
+                      />
+                    </label>
+                    <label className="flex items-center gap-2 text-xs uppercase tracking-widest text-stellar-white/70">
                       <input
                         type="checkbox"
                         checked={s.soldOut}
@@ -387,6 +405,10 @@ export function EventForm({ initialEvent }: { initialEvent?: EventRecord }) {
                     </button>
                   </div>
                 ))}
+                <p className="text-xs text-stellar-white/40">
+                  Límite de boletos = número de órdenes (no de personas) que se aceptan para esa fecha antes de
+                  marcarse agotada automáticamente. Déjalo vacío para no limitar.
+                </p>
               </div>
               <button
                 type="button"

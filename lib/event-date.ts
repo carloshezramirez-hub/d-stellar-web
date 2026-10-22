@@ -1,6 +1,37 @@
 import type { EventRecord } from "@/lib/events-types";
+// Type-only import — erased at compile time, so this stays safe to pull
+// into client bundles (ticket-order-form.tsx imports this module).
+import type { WebOrder } from "@/lib/orders-db";
 
 type Locale = "es" | "en";
+
+type SessionOrder = Pick<WebOrder, "session_date_iso" | "items">;
+
+/** Sum of `qty` across orders for one session, matched by real instant rather
+ * than string equality — `session_date_iso` isn't always serialized with the
+ * same UTC offset as the event's own `sessionDates` (admin form writes
+ * -06:00, Supabase reads back +00:00 for the same moment). */
+export function soldTicketQtyForSession(orders: SessionOrder[], sessionDateISO: string): number {
+  const targetMs = new Date(sessionDateISO).getTime();
+  return orders.reduce((sum, order) => {
+    if (!order.session_date_iso || new Date(order.session_date_iso).getTime() !== targetMs) return sum;
+    const qty = (order.items as { qty?: number } | null)?.qty;
+    return sum + (typeof qty === "number" ? qty : 0);
+  }, 0);
+}
+
+/** Session dates to treat as sold out in the booking UI: the manual toggle
+ * plus any date whose sessionTicketLimits cap has been reached. */
+export function effectiveSoldOutDates(
+  event: Pick<EventRecord, "soldOutSessionDates" | "sessionTicketLimits">,
+  orders: SessionOrder[],
+): string[] {
+  const manual = event.soldOutSessionDates ?? [];
+  const limitHit = (event.sessionTicketLimits ?? [])
+    .filter((limit) => soldTicketQtyForSession(orders, limit.sessionDateISO) >= limit.maxTickets)
+    .map((limit) => limit.sessionDateISO);
+  return [...new Set([...manual, ...limitHit])];
+}
 
 export function formatEventDate(
   event: Pick<EventRecord, "dateISO" | "timeKnown" | "monthLabel">,

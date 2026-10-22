@@ -7,7 +7,8 @@ import { buildTicketCustomerEmail, buildTicketOwnerEmail, type TicketOrderData }
 import { isMercadoPagoConfigured } from "@/lib/payments/env";
 import { createTicketPreference } from "@/lib/payments/mercadopago";
 import { getEventBySlug } from "@/lib/events-db";
-import { isUpcomingSession, resolveOrderDateLabel } from "@/lib/event-date";
+import { listOrdersByEventSlug } from "@/lib/orders-db";
+import { isUpcomingSession, resolveOrderDateLabel, soldTicketQtyForSession } from "@/lib/event-date";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -57,6 +58,21 @@ export async function POST(request: Request) {
   // since passed — the client already hides these (ticket-order-form.tsx).
   if (buyer.sessionDateISO && !isUpcomingSession(buyer.sessionDateISO)) {
     return NextResponse.json({ error: "session_in_past" }, { status: 400 });
+  }
+
+  // Matched by real instant, not string equality: sessionTicketLimits is
+  // plain jsonb (preserved verbatim as typed in /admin/eventos), while
+  // sessionDates is timestamptz[] (Postgres canonicalizes it to UTC on
+  // every read) — the same session can legitimately show up with a
+  // different UTC-offset format in each.
+  const buyerSessionMs = buyer.sessionDateISO ? new Date(buyer.sessionDateISO).getTime() : NaN;
+  const sessionLimit = event.sessionTicketLimits?.find((l) => new Date(l.sessionDateISO).getTime() === buyerSessionMs);
+  if (sessionLimit) {
+    const orders = await listOrdersByEventSlug(event.slug);
+    const sold = soldTicketQtyForSession(orders, buyer.sessionDateISO!);
+    if (sold + qty > sessionLimit.maxTickets) {
+      return NextResponse.json({ error: "session_limit_reached" }, { status: 400 });
+    }
   }
 
   const code = generateOrderCode("TIX");

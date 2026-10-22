@@ -112,6 +112,7 @@
       "submitting": "Processing...",
       "payNote": "Buying takes you to Mercado Pago's secure page to pay online.",
       "errorBody": "We couldn't process your purchase. Try again or message us on WhatsApp.",
+      "errorLimitReached": "There aren't enough tickets left for that date at the quantity you chose — try fewer tickets or another date.",
       "successTitle": "Reservation received!",
       "successBody": "We'll confirm availability and email you the payment details.",
       "successCode": "Ref. {code}",

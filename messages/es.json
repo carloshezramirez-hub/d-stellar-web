@@ -112,6 +112,7 @@
       "submitting": "Procesando...",
       "payNote": "Al comprar pasarás a la página segura de Mercado Pago para pagar en línea.",
       "errorBody": "No pudimos procesar tu compra. Intenta de nuevo o escríbenos por WhatsApp.",
+      "errorLimitReached": "Ya no quedan suficientes boletos para esa fecha con la cantidad elegida — prueba con menos boletos u otra fecha.",
       "successTitle": "¡Reservación recibida!",
       "successBody": "Te confirmaremos disponibilidad y te enviamos los detalles de pago por email.",
       "successCode": "Ref. {code}",

@@ -10,8 +10,9 @@ import { JsonLd } from "@/components/json-ld";
 import { eventSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { listAllEvents, getEventBySlug, eventStartingPrice } from "@/lib/events-db";
+import { listOrdersByEventSlug } from "@/lib/orders-db";
 import type { EventRecord } from "@/lib/events-types";
-import { formatEventDate } from "@/lib/event-date";
+import { formatEventDate, effectiveSoldOutDates } from "@/lib/event-date";
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { TicketOrderForm } from "@/components/sections/ticket-order-form";
 import { TicketPaymentBanner } from "@/components/sections/ticket-payment-banner";
@@ -63,6 +64,13 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const event = await getEventBySlug(slug);
   if (!event) notFound();
+
+  // Sessions whose sessionTicketLimits cap has been reached act sold out
+  // on the booking form too — only queried when the event actually has a
+  // limit set, so most events skip this extra read.
+  const bookableEvent = event.sessionTicketLimits?.length
+    ? { ...event, soldOutSessionDates: effectiveSoldOutDates(event, await listOrdersByEventSlug(event.slug)) }
+    : event;
 
   const loc = locale as Locale;
   const t = await getTranslations("events");
@@ -178,7 +186,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
                 </div>
               ))}
             </div>
-            {event.status === "upcoming" && <TicketOrderForm event={event} />}
+            {event.status === "upcoming" && <TicketOrderForm event={bookableEvent} />}
           </div>
         ) : (
           event.includes && (

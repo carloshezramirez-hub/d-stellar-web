@@ -24,6 +24,7 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
   const [sessionDateISO, setSessionDateISO] = useState(sessionDates.find((iso) => !soldOutDates.includes(iso)) ?? "");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [confirmationCode, setConfirmationCode] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
 
   const ticket = tickets[ticketIndex];
   const total = (ticket?.priceMXN ?? 0) * qty;
@@ -53,8 +54,12 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
         }),
       });
 
-      if (!res.ok) throw new Error("request_failed");
       const json = await res.json();
+      if (!res.ok) {
+        setErrorCode(typeof json.error === "string" ? json.error : null);
+        setStatus("error");
+        return;
+      }
 
       trackEvent("submit_ticket_order", { total, event: event.slug });
 
@@ -67,6 +72,7 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
       setConfirmationCode(json.code ?? null);
       setStatus("success");
     } catch {
+      setErrorCode(null);
       setStatus("error");
     }
   }
@@ -193,7 +199,11 @@ export function TicketOrderForm({ event }: { event: EventRecord }) {
           {status === "submitting" ? t("submitting") : t("submit")}
         </motion.button>
         <p className="mt-3 text-xs text-stellar-white/50">{t("payNote")}</p>
-        {status === "error" && <p className="mt-3 text-sm text-stellar-red">{t("errorBody")}</p>}
+        {status === "error" && (
+          <p className="mt-3 text-sm text-stellar-red">
+            {errorCode === "session_limit_reached" ? t("errorLimitReached") : t("errorBody")}
+          </p>
+        )}
       </div>
     </form>
   );

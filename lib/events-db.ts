@@ -29,6 +29,7 @@ interface EventRow {
   month_label: { es: string; en: string } | null;
   session_dates: string[] | null;
   sold_out_session_dates: string[] | null;
+  session_ticket_limits: EventRecord["sessionTicketLimits"] | null;
   dates_summary: { es: string; en: string } | null;
   doors_note: { es: string; en: string } | null;
   summary: { es: string; en: string };
@@ -54,6 +55,7 @@ function rowToEventRecord(row: EventRow): EventRecord {
     monthLabel: row.month_label ?? undefined,
     sessionDates: row.session_dates ?? undefined,
     soldOutSessionDates: row.sold_out_session_dates ?? undefined,
+    sessionTicketLimits: row.session_ticket_limits ?? undefined,
     datesSummary: row.dates_summary ?? undefined,
     doorsNote: row.doors_note ?? undefined,
     summary: row.summary,
@@ -80,6 +82,7 @@ function eventRecordToRow(input: EventRecord) {
     month_label: input.monthLabel ?? null,
     session_dates: input.sessionDates ?? null,
     sold_out_session_dates: input.soldOutSessionDates ?? null,
+    session_ticket_limits: input.sessionTicketLimits ?? null,
     dates_summary: input.datesSummary ?? null,
     doors_note: input.doorsNote ?? null,
     summary: input.summary,

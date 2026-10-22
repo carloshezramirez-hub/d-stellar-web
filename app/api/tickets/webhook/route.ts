@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { WebhookSignatureValidator } from "mercadopago";
 import { mercadoPagoEnv } from "@/lib/payments/env";
 import { getPayment } from "@/lib/payments/mercadopago";
@@ -80,6 +81,12 @@ export async function POST(request: Request) {
     console.error("[api/tickets/webhook] missing order metadata for payment", paymentId, metadata);
     return NextResponse.json({ ok: true, warning: "missing_metadata" });
   }
+
+  // Keeps the booking page's sold-out state (sessionTicketLimits) fresh
+  // right after a sale, same as the admin edit path — without this the
+  // static page would only pick up the new sold count on the next deploy.
+  revalidatePath(`/events/${event.slug}`);
+  revalidatePath(`/en/events/${event.slug}`);
 
   const orderData: TicketOrderData = {
     eventTitle: event.title,

@@ -7,6 +7,11 @@ export type EventTicket = {
   note?: { es: string; en: string };
 };
 
+export type SessionTicketLimit = {
+  sessionDateISO: string;
+  maxTickets: number;
+};
+
 export type EventRecord = {
   slug: string;
   title: string;
@@ -31,6 +36,13 @@ export type EventRecord = {
   // sold out, not selectable in the ticket form) and the tickets API
   // rejects them — toggled from /admin/eventos, no inventory tracking.
   soldOutSessionDates?: string[];
+  // Optional per-session cap on ticket units sold (order `qty` summed, not
+  // people — a Duo ticket still counts as 1). Unlike soldOutSessionDates
+  // (an all-or-nothing manual toggle), this is enforced live: /api/tickets
+  // rejects an order once the session's sold qty would exceed maxTickets,
+  // and the public page treats a session as sold out once it's hit (see
+  // lib/event-date.ts effectiveSoldOutDates).
+  sessionTicketLimits?: SessionTicketLimit[];
   // Overrides the formatted-date display on the list/detail pages —
   // needed once there's more than one session (a single formatted
   // dateISO would misleadingly imply only one date). Ignored when
