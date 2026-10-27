@@ -26,13 +26,14 @@ interface PageProps {
 
 export default async function AdsDashboardPage({ searchParams }: PageProps) {
   const { range: rawRange, from, to } = await searchParams;
-  // Default "Todo": hoy son solo 5 campañas en una semana — filtrar más angosto por defecto las escondería.
+  // Default "Todo": son pocas campañas repartidas en meses — filtrar más angosto por defecto las escondería.
   const range = resolveDateRange(rawRange, "all", from, to);
 
   const campaigns = AD_CAMPAIGNS.filter((c) => withinRange(c.startedAt, range));
   const totals = buildTotals(campaigns);
-  // "Qué aprendimos" siempre compara el set completo — son reglas pensadas
-  // para 5 campañas específicas, filtrar rompería comparaciones con nombre propio.
+  // "Qué aprendimos" siempre compara el set completo (nunca el filtrado por
+  // fecha) — son comparaciones entre campañas con nombre propio, filtrar
+  // dejaría out de contexto a las que se mencionan por caption.
   const learnings = buildLearnings();
   const efficiencies = buildAllEfficiency(campaigns);
   const efficiencyByCampaignId = new Map(efficiencies.map((e) => [e.campaign.id, e]));
@@ -77,8 +78,8 @@ export default async function AdsDashboardPage({ searchParams }: PageProps) {
         <section className="mb-10">
           <h2 className="mb-1 font-demi text-xl font-bold">Qué aprendimos</h2>
           <p className="mb-4 text-sm text-stellar-white/50">
-            Comparando las 5 campañas entre sí (siempre el histórico completo) — no son opiniones, son los números
-            cruzados.
+            Comparando las {AD_CAMPAIGNS.length} campañas entre sí (siempre el histórico completo) — no son opiniones,
+            son los números cruzados.
           </p>
           <LearningsPanel learnings={learnings} />
         </section>
