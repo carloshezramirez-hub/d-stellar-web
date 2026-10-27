@@ -60,6 +60,19 @@ export async function ga4RunReport(body: unknown): Promise<any> {
   return json;
 }
 
+/** GA4 Realtime API — usuarios activos ahora mismo (ventana ~30 min de GA4), endpoint distinto a :runReport. */
+export async function ga4RunRealtimeReport(body: unknown): Promise<any> {
+  const token = await getAccessToken("https://www.googleapis.com/auth/analytics.readonly");
+  const res = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${googleEnv.ga4PropertyId}:runRealtimeReport`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(`GA4 realtime error: ${JSON.stringify(json)}`);
+  return json;
+}
+
 export async function gscSearchAnalytics(body: unknown): Promise<any> {
   const token = await getAccessToken("https://www.googleapis.com/auth/webmasters.readonly");
   const siteUrl = encodeURIComponent(googleEnv.gscSiteUrl ?? "");

@@ -1,6 +1,6 @@
 import type { ResolvedRange } from "@/lib/admin/date-range";
 import { mxDateKey, previousPeriod } from "@/lib/admin/date-range";
-import { ga4RunReport } from "@/lib/google/client";
+import { ga4RunRealtimeReport, ga4RunReport } from "@/lib/google/client";
 
 export interface TrafficDayPoint {
   key: string;
@@ -198,4 +198,15 @@ export async function fetchTrafficSummary(range: ResolvedRange): Promise<Traffic
     devices: deviceRows,
     conversions,
   };
+}
+
+/**
+ * Usuarios activos en el sitio ahora mismo (GA4 Realtime, ventana ~30 min
+ * que GA4 define internamente, no configurable) — número real, no
+ * inventado, para el contador "gente conectada" del home.
+ */
+export async function fetchActiveUsers(): Promise<number> {
+  const res = await ga4RunRealtimeReport({ metrics: [{ name: "activeUsers" }] });
+  const value = res.rows?.[0]?.metricValues?.[0]?.value;
+  return value ? Number(value) : 0;
 }

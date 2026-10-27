@@ -15,6 +15,12 @@ function formatNumber(n: number) {
   return new Intl.NumberFormat("es-MX").format(n);
 }
 
+// Costo por reproducción siempre es una fracción de centavo — formatMoney()
+// (2 decimales) lo redondearía a $0.00/$0.01 y perdería toda la señal.
+function formatMoneyPrecise(n: number) {
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(n);
+}
+
 function RetentionBar({ label, value, vsAverage }: { label: string; value: number; vsAverage: "above" | "below" }) {
   return (
     <div>
@@ -81,7 +87,7 @@ export function CampaignCard({ campaign, efficiency }: { campaign: AdCampaign; e
         </div>
       </div>
 
-      <div className="mb-5 grid grid-cols-2 gap-3 border-t border-line pt-4 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-2 gap-3 border-t border-line pt-4 sm:grid-cols-5">
         <div>
           <p className="text-sm font-bold">{formatMoney(campaign.cpmMXN)}</p>
           <p className="text-[11px] text-stellar-white/50">CPM</p>
@@ -89,6 +95,10 @@ export function CampaignCard({ campaign, efficiency }: { campaign: AdCampaign; e
         <div>
           <p className="text-sm font-bold">{efficiency.costPerLike !== null ? formatMoney(efficiency.costPerLike) : "—"}</p>
           <p className="text-[11px] text-stellar-white/50">costo / like</p>
+        </div>
+        <div>
+          <p className="text-sm font-bold">{efficiency.costPerView !== null ? formatMoneyPrecise(efficiency.costPerView) : "—"}</p>
+          <p className="text-[11px] text-stellar-white/50">costo / reproducción</p>
         </div>
         <div>
           <p className="text-sm font-bold">{efficiency.costPerClick !== null ? formatMoney(efficiency.costPerClick) : "—"}</p>

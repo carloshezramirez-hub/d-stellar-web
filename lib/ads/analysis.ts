@@ -5,6 +5,7 @@ export interface CampaignEfficiency {
   costPerLike: number | null;
   costPerClick: number | null;
   costPerFollower: number | null;
+  costPerView: number | null; // adCostMXN / videoViews, en MXN por mil vistas no — por vista individual (es muy chico, se muestra con más decimales)
   focusedViewRate: number | null; // focusedViews / videoViews
   likeRate: number; // likes / videoViews * 100 — mismo cálculo que TikTok reporta como "like rate"
 }
@@ -15,6 +16,7 @@ export function buildEfficiency(campaign: AdCampaign): CampaignEfficiency {
     costPerLike: campaign.likes > 0 ? campaign.adCostMXN / campaign.likes : null,
     costPerClick: campaign.buttonClicks && campaign.buttonClicks > 0 ? campaign.adCostMXN / campaign.buttonClicks : null,
     costPerFollower: campaign.newFollowers && campaign.newFollowers > 0 ? campaign.adCostMXN / campaign.newFollowers : null,
+    costPerView: campaign.videoViews > 0 ? campaign.adCostMXN / campaign.videoViews : null,
     focusedViewRate: campaign.focusedViews !== null ? (campaign.focusedViews / campaign.videoViews) * 100 : null,
     likeRate: (campaign.likes / campaign.videoViews) * 100,
   };

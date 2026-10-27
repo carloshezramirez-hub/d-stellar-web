@@ -23,7 +23,7 @@ type Member = {
 };
 
 function toCsv(members: Member[]): string {
-  const header = ["Nombre", "Teléfono", "Email", "Nivel", "Sellos", "Sellos totales", "Desde"];
+  const header = ["Nombre", "Teléfono", "Email", "Nivel", "Visitas", "Visitas totales", "Desde"];
   const rows = members.map((m) => [
     m.name,
     m.phone,
@@ -104,11 +104,11 @@ export function ClientsPanel() {
         <>
           <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
             <KpiTile icon="👥" value={String(members.length)} label="clientes en el periodo" accent={ACCENT} />
-            <KpiTile icon="⭐" value={String(totalStamps)} label="sus sellos (histórico)" accent={ACCENT} />
+            <KpiTile icon="⭐" value={String(totalStamps)} label="sus visitas (histórico)" accent={ACCENT} />
             <KpiTile
               icon="📈"
               value={(totalStamps / members.length).toFixed(1)}
-              label="sellos promedio por cliente"
+              label="visitas promedio por cliente"
               accent={ACCENT}
             />
           </div>
@@ -132,7 +132,7 @@ export function ClientsPanel() {
                 <th className="py-2 pr-4">Teléfono</th>
                 <th className="py-2 pr-4">Email</th>
                 <th className="py-2 pr-4">Nivel</th>
-                <th className="py-2 pr-4">Sellos</th>
+                <th className="py-2 pr-4">Visitas</th>
                 <th className="py-2 pr-4">Desde</th>
               </tr>
             </thead>

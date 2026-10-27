@@ -10,7 +10,51 @@ export type ReviewQuote = {
 // that's standard curation for a testimonials section, not fabrication —
 // nothing here misrepresents what a review said. Update alongside
 // `googleReviewStats` when there's a fresher export from Google Maps.
+// Ordenadas de más reciente a más antigua (coincide con el feed real de
+// Google Maps) — refrescado 2026-10-27 con el export que compartió Carlos.
+// Solo se incluyen reseñas donde la cita completa estaba visible (sin
+// "Ver la opinión completa" cortando la frase a medias); varias reseñas
+// recientes con texto truncado se descartaron a propósito en vez de
+// completarlas a adivinar.
 export const googleReviews: ReviewQuote[] = [
+  {
+    author: "Edward Laag",
+    rating: 5,
+    quote: "Incredible service by Eduardo, and phenomenal drinks and cookies. The space is cozy and was fun to find.",
+  },
+  {
+    author: "Daniela Monserrat Romo Perez",
+    rating: 5,
+    quote:
+      "Todo muy lindo, las galletas están deliciosas y las bebidas también, me agradó que nos explicara el concepto de cada galleta y de las bebidas, muy rico todo. Y la atención también fue muy agradable, recomendado.",
+  },
+  {
+    author: "Adrian Sihuaen",
+    rating: 5,
+    quote:
+      "Me encanta, descubrí este lugar por accidente, pero se ha convertido en uno de mis favoritos, las galletas son deliciosas y el trato es excelente, 10/10.",
+  },
+  {
+    author: "Andrea Huerta",
+    rating: 5,
+    quote: "Excelente lugar, el sabor de las galletas es delicioso y el maridaje con las bebidas es excepcional! 100/10.",
+  },
+  {
+    author: "Erick Aguado",
+    rating: 5,
+    quote:
+      "Es un lugar super lindo, tiene un concepto muy cool y ni hablar de las bebidas y las galletas estan super deliciosas, además el servicio es muy bueno y recomiendo mucho, seguramente voy a volver muchas veces!",
+  },
+  {
+    author: "Tammy Itzel López Mejía",
+    rating: 5,
+    quote: "Super amables todo el equipo y las galletas estaban super ricas, es muy acogedor.",
+  },
+  {
+    author: "Martha Raquel Linares Macías",
+    rating: 5,
+    quote: "Todo es increíble, las galletas son deliciosas, el ambiente es muy cálido, 100% recomendado!!!",
+  },
   {
     author: "Carlos Hernández",
     rating: 5,
@@ -18,80 +62,31 @@ export const googleReviews: ReviewQuote[] = [
       "d-stellar es de esos lugares que se disfrutan desde que entras. Es una tienda de galletas con un espacio súper agradable y cuidado, pero lo que más me gustó es que todo se siente auténtico, local y todo está hecho al momento.",
   },
   {
-    author: "Gustavo Sánchez",
+    author: "Jorge Lozano",
     rating: 5,
-    quote:
-      "Son galletas de autor que cambian el menú cada mes. Es un muy buen lugar para quienes disfrutamos de probar propuestas algo fuera de lo común. El lugar es pequeño, muy tranquilo y la ambientación es bastante única.",
+    quote: "Delicioso todo! Increíbles instalaciones!",
   },
   {
-    author: "Arely Carrillo",
+    author: "Jazmín García Villegas",
     rating: 5,
-    quote:
-      "Tienen muchísimos sabores de galletas. El sabor es delicioso, se nota la calidad y el amor en cada bocado. El lugar es muy tranquilo y al entrar parece que hay estrellas en el techo, lo que lo hace mágico.",
+    quote: "Super agradable el lugar, el trato y las galletas de lavanda son lo maaaaaaas 🤤.",
   },
   {
-    author: "Karla Mancera",
+    author: "David Tomisich",
     rating: 5,
-    quote:
-      "El chico que me atendió me parece es el dueño y fue súper amable y me explicó el concepto de las galletas, ya que cambia cada mes de sabores. Las preparan al momento, lo cual significa que están frescas. Me encantó la combinación de caramelo con sal.",
+    quote: "Galletas excelentes, muy sabrosas y el servicio es muy bueno.",
   },
   {
-    author: "Sandra Careaga",
+    author: "Valeria Emiliana Ramírez Zambrano",
     rating: 5,
-    quote:
-      "Cada mes espero con ansias ver cuáles son las nuevas actualizaciones del menú para poder visitarlos, nunca me dejan de sorprender con su gran creatividad al combinar los ingredientes así como las deliciosas bebidas.",
-  },
-  {
-    author: "Z Rodríguez",
-    rating: 5,
-    quote:
-      "He ido alrededor de 5 veces y, honestamente, cada visita me sigue sorprendiendo. El lugar es pequeño, pero muy acogedor. Tiene una iluminación cálida y un techo con efecto de estrellas que le da un toque único y relajante.",
-  },
-  {
-    author: "Alonso Salinas",
-    rating: 5,
-    quote:
-      "Una joya para los amantes de los postres y también para cualquier persona que aprecie la comida gourmet. Lo hacen con esmero y con ingredientes de alta calidad. En cuanto al sabor, un triunfo. Una parada obligatoria en CDMX.",
-  },
-  {
-    author: "Andrea Madrigal Flores",
-    rating: 5,
-    quote:
-      "El lugar súper bonito, amé la decoración y los detalles en el techo. La atención increíble y súper personalizada, los precios bien y los sabores me encantaron. Además amo que cambien de menú tan seguido pero no pierdan calidad.",
-  },
-  {
-    author: "Sam Chávez",
-    rating: 5,
-    quote:
-      "Aprecié mucho que el dueño me puso la galleta vegana que pedí para mi amigo separadita, y yo no sabía por qué, pero él súper enterado de que eso es importante para el veganismo. Esos detalles hacen la diferencia.",
-  },
-  {
-    author: "S Amaya",
-    rating: 5,
-    quote:
-      "No solo las galletas tienen un sabor demasiado bueno, se siente como otro planeta. Literalmente parecía algo sacado de Star Wars y me ilusioné muchísimo.",
-  },
-  {
-    author: "Marissa Careaga",
-    rating: 5,
-    quote:
-      "Yo soy vegana y sé lo complicado que puede ser encontrar opciones para comer postres ricos y aptos. Me gusta que cada mes tengan una nueva opción, porque me dan la oportunidad de seguir descubriendo sabores.",
-  },
-  {
-    author: "emilio_rbalam",
-    rating: 5,
-    quote:
-      "Este lugar desborda cariño, Hernán y Lalo te tratan con amabilidad, te hacen sentir en casa y te demuestran que su trabajo es algo que realmente les encanta. Cada mes te sorprenden con nuevos sabores que reflejan la creatividad e ingenio.",
-  },
-  {
-    author: "Negrete Alan",
-    rating: 5,
-    quote:
-      "Uno se siente muy seguro y tranquilo en este espacio, las galletas son mega ricas, quieres probarlas todas de tan ricas que son. Fui a una reunión para ver un evento ahí y de verdad que la pasé muy a gusto platicando con todos.",
+    quote: "Un lugar súper bonito y la comida deliciosa, además súper amables el staff.",
   },
 ];
 
 // Real, verified against d-stellar's live Google Maps profile — refresh
-// this pair together the next time reviews are pulled, don't let one drift
-// from the other. Count updated 2026-10-12 (was 148).
+// este par junto la próxima vez que se jalen reseñas, no dejar que uno se
+// desfase del otro. Promedio confirmado 5.0 (todas las reseñas visibles en
+// el export de Carlos del 2026-10-27 eran de 5 estrellas) — el conteo total
+// se queda en el último número real conocido (2026-10-12) porque el export
+// de reseñas individuales no trae el agregado total de Google.
 export const googleReviewStats = { average: 5.0, count: 156 };

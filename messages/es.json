@@ -54,7 +54,11 @@
     "visitTeaserTitle": "Encuéntranos",
     "visitTeaserBody": "Dentro del Pabellón Nuevo León, a unas cuadras del Parque México.",
     "valuesTitle": "Un espacio abierto para tod★s",
+    "loyaltyBannerKicker": "d-stellar rewards",
     "loyaltyBannerTitle": "Tu tarjeta de fidelidad",
+    "loyaltyBannerBody": "Suma una visita cada vez que vienes, directo en tu Apple Wallet. Cada 5 visitas, una sorpresa.",
+    "liveVisitorSingular": "persona viendo esto ahora",
+    "liveVisitorPlural": "personas viendo esto ahora",
     "values": [
       {
         "title": "LGBTQ+ friendly",

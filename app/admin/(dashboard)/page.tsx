@@ -38,7 +38,7 @@ const SECTION_DESCRIPTION: Record<SectionKey, string> = {
   anuncios: "Campañas pagadas de TikTok Ads — qué funcionó, qué corregir.",
   eventos: "Crear/editar eventos, marcar sesiones agotadas, ver quién ya pagó.",
   pedidos: "Historial de compras — boletos y pickup, con estado de entrega.",
-  fidelidad: "Escanear tarjetas, sumar sellos y ver la base de clientes.",
+  fidelidad: "Escanear tarjetas, sumar visitas y ver la base de clientes.",
 };
 
 const ACCENT_STYLE: Record<string, { ring: string; iconBg: string; icon: string }> = {

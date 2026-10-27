@@ -102,7 +102,7 @@ export function WalletStaffScanner() {
       if (!res.ok) throw new Error("failed");
       const data = (await res.json()) as { member: Member };
       setMember(data.member);
-      setMessage(action === "redeem" ? "Canjeado — contador reiniciado." : "Sello agregado.");
+      setMessage(action === "redeem" ? "Canjeado — contador reiniciado." : "Visita agregada.");
     } catch {
       setMessage("Algo salió mal. Intenta de nuevo.");
     } finally {
@@ -169,7 +169,7 @@ export function WalletStaffScanner() {
             <p className="font-demi text-xl font-bold text-stellar-white">{member.name}</p>
           </div>
           <div>
-            <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">Sellos</p>
+            <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">Visitas</p>
             <p className="font-display text-3xl font-black text-stellar-pink">
               {member.stamps}/{member.stamps_required}
             </p>
@@ -182,7 +182,7 @@ export function WalletStaffScanner() {
               onClick={() => act("stamp")}
               className="bg-stellar-pink px-6 py-3 font-tag text-xs font-bold uppercase tracking-widest text-stellar-black disabled:cursor-not-allowed disabled:opacity-50"
             >
-              + 1 sello
+              + 1 visita
             </button>
             <button
               type="button"

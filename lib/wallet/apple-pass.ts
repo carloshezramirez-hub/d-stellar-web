@@ -44,10 +44,9 @@ function tenureDays(createdAt: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(createdAt).getTime()) / 86_400_000));
 }
 
-// Copy de placeholder para el beta técnico — la regla "10 sellos = 1
-// sorpresa" ya la confirmó Carlos (se ve como progreso visual en la franja,
-// terminando en la cajita de regalo); el resto del programa sigue
-// pendiente de definir.
+// Copy de placeholder para el beta técnico — la regla "5 visitas = 1
+// sorpresa" (antes 10, bajado por Carlos 2026-10-27) ya la confirmó
+// Carlos; el resto del programa sigue pendiente de definir.
 const COPY = {
   es: {
     description: "Tarjeta de fidelidad d-stellar",
@@ -55,9 +54,10 @@ const COPY = {
     nameLabel: "Miembro",
     tenureLabel: "Antigüedad",
     tenureValue: (days: number) => `${days} ${days === 1 ? "día" : "días"}`,
+    visitsLabel: "Visitas",
     backHeader: "d-stellar — Junt★s brillamos más",
     backBody:
-      "Muestra el código QR en caja para sumar un sello por compra. Esta es una tarjeta de fidelidad beta — las reglas del programa pueden cambiar.",
+      "Muestra el código QR en caja para sumar una visita por compra. Esta es una tarjeta de fidelidad beta — las reglas del programa pueden cambiar.",
     addressLabel: "Dirección",
     websiteLabel: "Sitio web",
   },
@@ -67,9 +67,10 @@ const COPY = {
     nameLabel: "Member",
     tenureLabel: "Member for",
     tenureValue: (days: number) => `${days} ${days === 1 ? "day" : "days"}`,
+    visitsLabel: "Visits",
     backHeader: "d-stellar — We shine brighter together",
     backBody:
-      "Show the QR code at checkout to earn a stamp per purchase. This is a beta loyalty card — program rules may change.",
+      "Show the QR code at checkout to earn a visit per purchase. This is a beta loyalty card — program rules may change.",
     addressLabel: "Address",
     websiteLabel: "Website",
   },
@@ -110,20 +111,20 @@ export async function buildAppleLoyaltyPass(member: LoyaltyMember): Promise<Buff
 
   pass.type = "storeCard";
 
-  // Dos headerFields arriba, en fila: sellos a la izquierda, nivel a la
-  // derecha (el primero que se agrega queda más a la izquierda) — el logo
-  // va centrado en medio de la franja, sin nada más ahí que pueda chocar.
-  pass.headerFields.push(
-    { key: "stamps", value: `${member.stamps}/${member.stamps_required}` },
+  // Sin headerFields arriba a propósito (pedido de Carlos 2026-10-27): el
+  // nivel ahora va al mismo tamaño que el nombre, no chico arriba — logo
+  // centrado en la franja, sin nada ahí que pueda chocar.
+  //
+  // Fila 1 (secondaryFields, mismo tamaño): Miembro (izq) · Nivel (der).
+  // Fila 2 (auxiliaryFields, debajo): Antigüedad (izq) · Visitas (der).
+  pass.secondaryFields.push(
+    { key: "name", label: copy.nameLabel, value: member.name },
     { key: "tier", label: copy.tierLabel, value: tier.label[member.locale] },
   );
-
-  pass.secondaryFields.push({ key: "name", label: copy.nameLabel, value: member.name });
-  pass.auxiliaryFields.push({
-    key: "tenure",
-    label: copy.tenureLabel,
-    value: copy.tenureValue(tenureDays(member.created_at)),
-  });
+  pass.auxiliaryFields.push(
+    { key: "tenure", label: copy.tenureLabel, value: copy.tenureValue(tenureDays(member.created_at)) },
+    { key: "stamps", label: copy.visitsLabel, value: `${member.stamps}/${member.stamps_required}` },
+  );
 
   pass.backFields.push(
     { key: "about", label: copy.backHeader, value: copy.backBody },

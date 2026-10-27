@@ -5,6 +5,7 @@ import { ArrowUpRight, Star } from "lucide-react";
 import { CtaLink } from "@/components/ui/cta-link";
 import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { StarField } from "@/components/ui/star-field";
+import { LiveVisitorsBadge } from "@/components/ui/live-visitors-badge";
 import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
 import { HeroCarousel } from "@/components/sections/hero-carousel";
 import { menu, MENU_MONTH_LABEL } from "@/data/menu";
@@ -69,6 +70,10 @@ export default async function HomePage({ params }: Props) {
                     <CtaLink href="/fidelidad" variant="ghost">
                       {cta("loyaltyCard")}
                     </CtaLink>
+                  </div>
+
+                  <div className="mt-6">
+                    <LiveVisitorsBadge />
                   </div>
                 </div>
 
@@ -295,18 +300,60 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      {/* LOYALTY BANNER — muy visual, poco texto */}
-      <section className="border-b border-line bg-stellar-pink px-5 py-14">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
-          <div className="flex items-center gap-5">
-            <Image src="/wallet/star-cookie.png" alt="" width={242} height={203} className="h-16 w-auto md:h-24" />
-            <h2 className="font-display text-3xl font-black uppercase leading-[0.9] text-stellar-black md:text-5xl">
+      {/* LOYALTY BANNER — mockup real de la tarjeta Wallet en vez de bloque plano */}
+      <section className="relative overflow-hidden border-b border-line bg-stellar-black px-5 py-20 md:py-28">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(circle at 15% 50%, var(--color-stellar-pink) 0%, transparent 42%), radial-gradient(circle at 85% 20%, var(--color-stellar-purple) 0%, transparent 38%)",
+          }}
+        />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-14 md:flex-row md:justify-between">
+          {/* Mini mockup de la tarjeta real */}
+          <div className="w-full max-w-[280px] shrink-0 -rotate-3 rounded-2xl border border-white/10 bg-stellar-black-soft p-5 shadow-[0_25px_70px_-15px_rgba(255,112,224,0.4)] transition-transform duration-500 hover:rotate-0">
+            <div className="mb-5 flex items-start justify-between gap-3">
+              <div>
+                <p className="font-tag text-[9px] uppercase tracking-widest text-stellar-pink">Miembro</p>
+                <p className="font-demi text-sm font-bold text-stellar-white">Tu nombre</p>
+              </div>
+              <div className="text-right">
+                <p className="font-tag text-[9px] uppercase tracking-widest text-stellar-pink">Nivel</p>
+                <p className="font-demi text-sm font-bold text-stellar-white">Cookie Noobie</p>
+              </div>
+            </div>
+            <Image
+              src="/brand/logos/dstellar-wordmark-white.png"
+              alt=""
+              width={2458}
+              height={502}
+              className="mb-5 h-5 w-auto opacity-90"
+            />
+            <div className="flex items-end justify-between border-t border-white/10 pt-4">
+              <div>
+                <p className="font-tag text-[9px] uppercase tracking-widest text-stellar-white/40">Visitas</p>
+                <p className="font-demi text-lg font-bold text-stellar-white">1/5</p>
+              </div>
+              <div className="grid h-14 w-14 grid-cols-3 grid-rows-3 gap-0.5 rounded bg-white/95 p-1.5">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className={`rounded-[1px] ${[0, 2, 4, 6, 8].includes(i) ? "bg-stellar-black" : "bg-transparent"}`} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center md:text-left">
+            <p className="mb-2 font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("loyaltyBannerKicker")}</p>
+            <h2 className="font-display text-4xl font-black uppercase leading-[0.95] text-stellar-white md:text-6xl">
               {t("loyaltyBannerTitle")}
             </h2>
+            <p className="mx-auto mt-4 max-w-sm text-base leading-relaxed text-stellar-white/70 md:mx-0">
+              {t("loyaltyBannerBody")}
+            </p>
+            <CtaLink href="/fidelidad" variant="solid" className="mt-7 shrink-0">
+              {cta("loyaltyCard")} <ArrowUpRight size={14} />
+            </CtaLink>
           </div>
-          <CtaLink href="/fidelidad" variant="solid" className="shrink-0 bg-stellar-black text-stellar-white hover:bg-stellar-white hover:text-stellar-black">
-            {cta("loyaltyCard")} <ArrowUpRight size={14} />
-          </CtaLink>
         </div>
       </section>
 

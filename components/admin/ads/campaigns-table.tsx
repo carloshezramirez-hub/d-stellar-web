@@ -5,6 +5,12 @@ function formatMoney(n: number) {
   return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 }
 
+// Costo por reproducción es una fracción de centavo — con 0 decimales se
+// vería "$0" en todas las filas, así que esta columna usa más precisión.
+function formatMoneyPrecise(n: number) {
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(n);
+}
+
 const STATUS_LABEL: Record<AdCampaign["status"], string> = { active: "Activa", closed: "Cerrada", completed: "Completada" };
 const STATUS_COLOR: Record<AdCampaign["status"], string> = {
   active: "text-stellar-green",
@@ -29,6 +35,7 @@ export function CampaignsTable({ efficiencies }: { efficiencies: CampaignEfficie
               <th className="py-2 pr-3 text-right">Gasto</th>
               <th className="py-2 pr-3 text-right">Vistas</th>
               <th className="py-2 pr-3 text-right">Costo/like</th>
+              <th className="py-2 pr-3 text-right">Costo/reproducción</th>
               <th className="py-2 pr-3 text-right">Clics</th>
             </tr>
           </thead>
@@ -43,6 +50,7 @@ export function CampaignsTable({ efficiencies }: { efficiencies: CampaignEfficie
                 <td className="py-2 pr-3 text-right text-stellar-white">{formatMoney(e.campaign.adCostMXN)}</td>
                 <td className="py-2 pr-3 text-right text-stellar-white/70">{e.campaign.videoViews.toLocaleString("es-MX")}</td>
                 <td className="py-2 pr-3 text-right text-stellar-white/70">{e.costPerLike !== null ? formatMoney(e.costPerLike) : "—"}</td>
+                <td className="py-2 pr-3 text-right text-stellar-white/70">{e.costPerView !== null ? formatMoneyPrecise(e.costPerView) : "—"}</td>
                 <td className="py-2 pr-3 text-right text-stellar-white/70">{e.campaign.buttonClicks ?? "—"}</td>
               </tr>
             ))}
