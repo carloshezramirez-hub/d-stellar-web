@@ -17,6 +17,7 @@ import { isGa4Configured, isSearchConsoleConfigured } from "@/lib/google/env";
 import { fetchSearchSummary, type SearchSummary } from "@/lib/google/search-console";
 import { getRecentMentions } from "@/lib/mentions/db";
 import { isMentionsConfigured } from "@/lib/mentions/env";
+import { TIKTOK_DISCOVERY } from "@/data/tiktok-discovery";
 
 const ACCENT = SECTION_THEME.trafico.accent;
 
@@ -30,6 +31,9 @@ function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60);
   const s = Math.round(seconds % 60);
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
+}
+function formatDelta(pct: number) {
+  return `${pct >= 0 ? "+" : ""}${pct.toFixed(0)}%`;
 }
 
 interface PageProps {
@@ -193,6 +197,62 @@ export default async function TraficoPage({ searchParams }: PageProps) {
             </div>
           </>
         )}
+
+        {/* TikTok — descubrimiento, pegado a mano desde TikTok Studio (sin API/cron) */}
+        <section className="mb-10">
+          <h2 className="mb-1 font-demi text-lg font-bold">Qué busca la gente en TikTok</h2>
+          <p className="mb-4 text-sm text-stellar-white/50">
+            Cargado a mano desde TikTok Studio (sin API ni cron) — se actualiza cuando se vuelve a pegar el snapshot.
+          </p>
+
+          {TIKTOK_DISCOVERY.length === 0 ? (
+            <StatusBanner status="not_connected" message="Todavía no se ha capturado el snapshot de TikTok Studio." />
+          ) : (
+            TIKTOK_DISCOVERY.map((snap) => (
+              <div key={snap.handle} className="mb-6">
+                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-stellar-white/40">
+                  @{snap.handle} · {snap.periodLabel}
+                </p>
+
+                <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                  <KpiTile icon="👁️" value={formatNumber(snap.videoViews)} label={`reproducciones (${formatDelta(snap.videoViewsDeltaPct)})`} accent={ACCENT} />
+                  <KpiTile icon="👤" value={formatNumber(snap.profileViews)} label={`visitas a perfil (${formatDelta(snap.profileViewsDeltaPct)})`} accent={ACCENT} />
+                  <KpiTile icon="❤️" value={formatNumber(snap.likes)} label={`me gusta (${formatDelta(snap.likesDeltaPct)})`} accent={ACCENT} />
+                  <KpiTile icon="💬" value={formatNumber(snap.comments)} label={`comentarios (${formatDelta(snap.commentsDeltaPct)})`} accent={ACCENT} />
+                  <KpiTile icon="🔁" value={formatNumber(snap.shares)} label={`compartidos (${formatDelta(snap.sharesDeltaPct)})`} accent={ACCENT} />
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-lg border border-line p-4">
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">De dónde llegan las vistas</p>
+                    <p className="mb-4 text-[11px] text-stellar-white/35">% de reproducciones por origen dentro de TikTok</p>
+                    <div className="grid gap-2">
+                      {snap.trafficSource.map((s) => (
+                        <div key={s.label} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
+                          <span className="truncate text-stellar-white/80">{s.label}</span>
+                          <span className="shrink-0 text-xs text-stellar-white/50">{s.pct}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-line p-4">
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-stellar-white/50">Qué busca la gente en TikTok</p>
+                    <p className="mb-4 text-[11px] text-stellar-white/35">Términos que trajeron tráfico vía "Búsqueda"</p>
+                    <div className="grid gap-2">
+                      {snap.searchQueries.map((q) => (
+                        <div key={q.label} className="flex items-center justify-between gap-3 border-b border-line/40 pb-2 text-sm">
+                          <span className="truncate text-stellar-white/80">{q.label}</span>
+                          <span className="shrink-0 text-xs text-stellar-white/50">{q.pct}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </section>
       </div>
     </main>
   );
