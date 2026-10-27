@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
 
 /**
  * Badge "gente conectada ahora" — dato real de GA4 Realtime (no inventado),
- * con un planeta animado estilo "quién está viendo esto" de Shopify. Se
- * oculta solo si GA4 no está configurado o devuelve null — nunca muestra
- * un número falso.
+ * con un planeta animado. Solo para /admin (texto fijo en español, sin
+ * next-intl porque /admin vive fuera de [locale] y no tiene ese provider).
+ * Se oculta solo si GA4 no está configurado o devuelve null — un 0 real sí
+ * se muestra, es información útil para Carlos aunque no sea bonita.
  */
 export function LiveVisitorsBadge() {
-  const t = useTranslations("home");
   const [activeUsers, setActiveUsers] = useState<number | null>(null);
 
   useEffect(() => {
@@ -34,15 +33,16 @@ export function LiveVisitorsBadge() {
     };
   }, []);
 
-  if (!activeUsers || activeUsers < 1) return null;
+  if (activeUsers === null) return null;
 
   return (
-    <div className="inline-flex items-center gap-3 border-2 border-line bg-stellar-black-soft px-4 py-2.5">
+    <div className="inline-flex items-center gap-3 rounded-lg border border-line bg-stellar-black-soft px-4 py-2.5">
       <div className="relative h-6 w-6 shrink-0">
         <div
           className="absolute inset-0 animate-spin rounded-full"
           style={{
-            background: "conic-gradient(from 0deg, var(--color-stellar-purple), var(--color-stellar-pink), var(--color-stellar-blue), var(--color-stellar-purple))",
+            background:
+              "conic-gradient(from 0deg, var(--color-stellar-purple), var(--color-stellar-pink), var(--color-stellar-blue), var(--color-stellar-purple))",
             animationDuration: "4s",
           }}
         />
@@ -53,7 +53,7 @@ export function LiveVisitorsBadge() {
       </div>
       <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/80">
         <span className="font-bold text-stellar-white">{activeUsers}</span>{" "}
-        {activeUsers === 1 ? t("liveVisitorSingular") : t("liveVisitorPlural")}
+        {activeUsers === 1 ? "persona conectada ahora" : "personas conectadas ahora"}
       </p>
     </div>
   );

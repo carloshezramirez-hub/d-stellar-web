@@ -18,6 +18,7 @@ import { fetchSearchSummary, type SearchSummary } from "@/lib/google/search-cons
 import { getRecentMentions } from "@/lib/mentions/db";
 import { isMentionsConfigured } from "@/lib/mentions/env";
 import { TIKTOK_DISCOVERY } from "@/data/tiktok-discovery";
+import { LiveVisitorsBadge } from "@/components/ui/live-visitors-badge";
 
 const ACCENT = SECTION_THEME.trafico.accent;
 
@@ -77,10 +78,14 @@ export default async function TraficoPage({ searchParams }: PageProps) {
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <p className="mb-1 font-tag text-xs font-bold tracking-widest text-stellar-white/40 uppercase">Tráfico</p>
-        <p className="mb-6 max-w-2xl text-sm text-stellar-white/60">
+        <p className="mb-4 max-w-2xl text-sm text-stellar-white/60">
           Google Analytics + Search Console, en vivo — quién llega al sitio, cuánto se queda, qué funciona y qué
           busca para encontrarte.
         </p>
+
+        <div className="mb-6">
+          <LiveVisitorsBadge />
+        </div>
 
         <DateRangeFilter basePath="/admin/trafico" current={range.value} accent={ACCENT} from={from} to={to} />
 

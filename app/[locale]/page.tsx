@@ -5,7 +5,6 @@ import { ArrowUpRight, Star } from "lucide-react";
 import { CtaLink } from "@/components/ui/cta-link";
 import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { StarField } from "@/components/ui/star-field";
-import { LiveVisitorsBadge } from "@/components/ui/live-visitors-badge";
 import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
 import { HeroCarousel } from "@/components/sections/hero-carousel";
 import { menu, MENU_MONTH_LABEL } from "@/data/menu";
@@ -70,10 +69,6 @@ export default async function HomePage({ params }: Props) {
                     <CtaLink href="/fidelidad" variant="ghost">
                       {cta("loyaltyCard")}
                     </CtaLink>
-                  </div>
-
-                  <div className="mt-6">
-                    <LiveVisitorsBadge />
                   </div>
                 </div>
 
