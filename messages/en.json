@@ -57,6 +57,8 @@
     "loyaltyBannerKicker": "d-stellar rewards",
     "loyaltyBannerTitle": "Your loyalty card",
     "loyaltyBannerBody": "Earn a visit every time you come in, right inside Apple Wallet. Every 5 visits, a surprise.",
+    "liveVisitorSingular": "person viewing this now",
+    "liveVisitorPlural": "people viewing this now",
     "values": [
       {
         "title": "LGBTQ+ friendly",

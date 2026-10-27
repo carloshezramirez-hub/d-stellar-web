@@ -4,12 +4,22 @@ import { useEffect, useState } from "react";
 
 /**
  * Badge "gente conectada ahora" — dato real de GA4 Realtime (no inventado),
- * con un planeta animado. Solo para /admin (texto fijo en español, sin
- * next-intl porque /admin vive fuera de [locale] y no tiene ese provider).
- * Se oculta solo si GA4 no está configurado o devuelve null — un 0 real sí
- * se muestra, es información útil para Carlos aunque no sea bonita.
+ * con un planeta animado. Se usa tanto en el home público (bilingüe, oculto
+ * en 0 — un "0 personas viendo esto" se ve mal como marketing) como en
+ * /admin/trafico (español fijo, sí muestra el 0 real porque ahí es
+ * información útil). Los labels se pasan como prop en vez de usar
+ * next-intl adentro porque /admin vive fuera de [locale] y no tiene ese
+ * provider.
  */
-export function LiveVisitorsBadge() {
+export function LiveVisitorsBadge({
+  labelOne = "persona conectada ahora",
+  labelMany = "personas conectadas ahora",
+  hideWhenZero = false,
+}: {
+  labelOne?: string;
+  labelMany?: string;
+  hideWhenZero?: boolean;
+}) {
   const [activeUsers, setActiveUsers] = useState<number | null>(null);
 
   useEffect(() => {
@@ -34,6 +44,7 @@ export function LiveVisitorsBadge() {
   }, []);
 
   if (activeUsers === null) return null;
+  if (hideWhenZero && activeUsers < 1) return null;
 
   return (
     <div className="inline-flex items-center gap-3 rounded-lg border border-line bg-stellar-black-soft px-4 py-2.5">
@@ -52,8 +63,7 @@ export function LiveVisitorsBadge() {
         />
       </div>
       <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/80">
-        <span className="font-bold text-stellar-white">{activeUsers}</span>{" "}
-        {activeUsers === 1 ? "persona conectada ahora" : "personas conectadas ahora"}
+        <span className="font-bold text-stellar-white">{activeUsers}</span> {activeUsers === 1 ? labelOne : labelMany}
       </p>
     </div>
   );
