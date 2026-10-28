@@ -5,10 +5,16 @@ import { ADMIN_SESSION_COOKIE, isValidAdminSession } from "@/lib/admin-auth";
 import { updateEvent, deleteEvent } from "@/lib/events-db";
 import type { EventRecord } from "@/lib/events-types";
 
+// Mismo gotcha que en app/api/admin/events/route.ts: "/events" (español,
+// sin prefijo por `localePrefix: "as-needed"`) resuelve internamente como
+// "/es/events" — revalidatePath necesita esa ruta explícita o el cache de
+// la versión en español nunca se invalida.
 function revalidateEventPaths(slug: string) {
   revalidatePath("/events");
+  revalidatePath("/es/events");
   revalidatePath("/en/events");
   revalidatePath(`/events/${slug}`);
+  revalidatePath(`/es/events/${slug}`);
   revalidatePath(`/en/events/${slug}`);
 }
 

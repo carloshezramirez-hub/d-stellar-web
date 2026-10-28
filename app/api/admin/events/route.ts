@@ -5,10 +5,19 @@ import { ADMIN_SESSION_COOKIE, isValidAdminSession } from "@/lib/admin-auth";
 import { createEvent } from "@/lib/events-db";
 import type { EventRecord } from "@/lib/events-types";
 
+// El español es el locale por default con `localePrefix: "as-needed"`
+// (routing.ts) — la URL pública es "/events" sin prefijo, pero el árbol de
+// rutas real (app/[locale]/events) resuelve internamente como "/es/events".
+// revalidatePath("/events") no estaba invalidando esa página porque el
+// cache de Next se indexa por la ruta interna resuelta, no por la URL
+// externa — por eso un evento nuevo aparecía en /en/events (ruta explícita)
+// pero nunca en /events (el que de verdad ve casi todo el público).
 function revalidateEventPaths(slug: string) {
   revalidatePath("/events");
+  revalidatePath("/es/events");
   revalidatePath("/en/events");
   revalidatePath(`/events/${slug}`);
+  revalidatePath(`/es/events/${slug}`);
   revalidatePath(`/en/events/${slug}`);
 }
 
