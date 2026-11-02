@@ -123,7 +123,7 @@ export function MenuSectionList({ menu }: { menu: MenuSection[] }) {
                   key={item.slug}
                   className="flex flex-wrap items-center justify-between gap-3 border border-line px-4 py-2.5"
                 >
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="font-demi text-sm font-bold text-stellar-white">
                       {item.name} <span className="text-stellar-white/50">· ${item.priceMXN}</span>
                     </p>

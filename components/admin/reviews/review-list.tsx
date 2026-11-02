@@ -43,7 +43,7 @@ export function ReviewList({ reviews }: { reviews: Array<ReviewQuote & { id: str
     <ul className="grid gap-2">
       {reviews.map((review, i) => (
         <li key={review.id} className="flex flex-wrap items-center justify-between gap-3 border-2 border-line bg-stellar-black-soft px-4 py-3">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="font-demi text-sm font-bold text-stellar-white">
               {review.author} <span className="text-stellar-white/50">· {review.rating}★</span>
             </p>

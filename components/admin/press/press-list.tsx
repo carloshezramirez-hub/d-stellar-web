@@ -43,7 +43,7 @@ export function PressList({ mentions }: { mentions: Array<PressMention & { id: s
     <ul className="grid gap-2">
       {mentions.map((mention, i) => (
         <li key={mention.id} className="flex flex-wrap items-center justify-between gap-3 border-2 border-line bg-stellar-black-soft px-4 py-3">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="font-demi text-sm font-bold text-stellar-white">{mention.outlet}</p>
             <p className="truncate text-xs text-stellar-white/60">{mention.title}</p>
           </div>
