@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store, Lightbulb, Globe } from "lucide-react";
+import { Sparkles, BarChart3, Megaphone, CalendarDays, ShoppingBag, Store, Lightbulb, Globe, NotebookPen } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
 import { HomeFinanceOverview } from "@/components/admin/home-finance-overview";
 import { HomeSectionSummary, type SectionSummaryData } from "@/components/admin/home-section-summary";
@@ -28,6 +28,7 @@ const SECTION_ICON: Record<SectionKey, typeof Sparkles> = {
   eventos: CalendarDays,
   pedidos: ShoppingBag,
   fidelidad: Sparkles,
+  contenido: NotebookPen,
 };
 
 const SECTION_DESCRIPTION: Record<SectionKey, string> = {
@@ -39,6 +40,7 @@ const SECTION_DESCRIPTION: Record<SectionKey, string> = {
   eventos: "Crear/editar eventos, marcar sesiones agotadas, ver quién ya pagó.",
   pedidos: "Historial de compras — boletos y pickup, con estado de entrega.",
   fidelidad: "Escanear tarjetas, sumar visitas y ver la base de clientes.",
+  contenido: "Editar menú, prensa, reseñas y datos del negocio sin tocar código.",
 };
 
 const ACCENT_STYLE: Record<string, { ring: string; iconBg: string; icon: string }> = {
@@ -167,6 +169,12 @@ export default async function AdminHubPage() {
       icon: SECTION_ICON.fidelidad,
       primary: `${members.length} cliente${members.length !== 1 ? "s" : ""}`,
       secondary: `${newMembers30d.length} nuevos en 30 días`,
+    },
+    {
+      key: "contenido",
+      icon: SECTION_ICON.contenido,
+      primary: "Menú, prensa, reseñas",
+      secondary: "Editar sin redeploy",
     },
   ];
 

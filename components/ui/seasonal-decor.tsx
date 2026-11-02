@@ -3,9 +3,13 @@
  * al mismo periodo que el menú temático y el evento "El Camino de Regreso"
  * (ver PROJECT_NOTES.md → "Monthly menu rotation"). Usa solo la paleta de
  * marca (blanco de línea + glow rosa), nada de naranja/negro genérico de
- * Halloween. Quitar o archivar este componente (y su mount en
- * app/[locale]/layout.tsx) cuando termine la temporada — no tiene
- * auto-expiración por fecha, mismo patrón manual que MENU_MONTH_LABEL.
+ * Halloween.
+ *
+ * El on/off vive en `site_settings.seasonal_decor_enabled` (editable desde
+ * /admin/contenido/negocio) — cuando termine la temporada, apagarlo ahí en
+ * vez de borrar código. Solo existe la variante "dia-de-muertos" por ahora;
+ * `seasonalDecorVariant` queda listo para una próxima temporada sin tener
+ * que volver a tocar este patrón.
  *
  * La vela va en bottom-24 (no bottom-4/6) porque MobileActionBar es una
  * barra fija z-50 pegada al fondo en móvil (<md) — cualquier offset menor
@@ -68,7 +72,9 @@ const SPIDER_ATTACH = spokePoint(SPIDER_SPOKE.angle, SPIDER_SPOKE.length, 0.42);
 const SPIDER_THREAD = 30;
 const SPIDER_BODY = { x: SPIDER_ATTACH.x, y: SPIDER_ATTACH.y + SPIDER_THREAD };
 
-export function SeasonalDecor() {
+export function SeasonalDecor({ enabled, variant }: { enabled: boolean; variant: string | null }) {
+  if (!enabled || variant !== "dia-de-muertos") return null;
+
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-10 overflow-hidden">
       {/* Telaraña + araña — esquina superior derecha, un solo sistema de

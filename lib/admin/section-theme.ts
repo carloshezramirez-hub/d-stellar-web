@@ -1,4 +1,13 @@
-export type SectionKey = "ventas" | "ideas" | "redes" | "trafico" | "anuncios" | "eventos" | "pedidos" | "fidelidad";
+export type SectionKey =
+  | "ventas"
+  | "ideas"
+  | "redes"
+  | "trafico"
+  | "anuncios"
+  | "eventos"
+  | "pedidos"
+  | "fidelidad"
+  | "contenido";
 
 export type SectionAccent = "pink" | "green" | "blue" | "red" | "purple" | "white";
 
@@ -14,10 +23,11 @@ export interface SectionThemeEntry {
  * dashboard, para que el mismo color identifique siempre a la misma área.
  *
  * Solo 6 colores de marca existen (ver app/globals.css: "no sustituir con
- * colores parecidos", son los del manual oficial) para 8 secciones — dos
- * pares se repiten a propósito (Ventas/Eventos en verde, Ideas/Fidelidad en
- * rosa), elegidos porque nunca se confunden entre sí (íconos y posición en
- * el nav distintos) en vez de inventar colores nuevos fuera de marca.
+ * colores parecidos", son los del manual oficial) para 9 secciones — tres
+ * comparten color a propósito (Ventas/Eventos en verde, Ideas/Fidelidad en
+ * rosa, Tráfico/Contenido en azul), elegidos porque nunca se confunden
+ * entre sí (íconos y posición en el nav distintos) en vez de inventar
+ * colores nuevos fuera de marca.
  */
 export const SECTION_THEME: Record<SectionKey, SectionThemeEntry> = {
   ventas: { label: "Ventas", href: "/admin/ventas", accent: "green" },
@@ -28,6 +38,17 @@ export const SECTION_THEME: Record<SectionKey, SectionThemeEntry> = {
   eventos: { label: "Eventos", href: "/admin/eventos", accent: "green" },
   pedidos: { label: "Pedidos", href: "/pedidos", accent: "white" },
   fidelidad: { label: "Fidelidad", href: "/wallet-staff", accent: "pink" },
+  contenido: { label: "Contenido", href: "/admin/contenido", accent: "blue" },
 };
 
-export const SECTION_ORDER: SectionKey[] = ["ventas", "ideas", "redes", "trafico", "anuncios", "eventos", "pedidos", "fidelidad"];
+export const SECTION_ORDER: SectionKey[] = [
+  "ventas",
+  "ideas",
+  "redes",
+  "trafico",
+  "anuncios",
+  "eventos",
+  "pedidos",
+  "fidelidad",
+  "contenido",
+];

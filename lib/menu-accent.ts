@@ -1,4 +1,4 @@
-import type { MenuSection } from "@/data/menu";
+import type { MenuSection } from "@/lib/menu-types";
 
 export const ACCENT_STYLES: Record<MenuSection["accent"], { bg: string; text: string }> = {
   green: { bg: "bg-stellar-green", text: "text-stellar-black" },

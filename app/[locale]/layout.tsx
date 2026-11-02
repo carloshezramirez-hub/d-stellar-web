@@ -13,7 +13,9 @@ import { PickupPromoPopup } from "@/components/sections/pickup-promo-popup";
 import { SeasonalDecor } from "@/components/ui/seasonal-decor";
 import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
+import { SiteSettingsProvider } from "@/components/site-settings-provider";
 import { localBusinessSchema, websiteSchema } from "@/lib/schema";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import { SITE_URL } from "@/data/site";
 import "../globals.css";
 
@@ -103,6 +105,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   setRequestLocale(locale);
+  const settings = await getSiteSettings();
 
   return (
     <html lang={locale} data-scroll-behavior="smooth">
@@ -110,15 +113,17 @@ export default async function LocaleLayout({ children, params }: Props) {
         className={`${franklinGothic.variable} ${coordinates.variable} ${plexMono.variable} font-body antialiased`}
       >
         <NextIntlClientProvider>
-          <JsonLd data={websiteSchema()} />
-          <JsonLd data={localBusinessSchema()} />
-          <Header />
-          <main className="pb-16 md:pb-0">{children}</main>
-          <Footer />
-          <MobileActionBar />
-          <WhatsappFloatButton />
-          <PickupPromoPopup />
-          <SeasonalDecor />
+          <SiteSettingsProvider value={settings}>
+            <JsonLd data={websiteSchema()} />
+            <JsonLd data={await localBusinessSchema()} />
+            <Header />
+            <main className="pb-16 md:pb-0">{children}</main>
+            <Footer />
+            <MobileActionBar />
+            <WhatsappFloatButton />
+            <PickupPromoPopup />
+            <SeasonalDecor enabled={settings.seasonalDecorEnabled} variant={settings.seasonalDecorVariant} />
+          </SiteSettingsProvider>
         </NextIntlClientProvider>
         <Analytics />
       </body>

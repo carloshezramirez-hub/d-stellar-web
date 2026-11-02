@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { SITE_URL, BUSINESS } from "@/data/site";
+import { getSiteSettings } from "@/lib/site-settings-db";
 
 let _resend: Resend | null = null;
 
@@ -54,11 +55,12 @@ export async function sendEventOutreach({ to, subject, body, leadId }: SendEvent
   if (!from) throw new Error("RESEND_FROM_EMAIL no está configurada.");
 
   const unsubscribeUrl = `${SITE_URL}/api/unsubscribe-event?lead=${leadId}`;
+  const settings = await getSiteSettings();
 
   const { data, error } = await getResend().emails.send({
     from,
     to,
-    replyTo: BUSINESS.email,
+    replyTo: settings.email,
     subject,
     html: wrapOutreachEmail(body, unsubscribeUrl),
     text: `${body}\n\n---\nSi prefieres que no te escribamos de nuevo: ${unsubscribeUrl}`,

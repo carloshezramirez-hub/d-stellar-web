@@ -3,14 +3,16 @@
 import { useLocale, useTranslations } from "next-intl";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
 import { trackEvent } from "@/lib/analytics";
+import { useSiteSettings } from "@/components/site-settings-provider";
 
 export function WhatsappFloatButton() {
   const locale = useLocale() as "es" | "en";
   const t = useTranslations("whatsappFloat");
+  const { whatsappUrl } = useSiteSettings();
 
   return (
     <a
-      href={whatsappOrderUrl(locale)}
+      href={whatsappOrderUrl(whatsappUrl, locale)}
       target="_blank"
       rel="noreferrer"
       onClick={() => trackEvent("click_whatsapp", { source: "floating_button" })}

@@ -1,8 +1,10 @@
 import { BUSINESS, SITE_URL } from "@/data/site";
-import { googleReviewStats } from "@/data/reviews";
+import { getReviewStats } from "@/lib/reviews-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import type { EventRecord } from "@/lib/events-types";
 
-export function localBusinessSchema() {
+export async function localBusinessSchema() {
+  const [settings, googleReviewStats] = await Promise.all([getSiteSettings(), getReviewStats()]);
   return {
     "@context": "https://schema.org",
     "@type": "CafeOrCoffeeShop",
@@ -11,7 +13,7 @@ export function localBusinessSchema() {
     alternateName: BUSINESS.legalName,
     url: SITE_URL,
     image: `${SITE_URL}/images/location/storefront-door-1.webp`,
-    telephone: BUSINESS.phone,
+    telephone: settings.phone,
     priceRange: "$$",
     servesCuisine: ["Bakery", "Coffee", "Desserts"],
     address: {
@@ -31,29 +33,32 @@ export function localBusinessSchema() {
       {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Thursday", "Saturday", "Sunday"],
-        opens: BUSINESS.hours.opens,
-        closes: BUSINESS.hours.closes,
+        opens: settings.hours.opens,
+        closes: settings.hours.closes,
       },
-      ...BUSINESS.hoursExceptions.map((exception) => ({
+      ...settings.hoursExceptions.map((exception) => ({
         "@type": "OpeningHoursSpecification" as const,
         dayOfWeek: [exception.dayOfWeek],
         opens: exception.opens,
         closes: exception.closes,
       })),
     ],
-    sameAs: Object.values(BUSINESS.social),
+    sameAs: Object.values(settings.social),
     menu: `${SITE_URL}/menu`,
     hasMap: BUSINESS.mapsUrl,
     foundingDate: String(BUSINESS.foundedYear),
     founder: BUSINESS.founders.map((name) => ({ "@type": "Person", name })),
     petsAllowed: true,
-    // Real snapshot from d-stellar's own Google Maps profile — keep in
-    // sync with data/reviews.ts → googleReviewStats, never a placeholder.
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: googleReviewStats.average,
-      reviewCount: googleReviewStats.count,
-    },
+    // Agregado real de Google Maps, editable desde /admin/contenido/resenas
+    // (tabla review_stats) — nunca un placeholder.
+    aggregateRating:
+      googleReviewStats.count > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: googleReviewStats.average,
+            reviewCount: googleReviewStats.count,
+          }
+        : undefined,
   };
 }
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { BUSINESS } from "@/data/site";
+import { useSiteSettings } from "@/components/site-settings-provider";
 import { trackEvent } from "@/lib/analytics";
 
 export function PhoneLink({ className }: { className?: string }) {
+  const { phone, phoneHref } = useSiteSettings();
   return (
-    <a href={`tel:${BUSINESS.phoneHref}`} onClick={() => trackEvent("click_phone")} className={className}>
-      {BUSINESS.phone}
+    <a href={`tel:${phoneHref}`} onClick={() => trackEvent("click_phone")} className={className}>
+      {phone}
     </a>
   );
 }

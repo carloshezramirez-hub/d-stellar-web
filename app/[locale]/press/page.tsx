@@ -5,7 +5,7 @@ import { ArrowUpRight, Newspaper } from "lucide-react";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { press } from "@/data/press";
+import { listPress } from "@/lib/press-db";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -29,6 +29,7 @@ export default async function PressPage({ params }: Props) {
   setRequestLocale(locale);
   const loc = locale as Locale;
   const t = await getTranslations("press");
+  const press = await listPress();
 
   return (
     <div>

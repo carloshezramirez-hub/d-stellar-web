@@ -7,6 +7,7 @@ import { filterWalkable } from "@/lib/prospecting/walking-distance";
 import { extractContactInfo } from "@/lib/prospecting/enrich-contact";
 import { buildEventProspectDossier } from "@/lib/ai/private-event-dossier";
 import { generateEventOutreachPlan, CONFIDENCE_GATE } from "@/lib/ai/private-event-research-agent";
+import { listReviews, getReviewStats } from "@/lib/reviews-db";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -18,6 +19,7 @@ export async function GET(request: Request) {
   if (authError) return authError;
 
   const supabase = getEventLeadsDb();
+  const [googleReviews, googleReviewStats] = await Promise.all([listReviews(), getReviewStats()]);
   let inserted = 0;
   let skippedNoWebsite = 0;
   let skippedNoEmail = 0;
@@ -80,15 +82,19 @@ export async function GET(request: Request) {
 
       inserted++;
 
-      const dossier = buildEventProspectDossier({
-        business_name: place.name,
-        category,
-        segment,
-        formatted_address: place.formattedAddress,
-        walking_distance_m: walkingDistanceM,
-        walking_duration_min: walkingDurationMin,
-        contact_name: contactName,
-      });
+      const dossier = buildEventProspectDossier(
+        {
+          business_name: place.name,
+          category,
+          segment,
+          formatted_address: place.formattedAddress,
+          walking_distance_m: walkingDistanceM,
+          walking_duration_min: walkingDurationMin,
+          contact_name: contactName,
+        },
+        googleReviews,
+        googleReviewStats,
+      );
       const plan = await generateEventOutreachPlan(dossier);
 
       const gatePassed = Boolean(plan && plan.send && plan.confidence >= CONFIDENCE_GATE);

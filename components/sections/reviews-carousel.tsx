@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import type { ReviewQuote } from "@/data/reviews";
+import type { ReviewQuote } from "@/lib/reviews-types";
 
-export function ReviewsCarousel({ reviews }: { reviews: ReviewQuote[] }) {
+export function ReviewsCarousel({ reviews }: { reviews: Array<ReviewQuote & { id?: string }> }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("press");
 
@@ -25,7 +25,7 @@ export function ReviewsCarousel({ reviews }: { reviews: ReviewQuote[] }) {
       >
         {reviews.map((review, i) => (
           <div
-            key={i}
+            key={review.id ?? i}
             data-review-card
             className="flex w-[78vw] shrink-0 snap-start flex-col gap-4 border-2 border-line bg-stellar-black-soft p-6 sm:w-[320px]"
           >

@@ -4,15 +4,12 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Cookie, CupSoda, Coffee, Leaf, Droplet, Croissant, Package, type LucideIcon } from "lucide-react";
-import { menu, type MenuSection } from "@/data/menu";
+import type { MenuSection } from "@/lib/menu-types";
 import { ACCENT_STYLES } from "@/lib/menu-accent";
 import { trackEvent } from "@/lib/analytics";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 
 type Locale = "es" | "en";
-
-const allItems = menu.flatMap((section) => section.items);
-const gourmetCookies = menu.find((section) => section.slug === "gourmet-cookies")!.items;
 
 const SECTION_ICONS: Record<MenuSection["slug"], LucideIcon> = {
   "gourmet-cookies": Cookie,
@@ -24,10 +21,12 @@ const SECTION_ICONS: Record<MenuSection["slug"], LucideIcon> = {
   "cookie-packs": Package,
 };
 
-export function PickupOrderForm() {
+export function PickupOrderForm({ menu }: { menu: MenuSection[] }) {
   const t = useTranslations("pickup.order");
   const locale = useLocale() as Locale;
-  const [activeSection, setActiveSection] = useState(menu[0].slug);
+  const allItems = useMemo(() => menu.flatMap((section) => section.items), [menu]);
+  const gourmetCookies = useMemo(() => menu.find((section) => section.slug === "gourmet-cookies")?.items ?? [], [menu]);
+  const [activeSection, setActiveSection] = useState(menu[0]?.slug ?? "");
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   // Per pack slug, the chosen cookie slug for each unit in the pack —
   // e.g. a qty-2 3-Pack has 6 slots, repeats allowed.
@@ -150,7 +149,7 @@ export function PickupOrderForm() {
     );
   }
 
-  const activeItems = menu.find((section) => section.slug === activeSection)!.items;
+  const activeItems = menu.find((section) => section.slug === activeSection)?.items ?? [];
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-8">

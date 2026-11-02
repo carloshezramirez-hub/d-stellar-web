@@ -7,7 +7,8 @@ import { TrackedCtaAnchor } from "@/components/ui/tracked-cta-anchor";
 import { JsonLd } from "@/components/json-ld";
 import { menuSchema, breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { menu, MENU_MONTH_LABEL } from "@/data/menu";
+import { listMenu } from "@/lib/menu-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import { BUSINESS, SITE_URL } from "@/data/site";
 import { ACCENT_STYLES } from "@/lib/menu-accent";
 
@@ -36,6 +37,8 @@ export default async function MenuPage({ params }: Props) {
   const loc = locale as Locale;
   const t = await getTranslations("menu");
   const cta = await getTranslations("cta");
+  const [menu, settings] = await Promise.all([listMenu(), getSiteSettings()]);
+  const MENU_MONTH_LABEL = settings.menuMonthLabel;
 
   const schemaSections = menu.map((section) => ({
     title: section.title[loc],
@@ -85,14 +88,22 @@ export default async function MenuPage({ params }: Props) {
         {([
           { image: "/images/promos/calabaza-cookie.webp", sectionSlug: "gourmet-cookies", itemSlug: "como-me-ensenaste" },
           { image: "/images/promos/calabaza-latte.webp", sectionSlug: "bebidas-autor", itemSlug: "cuentame-otra-vez" },
-        ] as const).map(({ image, sectionSlug, itemSlug }) => {
-          const section = menu.find((s) => s.slug === sectionSlug)!;
-          const item = section.items.find((i) => i.slug === itemSlug)!;
+        ] as const)
+          // Spotlight fijo de 2 productos del mes — si se borran/renombran
+          // desde /admin/contenido/menu sin actualizar este array, se omite
+          // el tile en vez de tronar la página.
+          .flatMap(({ image, sectionSlug, itemSlug }) => {
+            const section = menu.find((s) => s.slug === sectionSlug);
+            const item = section?.items.find((i) => i.slug === itemSlug);
+            return section && item ? [{ image, section, item }] : [];
+          })
+          .map(({ image, section, item }) => {
           const accent = ACCENT_STYLES[section.accent];
+          const itemSlug = item.slug;
           return (
             <a
               key={itemSlug}
-              href={`#${sectionSlug}`}
+              href={`#${section.slug}`}
               className="group relative block aspect-[4/5] overflow-hidden border-2 border-line"
             >
               <Image

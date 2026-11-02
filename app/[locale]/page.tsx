@@ -8,9 +8,10 @@ import { StarField } from "@/components/ui/star-field";
 import { LiveVisitorsBadge } from "@/components/ui/live-visitors-badge";
 import { ReviewsCarousel } from "@/components/sections/reviews-carousel";
 import { HeroCarousel } from "@/components/sections/hero-carousel";
-import { menu, MENU_MONTH_LABEL } from "@/data/menu";
+import { listMenu } from "@/lib/menu-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import { BUSINESS } from "@/data/site";
-import { googleReviews, googleReviewStats } from "@/data/reviews";
+import { listReviews, getReviewStats } from "@/lib/reviews-db";
 
 type Props = { params: Promise<{ locale: string }> };
 type Locale = "es" | "en";
@@ -26,8 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const cookieNames = menu[0].items.map((item) => item.name);
-
 const VALUE_ACCENTS = ["bg-stellar-green", "bg-stellar-pink", "bg-stellar-blue", "bg-stellar-purple"] as const;
 
 export default async function HomePage({ params }: Props) {
@@ -37,6 +36,17 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("home");
   const cta = await getTranslations("cta");
   const tPress = await getTranslations("press");
+  const [menu, settings, googleReviews, googleReviewStats] = await Promise.all([
+    listMenu(),
+    getSiteSettings(),
+    listReviews(),
+    getReviewStats(),
+  ]);
+  const MENU_MONTH_LABEL = settings.menuMonthLabel;
+  // menu puede venir vacío en un entorno sin Supabase configurado (preview
+  // sin env vars) — nunca en producción real, donde la tabla siempre tiene
+  // contenido, pero la portada no debe tronar si pasara.
+  const cookieNames = (menu[0]?.items ?? []).map((item) => item.name);
 
   return (
     <>

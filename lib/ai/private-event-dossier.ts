@@ -1,5 +1,5 @@
 import type { EventLead } from "@/lib/event-leads-db";
-import { googleReviews, googleReviewStats } from "@/data/reviews";
+import type { ReviewQuote, ReviewStats } from "@/lib/reviews-types";
 import { BUSINESS } from "@/data/site";
 
 /**
@@ -31,8 +31,15 @@ export function buildEventProspectDossier(
     EventLead,
     "business_name" | "category" | "segment" | "formatted_address" | "walking_distance_m" | "walking_duration_min" | "contact_name"
   >,
+  // Reseñas reales + su agregado — se piden una sola vez por corrida del
+  // cron (ver app/api/cron/prospect-events/route.ts) en vez de que cada
+  // dossier haga su propia consulta a Supabase.
+  googleReviews: ReviewQuote[],
+  googleReviewStats: ReviewStats,
 ): EventProspectDossier {
-  // Cita real y corta, tomada del set curado de reseñas verdaderas en data/reviews.ts.
+  // Cita real y corta, tomada del set curado de reseñas verdaderas (tabla
+  // `reviews`) — puede venir vacío si Supabase no está configurado en este
+  // entorno, a diferencia del antiguo data/reviews.ts que siempre tenía algo.
   const quotable = googleReviews.find((r) => r.quote.length <= 180) ?? googleReviews[0];
 
   return {
@@ -46,6 +53,6 @@ export function buildEventProspectDossier(
     dStellarAddress: `${BUSINESS.streetAddress}, ${BUSINESS.neighborhood}, ${BUSINESS.addressLocality}`,
     dStellarRating: googleReviewStats.average,
     dStellarReviewCount: googleReviewStats.count,
-    dStellarReviewQuote: quotable.quote,
+    dStellarReviewQuote: quotable?.quote ?? "",
   };
 }

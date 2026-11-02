@@ -1,6 +1,6 @@
 "use client";
 
-import { BUSINESS } from "@/data/site";
+import { useSiteSettings } from "@/components/site-settings-provider";
 import { trackEvent } from "@/lib/analytics";
 
 function InstagramIcon() {
@@ -22,10 +22,11 @@ function TikTokIcon() {
 }
 
 export function SocialLinks() {
+  const { social } = useSiteSettings();
   return (
     <div className="flex gap-4">
       <a
-        href={BUSINESS.social.instagram}
+        href={social.instagram}
         target="_blank"
         rel="noreferrer"
         aria-label="Instagram"
@@ -35,7 +36,7 @@ export function SocialLinks() {
         <InstagramIcon />
       </a>
       <a
-        href={BUSINESS.social.tiktok}
+        href={social.tiktok}
         target="_blank"
         rel="noreferrer"
         aria-label="TikTok"

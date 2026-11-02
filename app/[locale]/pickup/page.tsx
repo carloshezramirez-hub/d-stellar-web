@@ -8,8 +8,9 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { PickupOrderForm } from "@/components/sections/pickup-order-form";
 import { PickupPaymentBanner } from "@/components/sections/pickup-payment-banner";
-import { BUSINESS, SITE_URL } from "@/data/site";
-import { MENU_MONTH_LABEL } from "@/data/menu";
+import { SITE_URL } from "@/data/site";
+import { listMenu } from "@/lib/menu-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
 
 type Props = {
@@ -37,6 +38,8 @@ export default async function PickupPage({ params, searchParams }: Props) {
   const t = await getTranslations("pickup");
   const cta = await getTranslations("cta");
   const paymentStatus = status === "approved" || status === "pending" || status === "failure" ? status : null;
+  const [menu, settings] = await Promise.all([listMenu(), getSiteSettings()]);
+  const MENU_MONTH_LABEL = settings.menuMonthLabel;
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -97,7 +100,7 @@ export default async function PickupPage({ params, searchParams }: Props) {
         </div>
 
         <div className="mt-10">
-          <PickupOrderForm />
+          <PickupOrderForm menu={menu} />
         </div>
       </div>
 
@@ -105,7 +108,7 @@ export default async function PickupPage({ params, searchParams }: Props) {
         <p className="font-tag text-xs uppercase tracking-widest text-stellar-white/50">{t("altTitle")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <TrackedCtaAnchor
-            href={whatsappOrderUrl(locale === "en" ? "en" : "es")}
+            href={whatsappOrderUrl(settings.whatsappUrl, locale === "en" ? "en" : "es")}
             target="_blank"
             rel="noreferrer"
             variant="outline"
@@ -113,7 +116,7 @@ export default async function PickupPage({ params, searchParams }: Props) {
           >
             {cta("whatsapp")}
           </TrackedCtaAnchor>
-          <CtaAnchor href={BUSINESS.social.instagram} target="_blank" rel="noreferrer" variant="outline">
+          <CtaAnchor href={settings.social.instagram} target="_blank" rel="noreferrer" variant="outline">
             {cta("instagram")}
           </CtaAnchor>
           <CtaLink href="/menu" variant="ghost">

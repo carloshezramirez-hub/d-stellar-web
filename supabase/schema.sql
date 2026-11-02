@@ -245,3 +245,102 @@ create index if not exists loyalty_devices_member_idx on loyalty_devices (loyalt
 alter table loyalty_devices enable row level security;
 
 alter table loyalty_members enable row level security;
+
+-- Menú — antes hardcodeado en data/menu.ts, migrado para editarse desde
+-- /admin/contenido sin redeploy. Ver lib/menu-db.ts.
+create table if not exists menu_sections (
+  slug text primary key,
+  title jsonb not null, -- {es, en}
+  intro jsonb not null, -- {es, en}
+  accent text not null check (accent in ('green', 'pink', 'blue', 'purple', 'red')),
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists menu_items (
+  id uuid primary key default gen_random_uuid(),
+  section_slug text not null references menu_sections (slug) on delete cascade,
+  slug text not null,
+  name text not null,
+  description jsonb not null, -- {es, en}
+  price_mxn numeric not null,
+  compare_at_price_mxn numeric,
+  pack_size int,
+  tags text[],
+  image text,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (section_slug, slug)
+);
+
+create index if not exists menu_items_section_idx on menu_items (section_slug);
+
+alter table menu_sections enable row level security;
+alter table menu_items enable row level security;
+
+-- Prensa — antes hardcodeado en data/press.ts. Regla dura del proyecto:
+-- nunca agregar una mención que no nombre "d-stellar" de verdad (ver
+-- CLAUDE.md / PROJECT_NOTES.md) — el form de admin solo recuerda la regla,
+-- no la valida por código.
+create table if not exists press_mentions (
+  id uuid primary key default gen_random_uuid(),
+  outlet text not null,
+  logo text,
+  title text not null,
+  url text not null,
+  date_label jsonb not null, -- {es, en}
+  summary jsonb not null, -- {es, en}
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table press_mentions enable row level security;
+
+-- Reseñas — antes hardcodeado en data/reviews.ts. Mismo principio de cero
+-- datos fabricados: solo citas reales copiadas del perfil de Google Maps.
+create table if not exists reviews (
+  id uuid primary key default gen_random_uuid(),
+  author text not null,
+  rating int not null check (rating between 1 and 5),
+  quote text not null,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table reviews enable row level security;
+
+-- Fila única con el agregado real de Google Maps (promedio/conteo) — no se
+-- puede derivar del set curado de `reviews` porque ese es solo una
+-- selección positiva, no todas las reseñas reales.
+create table if not exists review_stats (
+  id int primary key default 1 check (id = 1),
+  average numeric not null,
+  count int not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table review_stats enable row level security;
+
+-- Configuración general editable del sitio (fila única) — el resto de
+-- BUSINESS en data/site.ts (dirección, geo, nombre legal, fundadores) son
+-- hechos fijos y se quedan en código a propósito, ver CLAUDE.md.
+create table if not exists site_settings (
+  id int primary key default 1 check (id = 1),
+  hours jsonb not null, -- {opens, closes}
+  hours_exceptions jsonb not null default '[]', -- [{dayOfWeek, opens, closes}]
+  phone text not null,
+  phone_href text not null,
+  whatsapp_url text not null,
+  email text not null,
+  social jsonb not null, -- {instagram, tiktok, facebook, linkedin}
+  menu_month_label jsonb not null, -- {es, en}
+  seasonal_decor_enabled boolean not null default false,
+  seasonal_decor_variant text,
+  updated_at timestamptz not null default now()
+);
+
+alter table site_settings enable row level security;
