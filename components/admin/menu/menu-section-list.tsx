@@ -115,7 +115,7 @@ export function MenuSectionList({ menu }: { menu: MenuSection[] }) {
             </div>
           </div>
 
-          <ul className="mt-4 grid gap-2">
+          <ul className="mt-4 flex flex-col gap-2">
             {section.items.map((item, itemIndex) => {
               const itemSlugs = section.items.map((i) => i.slug);
               return (

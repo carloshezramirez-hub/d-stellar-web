@@ -40,7 +40,7 @@ export function ReviewList({ reviews }: { reviews: Array<ReviewQuote & { id: str
   }
 
   return (
-    <ul className="grid gap-2">
+    <ul className="flex flex-col gap-2">
       {reviews.map((review, i) => (
         <li key={review.id} className="flex flex-wrap items-center justify-between gap-3 border-2 border-line bg-stellar-black-soft px-4 py-3">
           <div className="min-w-0 flex-1">
