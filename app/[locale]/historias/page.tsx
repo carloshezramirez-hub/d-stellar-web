@@ -7,7 +7,7 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { menuHistory } from "@/data/menu-history";
+import { listMenuHistory } from "@/lib/historias-db";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -16,6 +16,7 @@ type Locale = "es" | "en";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
+  const menuHistory = await listMenuHistory();
   return pageMetadata({
     locale: isEn ? "en" : "es",
     path: "/historias",
@@ -32,6 +33,7 @@ export default async function HistoriasPage({ params }: Props) {
   setRequestLocale(locale);
   const loc = locale as Locale;
   const t = await getTranslations("historias");
+  const menuHistory = await listMenuHistory();
 
   return (
     <div>

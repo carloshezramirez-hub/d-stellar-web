@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, Newspaper, Star, Store } from "lucide-react";
+import { BookOpen, Newspaper, Star, Store, BookMarked } from "lucide-react";
 import { ConsoleShell } from "@/components/admin/console-shell";
 
 const CARDS = [
@@ -26,6 +26,12 @@ const CARDS = [
     icon: Store,
     title: "Negocio",
     body: "Horario, teléfono, WhatsApp, email, redes sociales y decoración de temporada.",
+  },
+  {
+    href: "/admin/contenido/historias",
+    icon: BookMarked,
+    title: "Historias",
+    body: "La narrativa detrás de cada colección mensual del menú — un capítulo por mes.",
   },
 ];
 

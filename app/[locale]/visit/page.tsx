@@ -7,6 +7,8 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { BUSINESS, SITE_URL } from "@/data/site";
+import { getSiteSettings } from "@/lib/site-settings-db";
+import { formatHoursList } from "@/lib/hours-format";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -38,6 +40,8 @@ export default async function VisitPage({ params }: Props) {
   const t = await getTranslations("visit");
   const cta = await getTranslations("cta");
   const steps = t.raw("steps") as Array<{ title: string; body: string }>;
+  const settings = await getSiteSettings();
+  const hoursLines = formatHoursList(settings, locale === "en" ? "en" : "es");
 
   return (
     <div className="px-5 py-16 md:py-24">
@@ -112,7 +116,7 @@ export default async function VisitPage({ params }: Props) {
 
           <h2 className="mt-8 font-tag text-xs uppercase tracking-widest text-stellar-pink">{t("hoursTitle")}</h2>
           <div className="mt-3 space-y-1">
-            {t.raw("hoursBody").map((line: string, i: number) => (
+            {hoursLines.map((line, i) => (
               <p key={i} className="text-lg text-stellar-white">
                 {line}
               </p>

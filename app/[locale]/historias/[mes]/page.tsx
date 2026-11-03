@@ -8,19 +8,20 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { menuHistory, getMonthlyStory } from "@/data/menu-history";
+import { listMenuHistory, getMonthlyStory } from "@/lib/historias-db";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ locale: string; mes: string }> };
 type Locale = "es" | "en";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const menuHistory = await listMenuHistory();
   return menuHistory.map((month) => ({ mes: month.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, mes } = await params;
-  const month = getMonthlyStory(mes);
+  const month = await getMonthlyStory(mes);
   if (!month) return {};
   const loc = locale as Locale;
 
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HistoriaDetailPage({ params }: Props) {
   const { locale, mes } = await params;
   setRequestLocale(locale);
-  const month = getMonthlyStory(mes);
+  const [month, menuHistory] = await Promise.all([getMonthlyStory(mes), listMenuHistory()]);
   if (!month) notFound();
 
   const loc = locale as Locale;

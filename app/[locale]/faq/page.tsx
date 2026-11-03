@@ -5,6 +5,8 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { SITE_URL } from "@/data/site";
+import { getSiteSettings } from "@/lib/site-settings-db";
+import { formatHoursParagraph } from "@/lib/hours-format";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -27,7 +29,16 @@ export default async function FaqPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("faq");
-  const items = t.raw("items") as Array<{ q: string; a: string }>;
+  const rawItems = t.raw("items") as Array<{ q: string; a: string }>;
+  const settings = await getSiteSettings();
+  // items[1] es el ítem de horario en messages/{es,en}.json ("¿Cuál es el
+  // horario de d-stellar?") — su respuesta se reemplaza por el horario real
+  // (site_settings, editable en /admin/contenido/negocio) en vez del texto
+  // fijo. Si alguna vez se reordena el FAQ en el JSON, hay que mover este
+  // índice junto con él.
+  const items = rawItems.map((item, i) =>
+    i === 1 ? { ...item, a: formatHoursParagraph(settings, locale === "en" ? "en" : "es") } : item,
+  );
 
   return (
     <div className="px-5 py-16 md:py-24">

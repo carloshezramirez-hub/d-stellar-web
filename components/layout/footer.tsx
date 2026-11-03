@@ -1,14 +1,19 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BUSINESS } from "@/data/site";
 import { SocialLinks } from "@/components/layout/social-links";
 import { PreferredSourceButton } from "@/components/preferred-source-button";
 import { PhoneLink } from "@/components/layout/phone-link";
+import { getSiteSettings } from "@/lib/site-settings-db";
+import { formatHoursList } from "@/lib/hours-format";
 
-export function Footer() {
-  const t = useTranslations("footer");
-  const nav = useTranslations("nav");
+export async function Footer() {
+  const t = await getTranslations("footer");
+  const nav = await getTranslations("nav");
+  const locale = await getLocale();
+  const settings = await getSiteSettings();
+  const hoursLines = formatHoursList(settings, locale === "en" ? "en" : "es");
   const year = new Date().getFullYear();
 
   return (
@@ -29,7 +34,7 @@ export function Footer() {
           />
           <p className="mt-4 max-w-xs text-sm text-stellar-white/70">{t("address")}</p>
           <div className="mt-1">
-            {t.raw("hours").map((line: string, i: number) => (
+            {hoursLines.map((line, i) => (
               <p key={i} className="text-sm text-stellar-white/70">
                 {line}
               </p>

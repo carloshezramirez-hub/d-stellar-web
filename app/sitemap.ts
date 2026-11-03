@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/data/site";
 import { listAllEvents } from "@/lib/events-db";
-import { menuHistory } from "@/data/menu-history";
+import { listMenuHistory } from "@/lib/historias-db";
 
 const staticPaths = ["", "/menu", "/events", "/pickup", "/visit", "/about", "/press", "/historias", "/faq"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const events = await listAllEvents();
+  const [events, menuHistory] = await Promise.all([listAllEvents(), listMenuHistory()]);
   const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified: new Date(),

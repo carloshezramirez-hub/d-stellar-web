@@ -344,3 +344,56 @@ create table if not exists site_settings (
 );
 
 alter table site_settings enable row level security;
+
+-- Historias del menú — antes hardcodeado en data/menu-history.ts, migrado
+-- para editarse desde /admin/contenido/historias. Ver lib/historias-db.ts.
+create table if not exists menu_stories (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique not null,
+  chapter_number int,
+  month_label jsonb not null, -- {es, en}
+  title jsonb not null, -- {es, en}
+  hook jsonb not null, -- {es, en}
+  flavor_names text[] not null default '{}',
+  section_eyebrow jsonb not null, -- {es, en}
+  section_title jsonb not null, -- {es, en}
+  intro jsonb not null, -- {es: string[], en: string[]}
+  closing_eyebrow jsonb not null, -- {es, en}
+  closing_title jsonb not null, -- {es, en}
+  closing jsonb not null, -- {es: string[], en: string[]}
+  one_liner jsonb not null, -- {es, en}
+  hero_image text not null,
+  hero_alt jsonb not null, -- {es, en}
+  sort_order int not null default 0, -- 0 = más antiguo, crece con cada mes nuevo
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists menu_stories_sort_idx on menu_stories (sort_order);
+
+create table if not exists menu_story_cookies (
+  id uuid primary key default gen_random_uuid(),
+  story_id uuid not null references menu_stories (id) on delete cascade,
+  number text not null, -- ej. "01"
+  name text not null,
+  tagline jsonb not null, -- {es, en}
+  story jsonb not null, -- {es: string[], en: string[]}
+  pull_quote jsonb, -- {es, en} opcional
+  sort_order int not null default 0
+);
+
+create index if not exists menu_story_cookies_story_idx on menu_story_cookies (story_id);
+
+create table if not exists menu_story_gallery (
+  id uuid primary key default gen_random_uuid(),
+  story_id uuid not null references menu_stories (id) on delete cascade,
+  src text not null,
+  alt jsonb not null, -- {es, en}
+  sort_order int not null default 0
+);
+
+create index if not exists menu_story_gallery_story_idx on menu_story_gallery (story_id);
+
+alter table menu_stories enable row level security;
+alter table menu_story_cookies enable row level security;
+alter table menu_story_gallery enable row level security;
